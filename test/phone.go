@@ -38,7 +38,7 @@ func NewPhone(storage *mysql.MySQL) *Phone {
 					NotNull:  true,
 				},
 
-				&mysql.VarcharField{
+				&mysql.VarCharField{
 					Id:      "number",
 					Caption: "Number",
 					Length:  10,

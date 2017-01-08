@@ -23,14 +23,14 @@ func NewUser(storage *mysql.MySQL) *User {
 					AutoIncrement: true,
 				},
 
-				&mysql.VarcharField{
+				&mysql.VarCharField{
 					Id:      "name",
 					Caption: "Name",
 					Length:  255,
 					NotNull: true,
 				},
 
-				&mysql.VarcharField{
+				&mysql.VarCharField{
 					Id:      "lastname",
 					Caption: "Lastame",
 					Length:  255,

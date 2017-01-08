@@ -24,6 +24,17 @@ var (
 	netAddr string
 )
 
+var (
+	_ = mysql.IMysqlFieldDefinition(&mysql.TinyIntField{})
+	_ = mysql.IMysqlFieldDefinition(&mysql.SmallIntField{})
+	_ = mysql.IMysqlFieldDefinition(&mysql.MediumIntField{})
+	_ = mysql.IMysqlFieldDefinition(&mysql.IntField{})
+	_ = mysql.IMysqlFieldDefinition(&mysql.BigIntField{})
+
+	_ = mysql.IMysqlFieldDefinition(&mysql.VarCharField{})
+	_ = mysql.IMysqlFieldDefinition(&mysql.CharField{})
+)
+
 func init() {
 	env := func(key, defaultValue string) string {
 		if value := os.Getenv(key); value != "" {

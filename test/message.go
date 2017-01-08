@@ -22,7 +22,7 @@ func NewMessage(storage *mysql.MySQL) *Message {
 					AutoIncrement: true,
 				},
 
-				&mysql.VarcharField{
+				&mysql.VarCharField{
 					Id:      "text",
 					Caption: "Message text",
 					Length:  255,

@@ -22,21 +22,21 @@ func NewAddress(storage *mysql.MySQL) *Address {
 					AutoIncrement: true,
 				},
 
-				&mysql.VarcharField{
+				&mysql.VarCharField{
 					Id:      "country",
 					Caption: "Country",
 					Length:  64,
 					NotNull: true,
 				},
 
-				&mysql.VarcharField{
+				&mysql.VarCharField{
 					Id:      "city",
 					Caption: "City",
 					Length:  64,
 					NotNull: true,
 				},
 
-				&mysql.VarcharField{
+				&mysql.VarCharField{
 					Id:      "address",
 					Caption: "Address",
 					Length:  255,
