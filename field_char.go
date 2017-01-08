@@ -15,7 +15,7 @@ type baseCharField struct {
 	Collate   string
 	NotNull   bool
 	Default   string
-	CheckFunc func(interface{}) error
+	CheckFunc func(string) error
 }
 
 func (f *baseCharField) GetId() string         { return f.Id }
@@ -24,7 +24,7 @@ func (f *baseCharField) GetType() reflect.Type { return reflect.TypeOf(string(""
 func (f *baseCharField) IsRequired() bool      { return f.NotNull && f.Default == "" }
 func (f *baseCharField) Check(v interface{}) error {
 	if f.CheckFunc != nil {
-		return f.CheckFunc(v)
+		return f.CheckFunc(v.(string))
 	} else {
 		return nil
 	}

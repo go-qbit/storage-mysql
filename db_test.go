@@ -25,6 +25,11 @@ var (
 )
 
 var (
+	_ = mysql.IMysqlFieldDefinition(&mysql.DateField{})
+	_ = mysql.IMysqlFieldDefinition(&mysql.TimeField{})
+	_ = mysql.IMysqlFieldDefinition(&mysql.DateTimeField{})
+	_ = mysql.IMysqlFieldDefinition(&mysql.BooleanField{})
+
 	_ = mysql.IMysqlFieldDefinition(&mysql.TinyIntField{})
 	_ = mysql.IMysqlFieldDefinition(&mysql.SmallIntField{})
 	_ = mysql.IMysqlFieldDefinition(&mysql.MediumIntField{})

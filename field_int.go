@@ -16,7 +16,7 @@ type baseIntField struct {
 	NotNull       bool
 	AutoIncrement bool
 	Default       int
-	CheckFunc     func(interface{}) error
+	CheckFunc     func(int) error
 }
 
 func (f *baseIntField) GetId() string      { return f.Id }
@@ -24,7 +24,7 @@ func (f *baseIntField) GetCaption() string { return f.Caption }
 func (f *baseIntField) IsRequired() bool   { return f.NotNull && f.Default == 0 }
 func (f *baseIntField) Check(v interface{}) error {
 	if f.CheckFunc != nil {
-		return f.CheckFunc(v)
+		return f.CheckFunc(v.(int))
 	} else {
 		return nil
 	}
