@@ -1,3 +1,5 @@
+//go:generate go run ./gen/fields.go -filename fields_definitions.go
+
 package mysql
 
 import (
