@@ -14,11 +14,10 @@ func NewAddress(storage *mysql.MySQL) *Address {
 			storage,
 			"address",
 			[]mysql.IMysqlFieldDefinition{
-				&mysql.IntField{
+				&mysql.UintField{
 					Id:            "id",
 					Caption:       "ID",
 					NotNull:       true,
-					Unsigned:      true,
 					AutoIncrement: true,
 				},
 

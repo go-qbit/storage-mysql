@@ -15,10 +15,9 @@ func NewUser(storage *mysql.MySQL) *User {
 			storage,
 			"user",
 			[]mysql.IMysqlFieldDefinition{
-				&mysql.IntField{
+				&mysql.UintField{
 					Id:            "id",
 					Caption:       "ID",
-					Unsigned:      true,
 					NotNull:       true,
 					AutoIncrement: true,
 				},

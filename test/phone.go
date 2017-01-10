@@ -16,26 +16,23 @@ func NewPhone(storage *mysql.MySQL) *Phone {
 			storage,
 			"phone",
 			[]mysql.IMysqlFieldDefinition{
-				&mysql.IntField{
+				&mysql.UintField{
 					Id:            "id",
 					Caption:       "ID",
-					Unsigned:      true,
 					NotNull:       true,
 					AutoIncrement: true,
 				},
 
-				&mysql.IntField{
-					Id:       "country_code",
-					Caption:  "Country code",
-					Unsigned: true,
-					NotNull:  true,
+				&mysql.UintField{
+					Id:      "country_code",
+					Caption: "Country code",
+					NotNull: true,
 				},
 
-				&mysql.IntField{
-					Id:       "code",
-					Caption:  "Code",
-					Unsigned: true,
-					NotNull:  true,
+				&mysql.UintField{
+					Id:      "code",
+					Caption: "Code",
+					NotNull: true,
 				},
 
 				&mysql.VarCharField{

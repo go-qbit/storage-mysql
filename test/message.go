@@ -14,10 +14,9 @@ func NewMessage(storage *mysql.MySQL) *Message {
 			storage,
 			"message",
 			[]mysql.IMysqlFieldDefinition{
-				&mysql.IntField{
+				&mysql.UintField{
 					Id:            "id",
 					Caption:       "ID",
-					Unsigned:      true,
 					NotNull:       true,
 					AutoIncrement: true,
 				},
