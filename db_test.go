@@ -159,47 +159,68 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 }
 
 func (s *DBTestSuite) TestModel_Add() {
-	_, err := s.storage.Add(context.Background(), s.user, []map[string]interface{}{
-		{"id": 1, "name": "Ivan", "lastname": "Sidorov"},
-		{"id": 2, "name": "Petr", "lastname": "Ivanov"},
-		{"id": 3, "name": "James", "lastname": "Bond"},
-		{"id": 4, "name": "John", "lastname": "Connor"},
-		{"id": 5, "name": "Sara", "lastname": "Connor"},
+	_, err := s.user.AddFromStructs(context.Background(), []struct {
+		Id       int
+		Name     string
+		Lastname string
+	}{
+		{Id: 1, Name: "Ivan", Lastname: "Sidorov"},
+		{Id: 2, Name: "Petr", Lastname: "Ivanov"},
+		{Id: 3, Name: "James", Lastname: "Bond"},
+		{Id: 4, Name: "John", Lastname: "Connor"},
+		{Id: 5, Name: "Sara", Lastname: "Connor"},
 	})
 	s.NoError(err)
 
-	_, err = s.phone.AddMulti(context.Background(), []map[string]interface{}{
-		{"id": 1, "country_code": 1, "code": 111, "number": 1111111},
-		{"id": 3, "country_code": 3, "code": 333, "number": 3333333},
+	_, err = s.phone.AddFromStructs(context.Background(), []struct {
+		Id          int
+		CountryCode int
+		Code        int
+		Number      int
+	}{
+		{Id: 1, CountryCode: 1, Code: 111, Number: 1111111},
+		{Id: 3, CountryCode: 3, Code: 333, Number: 3333333},
 	})
 	s.NoError(err)
 
-	_, err = s.message.AddMulti(context.Background(), []map[string]interface{}{
-		{"id": 10, "text": "Message 1", "fk__user__id": 1},
-		{"id": 20, "text": "Message 2", "fk__user__id": 1},
-		{"id": 30, "text": "Message 3", "fk__user__id": 1},
-		{"id": 40, "text": "Message 4", "fk__user__id": 2},
+	_, err = s.message.AddFromStructs(context.Background(), []struct {
+		Id       int
+		Text     string
+		FkUserId int `field:"fk__user__id"`
+	}{
+		{Id: 10, Text: "Message 1", FkUserId: 1},
+		{Id: 20, Text: "Message 2", FkUserId: 1},
+		{Id: 30, Text: "Message 3", FkUserId: 1},
+		{Id: 40, Text: "Message 4", FkUserId: 2},
 	})
 	s.NoError(err)
 
-	_, err = s.address.AddMulti(context.Background(), []map[string]interface{}{
-		{"id": 100, "country": "USA", "city": "Arlington", "address": "1022 Bridges Dr"},
-		{"id": 200, "country": "USA", "city": "Fort Worth", "address": "7105 Plover Circle"},
-		{"id": 300, "country": "USA", "city": "Crowley", "address": "524 Pecan Street"},
-		{"id": 400, "country": "USA", "city": "Arlington", "address": "1023 Bridges Dr"},
-		{"id": 500, "country": "USA", "city": "Louisville", "address": "1246 Everett Avenue"},
+	_, err = s.address.AddFromStructs(context.Background(), []struct {
+		Id      int
+		Country string
+		City    string
+		Address string
+	}{
+		{Id: 100, Country: "USA", City: "Arlington", Address: "1022 Bridges Dr"},
+		{Id: 200, Country: "USA", City: "Fort Worth", Address: "7105 Plover Circle"},
+		{Id: 300, Country: "USA", City: "Crowley", Address: "524 Pecan Street"},
+		{Id: 400, Country: "USA", City: "Arlington", Address: "1023 Bridges Dr"},
+		{Id: 500, Country: "USA", City: "Louisville", Address: "1246 Everett Avenue"},
 	})
 	s.NoError(err)
 
-	_, err = s.user.GetRelation("address").JunctionModel.AddMulti(context.Background(), []map[string]interface{}{
-		{"fk__user__id": 1, "fk__address__id": 100},
-		{"fk__user__id": 1, "fk__address__id": 200},
-		{"fk__user__id": 2, "fk__address__id": 200},
-		{"fk__user__id": 2, "fk__address__id": 300},
-		{"fk__user__id": 3, "fk__address__id": 300},
-		{"fk__user__id": 4, "fk__address__id": 400},
-		{"fk__user__id": 5, "fk__address__id": 500},
-	})
+	_, err = s.user.GetRelation("address").JunctionModel.AddMulti(context.Background(),
+		[]string{"fk__user__id", "fk__address__id"},
+		[][]interface{}{
+			{1, 100},
+			{1, 200},
+			{2, 200},
+			{2, 300},
+			{3, 300},
+			{4, 400},
+			{5, 500},
+		},
+	)
 	s.NoError(err)
 }
 

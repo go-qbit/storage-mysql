@@ -108,26 +108,14 @@ func (s *MySQL) Exec(ctx context.Context, sql string, a ...interface{}) (driver.
 	return res, err
 }
 
-func (s *MySQL) Add(ctx context.Context, m model.IModel, data []map[string]interface{}) ([]interface{}, error) {
-	uniqKeys := make(map[string]struct{})
-	for _, row := range data {
-		for k, _ := range row {
-			uniqKeys[k] = struct{}{}
-		}
-	}
-	insertKeys := make([]string, 0, len(uniqKeys))
-	for k, _ := range uniqKeys {
-		insertKeys = append(insertKeys, k)
-	}
-	sort.Strings(insertKeys)
-
+func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, data [][]interface{}) ([]interface{}, error) {
 	sqlBuf := NewSqlBuffer()
 
 	sqlBuf.WriteString("INSERT INTO ")
 	sqlBuf.WriteIdentifier(m.GetId())
 
 	sqlBuf.WriteByte('(')
-	sqlBuf.WriteIdentifiersList(insertKeys)
+	sqlBuf.WriteIdentifiersList(fieldsNames)
 	sqlBuf.WriteByte(')')
 
 	sqlBuf.WriteString("VALUES")
@@ -137,13 +125,7 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, data []map[string]inter
 			sqlBuf.WriteByte(',')
 		}
 		sqlBuf.WriteByte('(')
-		for j, name := range insertKeys {
-			if j != 0 {
-				sqlBuf.WriteByte(',')
-			}
-			sqlBuf.WriteValue(row[name])
-		}
-
+		sqlBuf.WriteValuesList(row)
 		sqlBuf.WriteByte(')')
 	}
 
