@@ -40,6 +40,10 @@ func (s *MySQL) Connect(dsn string) error {
 	return nil
 }
 
+func (s *MySQL) Disonnect() error {
+	return s.db.Close()
+}
+
 func (s *MySQL) NewModel(id string, fields []model.IFieldDefinition, pk []string) model.IModel {
 	mysqlFields := make([]IMysqlFieldDefinition, len(fields))
 	for i, _ := range fields {
@@ -97,7 +101,43 @@ func (s *MySQL) InitDB(ctx context.Context) error {
 }
 
 func (s *MySQL) Exec(ctx context.Context, sql string, a ...interface{}) (driver.Result, error) {
-	res, err := s.db.Exec(sql, a...)
+	ct := ctx.Value(s.transactionKey())
+
+	var (
+		res driver.Result
+		err error
+	)
+
+	if ct == nil {
+		res, err = s.db.Exec(sql, a...)
+	} else {
+		res, err = ct.(*transaction).tx.Exec(sql, a...)
+	}
+
+	if err != nil {
+		if warning, ok := err.(drvMysql.MySQLWarnings); ok {
+			println(warning.Error())
+			err = nil
+		}
+	}
+
+	return res, err
+}
+
+func (s *MySQL) RawQuery(ctx context.Context, query string, a ...interface{}) (*sql.Rows, error) {
+	ct := ctx.Value(s.transactionKey())
+
+	var (
+		res *sql.Rows
+		err error
+	)
+
+	if ct == nil {
+		res, err = s.db.Query(query, a...)
+	} else {
+		res, err = ct.(*transaction).tx.Query(query, a...)
+	}
+
 	if err != nil {
 		if warning, ok := err.(drvMysql.MySQLWarnings); ok {
 			println(warning.Error())

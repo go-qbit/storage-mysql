@@ -334,3 +334,49 @@ func (s *DBTestSuite) TestModel_GetAllToStruc() {
 		res,
 	)
 }
+
+func (s *DBTestSuite) TestModel_Transaction() {
+	_, err := s.storage.Exec(context.Background(), "CREATE TABLE number (n INT)")
+	if !s.NoError(err) {
+		return
+	}
+
+	ctx, err := s.storage.StartTransaction(context.Background())
+	if !s.NoError(err) {
+		return
+	}
+
+	_, err = s.storage.Exec(ctx, "INSERT INTO number VALUES(100)")
+	if !s.NoError(err) {
+		return
+	}
+
+	ctx, err = s.storage.StartTransaction(ctx)
+	if !s.NoError(err) {
+		return
+	}
+
+	_, err = s.storage.Exec(ctx, "UPDATE number SET n = 1000")
+	if !s.NoError(err) {
+		return
+	}
+
+	ctx, err = s.storage.Rollback(ctx)
+	if !s.NoError(err) {
+		return
+	}
+
+	ctx, err = s.storage.Commit(ctx)
+	if !s.NoError(err) {
+		return
+	}
+
+	rows, err := s.storage.RawQuery(ctx, "SELECT * FROM number")
+	if !s.NoError(err) {
+		return
+	}
+	s.True(rows.Next())
+	var n int
+	rows.Scan(&n)
+	s.Equal(100, n)
+}
