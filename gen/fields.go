@@ -204,7 +204,7 @@ func main() {
 		buf.WriteString("func (f *" + typeName + ") GetCaption() string  { return f.Caption }\n")
 		buf.WriteString("func (f *" + typeName + ") GetType() reflect.Type { return reflect.TypeOf(" + typeOf[mysqlType.goType] + ") }\n")
 		buf.WriteString("func (f *" + typeName + ") IsDerivable() bool { return false }\n")
-		buf.WriteString("func (f *" + typeName + ") IsRequired() bool { return f.NotNull && f.Default == nil }\n")
+		buf.WriteString("func (f *" + typeName + ") IsRequired() bool { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }\n")
 		buf.WriteString("func (f *" + typeName + ") GetDependsOn() []string { return nil }\n")
 		buf.WriteString("func (f *" + typeName + ") Calc(map[string]interface{}) (interface{}, error) { return nil, nil }\n")
 		buf.WriteString("func (f *" + typeName + ") Check(v interface{}) error {\n" +
@@ -228,16 +228,22 @@ func main() {
 			"return &" + typeName + "{id, caption, " + cloneFields + " required, f.Default, f.CheckFunc}\n" +
 			"}\n")
 
+		typeFields := make(map[string]struct{})
+		for _, ftype := range mysqlType.baseClass.Fields() {
+			typeFields[ftype.Name()] = struct{}{}
+		}
+
+		isAutoincremented := "false"
+		if _, exists := typeFields["AutoIncrement"]; exists {
+			isAutoincremented = "true"
+		}
+		buf.WriteString("func (f *" + typeName + ") IsAutoIncremented() bool { return " + isAutoincremented + " }\n")
+
 		buf.WriteString("" +
 			"func (f *" + typeName + ") WriteSQL(sqlBuf *SqlBuffer) {\n" +
 			"	sqlBuf.WriteIdentifier(f.Id)\n\n" +
 			"	sqlBuf.WriteByte(' ')\n" +
 			"	sqlBuf.WriteString(\"" + mysqlType.mysqlType + "\")\n\n")
-
-		typeFields := make(map[string]struct{})
-		for _, ftype := range mysqlType.baseClass.Fields() {
-			typeFields[ftype.Name()] = struct{}{}
-		}
 
 		if _, exists := typeFields["Length"]; exists {
 			buf.WriteString("" +

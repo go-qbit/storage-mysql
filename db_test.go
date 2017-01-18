@@ -159,18 +159,24 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 }
 
 func (s *DBTestSuite) TestModel_Add() {
-	_, err := s.user.AddFromStructs(context.Background(), []struct {
-		Id       int
+	data, err := s.user.AddFromStructs(context.Background(), []struct {
 		Name     string
 		Lastname string
 	}{
-		{Id: 1, Name: "Ivan", Lastname: "Sidorov"},
-		{Id: 2, Name: "Petr", Lastname: "Ivanov"},
-		{Id: 3, Name: "James", Lastname: "Bond"},
-		{Id: 4, Name: "John", Lastname: "Connor"},
-		{Id: 5, Name: "Sara", Lastname: "Connor"},
+		{Name: "Ivan", Lastname: "Sidorov"},
+		{Name: "Petr", Lastname: "Ivanov"},
+		{Name: "James", Lastname: "Bond"},
+		{Name: "John", Lastname: "Connor"},
+		{Name: "Sara", Lastname: "Connor"},
 	})
 	s.NoError(err)
+	s.Equal([]interface{}{
+		[]interface{}{uint32(1)},
+		[]interface{}{uint32(2)},
+		[]interface{}{uint32(3)},
+		[]interface{}{uint32(4)},
+		[]interface{}{uint32(5)},
+	}, data)
 
 	_, err = s.phone.AddFromStructs(context.Background(), []struct {
 		Id          int

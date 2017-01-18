@@ -8,5 +8,6 @@ import (
 
 type IMysqlFieldDefinition interface {
 	model.IFieldDefinition
+	IsAutoIncremented() bool
 	WriteSQL(buf *SqlBuffer)
 }

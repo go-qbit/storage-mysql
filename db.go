@@ -169,12 +169,63 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 		sqlBuf.WriteByte(')')
 	}
 
-	_, err := s.db.Exec(sqlBuf.String(), sqlBuf.GetArgs()...)
+	execRes, err := s.db.Exec(sqlBuf.String(), sqlBuf.GetArgs()...)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	pKFieldsNames := m.GetPKFieldsNames()
+	fieldsPos := make(map[string]int)
+	for i, fieldName := range fieldsNames {
+		fieldsPos[fieldName] = i
+	}
+
+	lastInsertId := int64(0)
+	for _, fieldName := range pKFieldsNames {
+		if _, exists := fieldsPos[fieldName]; !exists {
+			if m.GetFieldDefinition(fieldName).(IMysqlFieldDefinition).IsAutoIncremented() {
+				lastInsertId, _ = execRes.LastInsertId()
+				break
+			}
+		}
+	}
+
+	res := make([]interface{}, len(data))
+	for i, row := range data {
+		rowRes := make([]interface{}, len(pKFieldsNames))
+		for j, fieldName := range pKFieldsNames {
+			fp, exists := fieldsPos[fieldName]
+			if exists {
+				rowRes[j] = row[fp]
+			}
+			if (!exists || rowRes[j] == nil) && m.GetFieldDefinition(fieldName).(IMysqlFieldDefinition).IsAutoIncremented() {
+				switch m.GetFieldDefinition(fieldName).GetType().Kind() {
+				case reflect.Int8:
+					rowRes[j] = int8(lastInsertId)
+				case reflect.Int16:
+					rowRes[j] = int16(lastInsertId)
+				case reflect.Int32:
+					rowRes[j] = int32(lastInsertId)
+				case reflect.Int64:
+					rowRes[j] = int64(lastInsertId)
+				case reflect.Uint8:
+					rowRes[j] = uint8(lastInsertId)
+				case reflect.Uint16:
+					rowRes[j] = uint16(lastInsertId)
+				case reflect.Uint32:
+					rowRes[j] = uint32(lastInsertId)
+				case reflect.Uint64:
+					rowRes[j] = uint64(lastInsertId)
+				default:
+					panic("Not implemented")
+				}
+				lastInsertId++
+			}
+		}
+		res[i] = rowRes
+	}
+
+	return res, nil
 }
 
 func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string, options model.QueryOptions) ([]map[string]interface{}, error) {
