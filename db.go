@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"database/sql/driver"
+	"fmt"
 	"reflect"
 	"sort"
 	"strconv"
@@ -92,7 +93,7 @@ func (s *MySQL) InitDB(ctx context.Context) error {
 	for _, modelLevel := range modelLevels {
 		sqlBuf.Reset()
 		s.models[modelLevel.name].(*BaseModel).WriteCreateSQL(sqlBuf)
-		if _, err := s.Exec(ctx, sqlBuf.String(), sqlBuf.GetArgs()...); err != nil {
+		if _, err := s.Exec(ctx, sqlBuf.GetSQL(), sqlBuf.GetArgs()...); err != nil {
 			return err
 		}
 	}
@@ -169,7 +170,7 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 		sqlBuf.WriteByte(')')
 	}
 
-	execRes, err := s.db.Exec(sqlBuf.String(), sqlBuf.GetArgs()...)
+	execRes, err := s.db.Exec(sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
 	if err != nil {
 		return nil, err
 	}
@@ -265,7 +266,7 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 
 	//fmt.Println(sqlBuf.String())
 
-	rows, err := s.db.Query(sqlBuf.String(), sqlBuf.GetArgs()...)
+	rows, err := s.db.Query(sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
 	if err != nil {
 		return nil, err
 	}
@@ -303,7 +304,40 @@ func QuoteIdentifier(identifier string) string {
 	return "`" + strings.Replace(identifier, "`", "``", -1) + "`"
 }
 
-func Quote(value string) string {
+func Quote(value interface{}) string {
 	// FixMe: Replace termporary solution
-	return "'" + strings.Replace(value, "'", "''", -1) + "'"
+	var v string
+
+	switch value := value.(type) {
+	case string:
+		v = strings.Replace(value, "'", "''", -1)
+	case int:
+		v = strconv.FormatInt(int64(value), 10)
+	case int8:
+		v = strconv.FormatInt(int64(value), 10)
+	case int16:
+		v = strconv.FormatInt(int64(value), 10)
+	case int32:
+		v = strconv.FormatInt(int64(value), 10)
+	case int64:
+		v = strconv.FormatInt(value, 10)
+	case uint:
+		v = strconv.FormatUint(uint64(value), 10)
+	case uint8:
+		v = strconv.FormatUint(uint64(value), 10)
+	case uint16:
+		v = strconv.FormatUint(uint64(value), 10)
+	case uint32:
+		v = strconv.FormatUint(uint64(value), 10)
+	case uint64:
+		v = strconv.FormatUint(value, 10)
+	case float32:
+		v = strconv.FormatFloat(float64(value), 'f', -1, 32)
+	case float64:
+		v = strconv.FormatFloat(value, 'f', -1, 64)
+	default:
+		panic(fmt.Sprintf("%T is not implemented", value))
+	}
+
+	return "'" + v + "'"
 }
