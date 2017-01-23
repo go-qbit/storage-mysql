@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/go-qbit/qerror"
+	"github.com/go-qbit/timelog"
 	"strconv"
 	"sync"
 	"unsafe"
@@ -21,7 +22,9 @@ func (s *MySQL) StartTransaction(ctx context.Context) (context.Context, error) {
 	t := ctx.Value(s.transactionKey())
 
 	if t == nil {
+		ctx = timelog.Start(ctx, "BEGIN")
 		tx, err := s.db.Begin()
+		ctx = timelog.Finish(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -67,7 +70,10 @@ func (s *MySQL) Commit(ctx context.Context) (context.Context, error) {
 		return ctx, nil
 	}
 
-	if err := t.tx.Commit(); err != nil {
+	ctx = timelog.Start(ctx, "COMMIT")
+	err := t.tx.Commit()
+	ctx = timelog.Finish(ctx)
+	if err != nil {
 		return nil, err
 	}
 
@@ -96,7 +102,10 @@ func (s *MySQL) Rollback(ctx context.Context) (context.Context, error) {
 		return ctx, nil
 	}
 
-	if err := t.tx.Rollback(); err != nil {
+	ctx = timelog.Start(ctx, "ROLLBACK")
+	err := t.tx.Rollback()
+	ctx = timelog.Finish(ctx)
+	if err != nil {
 		return nil, err
 	}
 

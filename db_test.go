@@ -10,18 +10,20 @@ import (
 	"github.com/go-qbit/model/expr"
 	"github.com/go-qbit/storage-mysql"
 	"github.com/go-qbit/storage-mysql/test"
+	"github.com/go-qbit/timelog"
 
 	"github.com/stretchr/testify/suite"
 )
 
 var (
-	user    string
-	pass    string
-	prot    string
-	addr    string
-	dbname  string
-	dsn     string
-	netAddr string
+	user      string
+	pass      string
+	prot      string
+	addr      string
+	dbname    string
+	mysqlDsn  string
+	gotestDsn string
+	netAddr   string
 )
 
 var (
@@ -53,7 +55,8 @@ func init() {
 	addr = env("MYSQL_TEST_ADDR", "localhost:3306")
 	dbname = env("MYSQL_TEST_DBNAME", "gotest")
 	netAddr = fmt.Sprintf("%s(%s)", prot, addr)
-	dsn = fmt.Sprintf("%s:%s@%s/%s?timeout=30s&strict=true", user, pass, netAddr, "mysql")
+	mysqlDsn = fmt.Sprintf("%s:%s@%s/%s?timeout=30s&strict=true&", user, pass, netAddr, "mysql")
+	gotestDsn = fmt.Sprintf("%s:%s@%s/%s?timeout=30s&strict=true&", user, pass, netAddr, dbname)
 }
 
 type DBTestSuite struct {
@@ -81,7 +84,7 @@ func (s *DBTestSuite) SetupTest() {
 	model.AddManyToOneRelation(s.message, s.user)
 	model.AddManyToManyRelation(s.user, s.address, s.storage)
 
-	if !s.NoError(s.storage.Connect(dsn)) {
+	if !s.NoError(s.storage.Connect(mysqlDsn)) {
 		return
 	}
 
@@ -95,8 +98,7 @@ func (s *DBTestSuite) SetupTest() {
 		return
 	}
 
-	_, err = s.storage.Exec(context.Background(), "USE "+dbname)
-	if !s.NoError(err) {
+	if !s.NoError(s.storage.Connect(gotestDsn)) {
 		return
 	}
 
@@ -159,7 +161,12 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 }
 
 func (s *DBTestSuite) TestModel_Add() {
-	data, err := s.user.AddFromStructs(context.Background(), []struct {
+	ctx := timelog.Start(context.Background(), "Add data")
+
+	ctx, err := s.storage.StartTransaction(ctx)
+	s.NoError(err)
+
+	data, err := s.user.AddFromStructs(ctx, []struct {
 		Name     string
 		Lastname string
 	}{
@@ -170,6 +177,7 @@ func (s *DBTestSuite) TestModel_Add() {
 		{Name: "Sara", Lastname: "Connor"},
 	})
 	s.NoError(err)
+
 	s.Equal([]interface{}{
 		[]interface{}{uint32(1)},
 		[]interface{}{uint32(2)},
@@ -178,7 +186,7 @@ func (s *DBTestSuite) TestModel_Add() {
 		[]interface{}{uint32(5)},
 	}, data)
 
-	_, err = s.phone.AddFromStructs(context.Background(), []struct {
+	_, err = s.phone.AddFromStructs(ctx, []struct {
 		Id          int
 		CountryCode int
 		Code        int
@@ -189,7 +197,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	})
 	s.NoError(err)
 
-	_, err = s.message.AddFromStructs(context.Background(), []struct {
+	_, err = s.message.AddFromStructs(ctx, []struct {
 		Id       int
 		Text     string
 		FkUserId int `field:"fk__user__id"`
@@ -201,7 +209,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	})
 	s.NoError(err)
 
-	_, err = s.address.AddFromStructs(context.Background(), []struct {
+	_, err = s.address.AddFromStructs(ctx, []struct {
 		Id      int
 		Country string
 		City    string
@@ -215,7 +223,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	})
 	s.NoError(err)
 
-	_, err = s.user.GetRelation("address").JunctionModel.AddMulti(context.Background(),
+	_, err = s.user.GetRelation("address").JunctionModel.AddMulti(ctx,
 		[]string{"fk__user__id", "fk__address__id"},
 		[][]interface{}{
 			{1, 100},
@@ -228,6 +236,12 @@ func (s *DBTestSuite) TestModel_Add() {
 		},
 	)
 	s.NoError(err)
+
+	ctx, err = s.storage.Commit(ctx)
+	s.NoError(err)
+
+	timelog.Finish(ctx)
+	//println(timelog.Get(ctx).Analyze().String())
 }
 
 func (s *DBTestSuite) TestModel_Query() {
@@ -252,8 +266,10 @@ func (s *DBTestSuite) TestModel_Query() {
 	}, data)
 }
 
-func (s *DBTestSuite) TestModel_GetAllToStruc() {
+func (s *DBTestSuite) TestModel_GetAllToStruct() {
 	s.TestModel_Add()
+
+	ctx := timelog.Start(context.Background(), "Get all to struct")
 
 	type PhoneType struct {
 		FormattedNumber string `field:"formated_number"`
@@ -280,9 +296,7 @@ func (s *DBTestSuite) TestModel_GetAllToStruc() {
 	var res []UserType
 
 	s.NoError(s.user.GetAllToStruct(
-		context.Background(),
-		&res,
-		model.GetAllOptions{
+		ctx, &res, model.GetAllOptions{
 			Filter: expr.Lt(expr.ModelField("id"), expr.Value(4)),
 			OrderBy: []model.Order{
 				{"id", false},
@@ -290,6 +304,9 @@ func (s *DBTestSuite) TestModel_GetAllToStruc() {
 			Limit: 3,
 		},
 	))
+
+	timelog.Finish(ctx)
+	//println(timelog.Get(ctx).Analyze().String())
 
 	s.Equal(
 		[]UserType{

@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"database/sql/driver"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/qerror"
+	"github.com/go-qbit/timelog"
 
 	drvMysql "github.com/go-sql-driver/mysql"
 )
@@ -102,6 +104,9 @@ func (s *MySQL) InitDB(ctx context.Context) error {
 }
 
 func (s *MySQL) Exec(ctx context.Context, sql string, a ...interface{}) (driver.Result, error) {
+	ctx = timelog.Start(ctx, &SqlBuffer{Buffer: bytes.NewBufferString(sql), args: a})
+	defer timelog.Finish(ctx)
+
 	ct := ctx.Value(s.transactionKey())
 
 	var (
@@ -170,7 +175,9 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 		sqlBuf.WriteByte(')')
 	}
 
+	ctx = timelog.Start(ctx, sqlBuf)
 	execRes, err := s.db.Exec(sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
+	ctx = timelog.Finish(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -266,7 +273,9 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 
 	//fmt.Println(sqlBuf.String())
 
+	ctx = timelog.Start(ctx, sqlBuf)
 	rows, err := s.db.Query(sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
+	ctx = timelog.Finish(ctx)
 	if err != nil {
 		return nil, err
 	}
