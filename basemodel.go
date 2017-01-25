@@ -132,4 +132,5 @@ func (m *BaseModel) WriteCreateSQL(sqlBuf *SqlBuffer) {
 	}
 
 	sqlBuf.WriteByte(')')
+	sqlBuf.WriteString("ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8'")
 }

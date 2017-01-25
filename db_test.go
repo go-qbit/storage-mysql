@@ -118,7 +118,7 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"`address` VARCHAR(255) NOT NULL,"+
 		"PRIMARY KEY (`id`),"+
 		"UNIQUE INDEX `uniq_address__country_city_address`(`country`,`city`,`address`)"+
-		");\n"+
+		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `user` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
@@ -127,7 +127,7 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"PRIMARY KEY (`id`),"+
 		"INDEX `user__name`(`name`),"+
 		"INDEX `user__lastname_name`(`lastname`,`name`)"+
-		");\n"+
+		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `_junction__user__address` ("+
 		"`fk__user__id` INT UNSIGNED NOT NULL,"+
@@ -136,7 +136,8 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"FOREIGN KEY `fk__junction__user__address__fk__user__id___user__id`(`fk__user__id`)"+
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT,"+
 		"FOREIGN KEY `fk__junction__user__address__fk__address__id___address__id`(`fk__address__id`)"+
-		"REFERENCES `address`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT);\n"+
+		"REFERENCES `address`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT" +
+		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `message` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
@@ -145,7 +146,7 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"PRIMARY KEY (`id`),"+
 		"FOREIGN KEY `fk_message__fk__user__id___user__id`(`fk__user__id`)"+
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
-		");\n"+
+		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `phone` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
@@ -156,7 +157,7 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"UNIQUE INDEX `uniq_phone__country_code_code_number`(`country_code`,`code`,`number`),"+
 		"FOREIGN KEY `fk_phone__id___user__id`(`id`)"+
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
-		");\n", sqlBuf.String(),
+		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n", sqlBuf.String(),
 	)
 }
 
