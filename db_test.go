@@ -133,10 +133,10 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"`fk__user__id` INT UNSIGNED NOT NULL,"+
 		"`fk__address__id` INT UNSIGNED NOT NULL,"+
 		"PRIMARY KEY (`fk__user__id`,`fk__address__id`),"+
-		"FOREIGN KEY `fk__junction__user__address__fk__user__id___user__id`(`fk__user__id`)"+
-		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT,"+
 		"FOREIGN KEY `fk__junction__user__address__fk__address__id___address__id`(`fk__address__id`)"+
-		"REFERENCES `address`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT" +
+		"REFERENCES `address`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT,"+
+		"FOREIGN KEY `fk__junction__user__address__fk__user__id___user__id`(`fk__user__id`)"+
+		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `message` ("+
@@ -176,7 +176,7 @@ func (s *DBTestSuite) TestModel_Add() {
 		{Name: "James", Lastname: "Bond"},
 		{Name: "John", Lastname: "Connor"},
 		{Name: "Sara", Lastname: "Connor"},
-	})
+	}, model.AddOptions{Replace: true})
 	s.NoError(err)
 
 	s.Equal([]interface{}{
@@ -195,7 +195,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	}{
 		{Id: 1, CountryCode: 1, Code: 111, Number: 1111111},
 		{Id: 3, CountryCode: 3, Code: 333, Number: 3333333},
-	})
+	}, model.AddOptions{})
 	s.NoError(err)
 
 	_, err = s.message.AddFromStructs(ctx, []struct {
@@ -207,7 +207,7 @@ func (s *DBTestSuite) TestModel_Add() {
 		{Id: 20, Text: "Message 2", FkUserId: 1},
 		{Id: 30, Text: "Message 3", FkUserId: 1},
 		{Id: 40, Text: "Message 4", FkUserId: 2},
-	})
+	}, model.AddOptions{})
 	s.NoError(err)
 
 	_, err = s.address.AddFromStructs(ctx, []struct {
@@ -221,7 +221,7 @@ func (s *DBTestSuite) TestModel_Add() {
 		{Id: 300, Country: "USA", City: "Crowley", Address: "524 Pecan Street"},
 		{Id: 400, Country: "USA", City: "Arlington", Address: "1023 Bridges Dr"},
 		{Id: 500, Country: "USA", City: "Louisville", Address: "1246 Everett Avenue"},
-	})
+	}, model.AddOptions{})
 	s.NoError(err)
 
 	_, err = s.user.GetRelation("address").JunctionModel.AddMulti(ctx,
@@ -234,7 +234,7 @@ func (s *DBTestSuite) TestModel_Add() {
 			{3, 300},
 			{4, 400},
 			{5, 500},
-		},
+		}, model.AddOptions{},
 	)
 	s.NoError(err)
 
@@ -248,7 +248,7 @@ func (s *DBTestSuite) TestModel_Add() {
 func (s *DBTestSuite) TestModel_Query() {
 	s.TestModel_Add()
 
-	data, err := s.storage.Query(context.Background(), s.user, []string{"id", "name"}, model.QueryOptions{
+	data, err := s.storage.Query(context.Background(), s.user, []string{"id", "name"}, model.GetAllOptions{
 		OrderBy: []model.Order{
 			{"id", false},
 			{"name", true},

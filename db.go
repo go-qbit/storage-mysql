@@ -154,10 +154,14 @@ func (s *MySQL) RawQuery(ctx context.Context, query string, a ...interface{}) (*
 	return res, err
 }
 
-func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, data [][]interface{}) ([]interface{}, error) {
+func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, data [][]interface{}, opts model.AddOptions) ([]interface{}, error) {
 	sqlBuf := NewSqlBuffer()
 
-	sqlBuf.WriteString("INSERT INTO ")
+	if opts.Replace {
+		sqlBuf.WriteString("REPLACE INTO ")
+	} else {
+		sqlBuf.WriteString("INSERT INTO ")
+	}
 	sqlBuf.WriteIdentifier(m.GetId())
 
 	sqlBuf.WriteByte('(')
@@ -236,7 +240,7 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 	return res, nil
 }
 
-func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string, options model.QueryOptions) ([]map[string]interface{}, error) {
+func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string, options model.GetAllOptions) ([]map[string]interface{}, error) {
 	sqlBuf := NewSqlBuffer()
 
 	sqlBuf.WriteString("SELECT ")
