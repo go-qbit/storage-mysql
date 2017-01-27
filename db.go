@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"os"
 	"reflect"
 	"sort"
 	"strconv"
@@ -18,6 +19,8 @@ import (
 
 	drvMysql "github.com/go-sql-driver/mysql"
 )
+
+var debugSQL = os.Getenv("MYSQL_DEBUG") != ""
 
 type MySQL struct {
 	db        *sql.DB
@@ -104,7 +107,9 @@ func (s *MySQL) InitDB(ctx context.Context) error {
 }
 
 func (s *MySQL) Exec(ctx context.Context, sql string, a ...interface{}) (driver.Result, error) {
-	ctx = timelog.Start(ctx, &SqlBuffer{Buffer: bytes.NewBufferString(sql), args: a})
+	sqlBuf := &SqlBuffer{Buffer: bytes.NewBufferString(sql), args: a}
+
+	ctx = timelog.Start(ctx, sqlBuf)
 	defer timelog.Finish(ctx)
 
 	ct := ctx.Value(s.transactionKey())
@@ -113,6 +118,10 @@ func (s *MySQL) Exec(ctx context.Context, sql string, a ...interface{}) (driver.
 		res driver.Result
 		err error
 	)
+
+	if debugSQL {
+		println(sqlBuf.String())
+	}
 
 	if ct == nil {
 		res, err = s.db.Exec(sql, a...)
@@ -131,12 +140,21 @@ func (s *MySQL) Exec(ctx context.Context, sql string, a ...interface{}) (driver.
 }
 
 func (s *MySQL) RawQuery(ctx context.Context, query string, a ...interface{}) (*sql.Rows, error) {
+	sqlBuf := &SqlBuffer{Buffer: bytes.NewBufferString(query), args: a}
+
+	ctx = timelog.Start(ctx, sqlBuf)
+	defer timelog.Finish(ctx)
+
 	ct := ctx.Value(s.transactionKey())
 
 	var (
 		res *sql.Rows
 		err error
 	)
+
+	if debugSQL {
+		println(sqlBuf.String())
+	}
 
 	if ct == nil {
 		res, err = s.db.Query(query, a...)
@@ -188,9 +206,7 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 		}
 	}
 
-	ctx = timelog.Start(ctx, sqlBuf)
 	execRes, err := s.Exec(ctx, sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
-	ctx = timelog.Finish(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -284,11 +300,7 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 		}
 	}
 
-	//fmt.Println(sqlBuf.String())
-
-	ctx = timelog.Start(ctx, sqlBuf)
-	rows, err := s.db.Query(sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
-	ctx = timelog.Finish(ctx)
+	rows, err := s.RawQuery(ctx, sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
 	if err != nil {
 		return nil, err
 	}
@@ -332,7 +344,7 @@ func Quote(value interface{}) string {
 
 	switch value := value.(type) {
 	case string:
-		v = strings.Replace(value, "'", "''", -1)
+		v = "'" + strings.Replace(value, "'", "''", -1) + "'"
 	case int:
 		v = strconv.FormatInt(int64(value), 10)
 	case int8:
@@ -357,12 +369,18 @@ func Quote(value interface{}) string {
 		v = strconv.FormatFloat(float64(value), 'f', -1, 32)
 	case float64:
 		v = strconv.FormatFloat(value, 'f', -1, 64)
+	case bool:
+		if value {
+			v = "TRUE"
+		} else {
+			v = "FALSE"
+		}
 
 	case *string:
 		if value == nil {
 			v = "NULL"
 		} else {
-			v = strings.Replace(*value, "'", "''", -1)
+			v = "'" + strings.Replace(*value, "'", "''", -1) + "'"
 		}
 	case *int:
 		if value == nil {
@@ -436,10 +454,20 @@ func Quote(value interface{}) string {
 		} else {
 			v = strconv.FormatFloat(*value, 'f', -1, 64)
 		}
+	case *bool:
+		if value == nil {
+			v = "NULL"
+		} else {
+			if *value {
+				v = "TRUE"
+			} else {
+				v = "FALSE"
+			}
+		}
 
 	default:
 		panic(fmt.Sprintf("%T is not implemented", value))
 	}
 
-	return "'" + v + "'"
+	return v
 }
