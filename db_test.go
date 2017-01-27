@@ -81,7 +81,7 @@ func (s *DBTestSuite) SetupTest() {
 	s.address = test.NewAddress(s.storage)
 
 	model.AddOneToOneRelation(s.phone, s.user, false)
-	model.AddManyToOneRelation(s.message, s.user)
+	model.AddManyToOneRelation(s.message, s.user, false)
 	model.AddManyToManyRelation(s.user, s.address, s.storage)
 
 	if !s.NoError(s.storage.Connect(mysqlDsn)) {
@@ -134,18 +134,18 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"`fk__address__id` INT UNSIGNED NOT NULL,"+
 		"PRIMARY KEY (`fk__user__id`,`fk__address__id`),"+
 		"FOREIGN KEY `fk__junction__user__address__fk__address__id___address__id`(`fk__address__id`)"+
-		"REFERENCES `address`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT,"+
+		"REFERENCES `address`(`id`)ON UPDATE CASCADE ON DELETE RESTRICT,"+
 		"FOREIGN KEY `fk__junction__user__address__fk__user__id___user__id`(`fk__user__id`)"+
-		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
+		"REFERENCES `user`(`id`)ON UPDATE CASCADE ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `message` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
 		"`text` VARCHAR(255) NOT NULL,"+
-		"`fk__user__id` INT UNSIGNED NOT NULL,"+
+		"`fk__user__id` INT UNSIGNED,"+
 		"PRIMARY KEY (`id`),"+
 		"FOREIGN KEY `fk_message__fk__user__id___user__id`(`fk__user__id`)"+
-		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
+		"REFERENCES `user`(`id`)ON UPDATE CASCADE ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `phone` ("+
@@ -156,7 +156,7 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"PRIMARY KEY (`id`),"+
 		"UNIQUE INDEX `uniq_phone__country_code_code_number`(`country_code`,`code`,`number`),"+
 		"FOREIGN KEY `fk_phone__id___user__id`(`id`)"+
-		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
+		"REFERENCES `user`(`id`)ON UPDATE CASCADE ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n", sqlBuf.String(),
 	)
 }

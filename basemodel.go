@@ -127,7 +127,7 @@ func (m *BaseModel) WriteCreateSQL(sqlBuf *SqlBuffer) {
 			sqlBuf.WriteIdentifier(extModel)
 			sqlBuf.WriteByte('(')
 			sqlBuf.WriteIdentifiersList(relation.FkFieldsNames)
-			sqlBuf.WriteString(")ON UPDATE RESTRICT ON DELETE RESTRICT")
+			sqlBuf.WriteString(")ON UPDATE CASCADE ON DELETE RESTRICT")
 		}
 	}
 
