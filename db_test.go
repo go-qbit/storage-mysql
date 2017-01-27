@@ -134,9 +134,9 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"`fk__address__id` INT UNSIGNED NOT NULL,"+
 		"PRIMARY KEY (`fk__user__id`,`fk__address__id`),"+
 		"FOREIGN KEY `fk__junction__user__address__fk__address__id___address__id`(`fk__address__id`)"+
-		"REFERENCES `address`(`id`)ON UPDATE CASCADE ON DELETE RESTRICT,"+
+		"REFERENCES `address`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT,"+
 		"FOREIGN KEY `fk__junction__user__address__fk__user__id___user__id`(`fk__user__id`)"+
-		"REFERENCES `user`(`id`)ON UPDATE CASCADE ON DELETE RESTRICT"+
+		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `message` ("+
@@ -145,7 +145,7 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"`fk__user__id` INT UNSIGNED,"+
 		"PRIMARY KEY (`id`),"+
 		"FOREIGN KEY `fk_message__fk__user__id___user__id`(`fk__user__id`)"+
-		"REFERENCES `user`(`id`)ON UPDATE CASCADE ON DELETE RESTRICT"+
+		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `phone` ("+
@@ -156,7 +156,7 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"PRIMARY KEY (`id`),"+
 		"UNIQUE INDEX `uniq_phone__country_code_code_number`(`country_code`,`code`,`number`),"+
 		"FOREIGN KEY `fk_phone__id___user__id`(`id`)"+
-		"REFERENCES `user`(`id`)ON UPDATE CASCADE ON DELETE RESTRICT"+
+		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n", sqlBuf.String(),
 	)
 }
@@ -176,7 +176,7 @@ func (s *DBTestSuite) TestModel_Add() {
 		{Name: "James", Lastname: "Bond"},
 		{Name: "John", Lastname: "Connor"},
 		{Name: "Sara", Lastname: "Connor"},
-	}, model.AddOptions{Replace: true})
+	}, model.AddOptions{})
 	s.NoError(err)
 
 	s.Equal([]interface{}{
@@ -187,7 +187,7 @@ func (s *DBTestSuite) TestModel_Add() {
 		[]interface{}{uint32(5)},
 	}, data)
 
-	_, err = s.phone.AddFromStructs(ctx, []struct {
+	phones := []struct {
 		Id          int
 		CountryCode int
 		Code        int
@@ -195,7 +195,11 @@ func (s *DBTestSuite) TestModel_Add() {
 	}{
 		{Id: 1, CountryCode: 1, Code: 111, Number: 1111111},
 		{Id: 3, CountryCode: 3, Code: 333, Number: 3333333},
-	}, model.AddOptions{})
+	}
+	_, err = s.phone.AddFromStructs(ctx, phones, model.AddOptions{})
+	s.NoError(err)
+
+	_, err = s.phone.AddFromStructs(ctx, phones, model.AddOptions{Replace: true})
 	s.NoError(err)
 
 	_, err = s.message.AddFromStructs(ctx, []struct {

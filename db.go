@@ -157,11 +157,7 @@ func (s *MySQL) RawQuery(ctx context.Context, query string, a ...interface{}) (*
 func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, data [][]interface{}, opts model.AddOptions) ([]interface{}, error) {
 	sqlBuf := NewSqlBuffer()
 
-	if opts.Replace {
-		sqlBuf.WriteString("REPLACE INTO ")
-	} else {
-		sqlBuf.WriteString("INSERT INTO ")
-	}
+	sqlBuf.WriteString("INSERT INTO ")
 	sqlBuf.WriteIdentifier(m.GetId())
 
 	sqlBuf.WriteByte('(')
@@ -179,8 +175,21 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 		sqlBuf.WriteByte(')')
 	}
 
+	if opts.Replace {
+		sqlBuf.WriteString("ON DUPLICATE KEY UPDATE ")
+		for i, fieldName := range fieldsNames {
+			if i > 0 {
+				sqlBuf.WriteByte(',')
+			}
+			sqlBuf.WriteIdentifier(fieldName)
+			sqlBuf.WriteString("=VALUES(")
+			sqlBuf.WriteIdentifier(fieldName)
+			sqlBuf.WriteByte(')')
+		}
+	}
+
 	ctx = timelog.Start(ctx, sqlBuf)
-	execRes, err := s.db.Exec(sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
+	execRes, err := s.Exec(ctx, sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
 	ctx = timelog.Finish(ctx)
 	if err != nil {
 		return nil, err
@@ -348,6 +357,86 @@ func Quote(value interface{}) string {
 		v = strconv.FormatFloat(float64(value), 'f', -1, 32)
 	case float64:
 		v = strconv.FormatFloat(value, 'f', -1, 64)
+
+	case *string:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strings.Replace(*value, "'", "''", -1)
+		}
+	case *int:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatInt(int64(*value), 10)
+		}
+	case *int8:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatInt(int64(*value), 10)
+		}
+	case *int16:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatInt(int64(*value), 10)
+		}
+	case *int32:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatInt(int64(*value), 10)
+		}
+	case *int64:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatInt(*value, 10)
+		}
+	case *uint:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatUint(uint64(*value), 10)
+		}
+	case *uint8:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatUint(uint64(*value), 10)
+		}
+	case *uint16:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatUint(uint64(*value), 10)
+		}
+	case *uint32:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatUint(uint64(*value), 10)
+		}
+	case *uint64:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatUint(*value, 10)
+		}
+	case *float32:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatFloat(float64(*value), 'f', -1, 32)
+		}
+	case *float64:
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = strconv.FormatFloat(*value, 'f', -1, 64)
+		}
+
 	default:
 		panic(fmt.Sprintf("%T is not implemented", value))
 	}
