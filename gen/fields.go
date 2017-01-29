@@ -198,6 +198,7 @@ func main() {
 		buf.WriteString("NotNull bool\n")
 		buf.WriteString("Default *" + mysqlType.goType + "\n")
 		buf.WriteString("CheckFunc func(" + mysqlType.goType + ") error\n")
+		buf.WriteString("CleanFunc func(" + mysqlType.goType + ") (" + mysqlType.goType + ", error)\n")
 		buf.WriteString("}\n")
 
 		buf.WriteString("func (f *" + typeName + ") GetId() string { return f.Id }\n")
@@ -214,6 +215,13 @@ func main() {
 			"		return nil\n" +
 			"	}\n" +
 			"}\n")
+		buf.WriteString("func (f *" + typeName + ") Clean(v interface{}) (interface{}, error) {\n" +
+			"	if f.CleanFunc != nil {\n" +
+			"		return f.CleanFunc(v.(" + mysqlType.goType + "))\n" +
+			"	} else {\n" +
+			"		return v, nil\n" +
+			"	}\n" +
+			"}\n")
 
 		var cloneFields string
 		for _, field := range mysqlType.baseClass.Fields() {
@@ -225,7 +233,7 @@ func main() {
 		}
 
 		buf.WriteString("func (f *" + typeName + ") CloneForFK(id string, caption string, required bool) model.IFieldDefinition {\n" +
-			"return &" + typeName + "{id, caption, " + cloneFields + " required, f.Default, f.CheckFunc}\n" +
+			"return &" + typeName + "{id, caption, " + cloneFields + " required, f.Default, f.CheckFunc, f.CleanFunc}\n" +
 			"}\n")
 
 		typeFields := make(map[string]struct{})

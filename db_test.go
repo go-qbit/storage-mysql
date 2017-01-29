@@ -130,21 +130,21 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `_junction__user__address` ("+
-		"`fk__user__id` INT UNSIGNED NOT NULL,"+
-		"`fk__address__id` INT UNSIGNED NOT NULL,"+
-		"PRIMARY KEY (`fk__user__id`,`fk__address__id`),"+
-		"FOREIGN KEY `fk__junction__user__address__fk__address__id___address__id`(`fk__address__id`)"+
+		"`fk_user_id` INT UNSIGNED NOT NULL,"+
+		"`fk_address_id` INT UNSIGNED NOT NULL,"+
+		"PRIMARY KEY (`fk_user_id`,`fk_address_id`),"+
+		"FOREIGN KEY `fk__junction__user__address__fk_address_id___address__id`(`fk_address_id`)"+
 		"REFERENCES `address`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT,"+
-		"FOREIGN KEY `fk__junction__user__address__fk__user__id___user__id`(`fk__user__id`)"+
+		"FOREIGN KEY `fk__junction__user__address__fk_user_id___user__id`(`fk_user_id`)"+
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
 		"CREATE TABLE `message` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
 		"`text` VARCHAR(255) NOT NULL,"+
-		"`fk__user__id` INT UNSIGNED,"+
+		"`fk_user_id` INT UNSIGNED,"+
 		"PRIMARY KEY (`id`),"+
-		"FOREIGN KEY `fk_message__fk__user__id___user__id`(`fk__user__id`)"+
+		"FOREIGN KEY `fk_message__fk_user_id___user__id`(`fk_user_id`)"+
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 
@@ -167,7 +167,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	ctx, err := s.storage.StartTransaction(ctx)
 	s.NoError(err)
 
-	data, err := s.user.AddFromStructs(ctx, []struct {
+	pks, err := s.user.AddFromStructs(ctx, []struct {
 		Name     string
 		Lastname string
 	}{
@@ -179,13 +179,13 @@ func (s *DBTestSuite) TestModel_Add() {
 	}, model.AddOptions{})
 	s.NoError(err)
 
-	s.Equal([]interface{}{
+	s.Equal(model.NewData([]string{"id"}, [][]interface{}{
 		[]interface{}{uint32(1)},
 		[]interface{}{uint32(2)},
 		[]interface{}{uint32(3)},
 		[]interface{}{uint32(4)},
 		[]interface{}{uint32(5)},
-	}, data)
+	}), pks)
 
 	phones := []struct {
 		Id          int
@@ -205,7 +205,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	_, err = s.message.AddFromStructs(ctx, []struct {
 		Id       int
 		Text     string
-		FkUserId int `field:"fk__user__id"`
+		FkUserId int `field:"fk_user_id"`
 	}{
 		{Id: 10, Text: "Message 1", FkUserId: 1},
 		{Id: 20, Text: "Message 2", FkUserId: 1},
@@ -228,19 +228,13 @@ func (s *DBTestSuite) TestModel_Add() {
 	}, model.AddOptions{})
 	s.NoError(err)
 
-	_, err = s.user.GetRelation("address").JunctionModel.AddMulti(ctx,
-		[]string{"fk__user__id", "fk__address__id"},
-		[][]interface{}{
-			{1, 100},
-			{1, 200},
-			{2, 200},
-			{2, 300},
-			{3, 300},
-			{4, 400},
-			{5, 500},
-		}, model.AddOptions{},
-	)
-	s.NoError(err)
+	s.NoError(s.user.Link(ctx, "address", []model.ModelLink{
+		{[]interface{}{1}, [][]interface{}{{100}, {200}}},
+		{[]interface{}{2}, [][]interface{}{{200}, {300}}},
+		{[]interface{}{3}, [][]interface{}{{300}}},
+		{[]interface{}{4}, [][]interface{}{{400}}},
+		{[]interface{}{5}, [][]interface{}{{500}}},
+	}))
 
 	ctx, err = s.storage.Commit(ctx)
 	s.NoError(err)
@@ -264,11 +258,11 @@ func (s *DBTestSuite) TestModel_Query() {
 		return
 	}
 
-	s.Equal([]map[string]interface{}{
-		{"id": uint32(3), "name": "James"},
-		{"id": uint32(4), "name": "John"},
-		{"id": uint32(5), "name": "Sara"},
-	}, data)
+	s.Equal(model.NewData([]string{"id", "name"}, [][]interface{}{
+		{uint32(3), "James"},
+		{uint32(4), "John"},
+		{uint32(5), "Sara"},
+	}), data)
 }
 
 func (s *DBTestSuite) TestModel_GetAllToStruct() {

@@ -15,6 +15,7 @@ type DateField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *DateField) GetId() string                                    { return f.Id }
@@ -31,8 +32,15 @@ func (f *DateField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *DateField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *DateField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &DateField{id, caption, required, f.Default, f.CheckFunc}
+	return &DateField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *DateField) IsAutoIncremented() bool { return false }
 func (f *DateField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -58,6 +66,7 @@ type TimeField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *TimeField) GetId() string                                    { return f.Id }
@@ -74,8 +83,15 @@ func (f *TimeField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *TimeField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *TimeField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TimeField{id, caption, required, f.Default, f.CheckFunc}
+	return &TimeField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *TimeField) IsAutoIncremented() bool { return false }
 func (f *TimeField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -101,6 +117,7 @@ type TimeStampField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *TimeStampField) GetId() string         { return f.Id }
@@ -119,8 +136,15 @@ func (f *TimeStampField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *TimeStampField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *TimeStampField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TimeStampField{id, caption, required, f.Default, f.CheckFunc}
+	return &TimeStampField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *TimeStampField) IsAutoIncremented() bool { return false }
 func (f *TimeStampField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -146,6 +170,7 @@ type DateTimeField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *DateTimeField) GetId() string         { return f.Id }
@@ -164,8 +189,15 @@ func (f *DateTimeField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *DateTimeField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *DateTimeField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &DateTimeField{id, caption, required, f.Default, f.CheckFunc}
+	return &DateTimeField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *DateTimeField) IsAutoIncremented() bool { return false }
 func (f *DateTimeField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -191,6 +223,7 @@ type YearField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *YearField) GetId() string                                    { return f.Id }
@@ -207,8 +240,15 @@ func (f *YearField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *YearField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *YearField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &YearField{id, caption, required, f.Default, f.CheckFunc}
+	return &YearField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *YearField) IsAutoIncremented() bool { return false }
 func (f *YearField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -234,6 +274,7 @@ type TinyBlobField struct {
 	NotNull   bool
 	Default   *[]byte
 	CheckFunc func([]byte) error
+	CleanFunc func([]byte) ([]byte, error)
 }
 
 func (f *TinyBlobField) GetId() string         { return f.Id }
@@ -252,8 +293,15 @@ func (f *TinyBlobField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *TinyBlobField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		return v, nil
+	}
+}
 func (f *TinyBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TinyBlobField{id, caption, required, f.Default, f.CheckFunc}
+	return &TinyBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *TinyBlobField) IsAutoIncremented() bool { return false }
 func (f *TinyBlobField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -279,6 +327,7 @@ type BlobField struct {
 	NotNull   bool
 	Default   *[]byte
 	CheckFunc func([]byte) error
+	CleanFunc func([]byte) ([]byte, error)
 }
 
 func (f *BlobField) GetId() string                                    { return f.Id }
@@ -295,8 +344,15 @@ func (f *BlobField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *BlobField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		return v, nil
+	}
+}
 func (f *BlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BlobField{id, caption, required, f.Default, f.CheckFunc}
+	return &BlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *BlobField) IsAutoIncremented() bool { return false }
 func (f *BlobField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -322,6 +378,7 @@ type MediumBlobField struct {
 	NotNull   bool
 	Default   *[]byte
 	CheckFunc func([]byte) error
+	CleanFunc func([]byte) ([]byte, error)
 }
 
 func (f *MediumBlobField) GetId() string         { return f.Id }
@@ -340,8 +397,15 @@ func (f *MediumBlobField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *MediumBlobField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		return v, nil
+	}
+}
 func (f *MediumBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &MediumBlobField{id, caption, required, f.Default, f.CheckFunc}
+	return &MediumBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *MediumBlobField) IsAutoIncremented() bool { return false }
 func (f *MediumBlobField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -367,6 +431,7 @@ type LongBlobField struct {
 	NotNull   bool
 	Default   *[]byte
 	CheckFunc func([]byte) error
+	CleanFunc func([]byte) ([]byte, error)
 }
 
 func (f *LongBlobField) GetId() string         { return f.Id }
@@ -385,8 +450,15 @@ func (f *LongBlobField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *LongBlobField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		return v, nil
+	}
+}
 func (f *LongBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &LongBlobField{id, caption, required, f.Default, f.CheckFunc}
+	return &LongBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *LongBlobField) IsAutoIncremented() bool { return false }
 func (f *LongBlobField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -412,6 +484,7 @@ type BooleanField struct {
 	NotNull   bool
 	Default   *bool
 	CheckFunc func(bool) error
+	CleanFunc func(bool) (bool, error)
 }
 
 func (f *BooleanField) GetId() string         { return f.Id }
@@ -430,8 +503,15 @@ func (f *BooleanField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *BooleanField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(bool))
+	} else {
+		return v, nil
+	}
+}
 func (f *BooleanField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BooleanField{id, caption, required, f.Default, f.CheckFunc}
+	return &BooleanField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *BooleanField) IsAutoIncremented() bool { return false }
 func (f *BooleanField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -460,6 +540,7 @@ type TinyIntField struct {
 	NotNull       bool
 	Default       *int8
 	CheckFunc     func(int8) error
+	CleanFunc     func(int8) (int8, error)
 }
 
 func (f *TinyIntField) GetId() string         { return f.Id }
@@ -478,8 +559,15 @@ func (f *TinyIntField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *TinyIntField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(int8))
+	} else {
+		return v, nil
+	}
+}
 func (f *TinyIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TinyIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &TinyIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *TinyIntField) IsAutoIncremented() bool { return true }
 func (f *TinyIntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -522,6 +610,7 @@ type SmallIntField struct {
 	NotNull       bool
 	Default       *int16
 	CheckFunc     func(int16) error
+	CleanFunc     func(int16) (int16, error)
 }
 
 func (f *SmallIntField) GetId() string         { return f.Id }
@@ -540,8 +629,15 @@ func (f *SmallIntField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *SmallIntField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(int16))
+	} else {
+		return v, nil
+	}
+}
 func (f *SmallIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &SmallIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &SmallIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *SmallIntField) IsAutoIncremented() bool { return true }
 func (f *SmallIntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -584,6 +680,7 @@ type MediumIntField struct {
 	NotNull       bool
 	Default       *int32
 	CheckFunc     func(int32) error
+	CleanFunc     func(int32) (int32, error)
 }
 
 func (f *MediumIntField) GetId() string         { return f.Id }
@@ -602,8 +699,15 @@ func (f *MediumIntField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *MediumIntField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(int32))
+	} else {
+		return v, nil
+	}
+}
 func (f *MediumIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &MediumIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &MediumIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *MediumIntField) IsAutoIncremented() bool { return true }
 func (f *MediumIntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -646,6 +750,7 @@ type IntField struct {
 	NotNull       bool
 	Default       *int32
 	CheckFunc     func(int32) error
+	CleanFunc     func(int32) (int32, error)
 }
 
 func (f *IntField) GetId() string                                    { return f.Id }
@@ -662,8 +767,15 @@ func (f *IntField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *IntField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(int32))
+	} else {
+		return v, nil
+	}
+}
 func (f *IntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &IntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &IntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *IntField) IsAutoIncremented() bool { return true }
 func (f *IntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -706,6 +818,7 @@ type BigIntField struct {
 	NotNull       bool
 	Default       *int64
 	CheckFunc     func(int64) error
+	CleanFunc     func(int64) (int64, error)
 }
 
 func (f *BigIntField) GetId() string         { return f.Id }
@@ -724,8 +837,15 @@ func (f *BigIntField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *BigIntField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(int64))
+	} else {
+		return v, nil
+	}
+}
 func (f *BigIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BigIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &BigIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *BigIntField) IsAutoIncremented() bool { return true }
 func (f *BigIntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -768,6 +888,7 @@ type TinyUintField struct {
 	NotNull       bool
 	Default       *uint8
 	CheckFunc     func(uint8) error
+	CleanFunc     func(uint8) (uint8, error)
 }
 
 func (f *TinyUintField) GetId() string         { return f.Id }
@@ -786,8 +907,15 @@ func (f *TinyUintField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *TinyUintField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(uint8))
+	} else {
+		return v, nil
+	}
+}
 func (f *TinyUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TinyUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &TinyUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *TinyUintField) IsAutoIncremented() bool { return true }
 func (f *TinyUintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -832,6 +960,7 @@ type SmallUintField struct {
 	NotNull       bool
 	Default       *uint16
 	CheckFunc     func(uint16) error
+	CleanFunc     func(uint16) (uint16, error)
 }
 
 func (f *SmallUintField) GetId() string         { return f.Id }
@@ -850,8 +979,15 @@ func (f *SmallUintField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *SmallUintField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(uint16))
+	} else {
+		return v, nil
+	}
+}
 func (f *SmallUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &SmallUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &SmallUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *SmallUintField) IsAutoIncremented() bool { return true }
 func (f *SmallUintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -896,6 +1032,7 @@ type MediumUintField struct {
 	NotNull       bool
 	Default       *uint32
 	CheckFunc     func(uint32) error
+	CleanFunc     func(uint32) (uint32, error)
 }
 
 func (f *MediumUintField) GetId() string         { return f.Id }
@@ -914,8 +1051,15 @@ func (f *MediumUintField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *MediumUintField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(uint32))
+	} else {
+		return v, nil
+	}
+}
 func (f *MediumUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &MediumUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &MediumUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *MediumUintField) IsAutoIncremented() bool { return true }
 func (f *MediumUintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -960,6 +1104,7 @@ type UintField struct {
 	NotNull       bool
 	Default       *uint32
 	CheckFunc     func(uint32) error
+	CleanFunc     func(uint32) (uint32, error)
 }
 
 func (f *UintField) GetId() string                                    { return f.Id }
@@ -976,8 +1121,15 @@ func (f *UintField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *UintField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(uint32))
+	} else {
+		return v, nil
+	}
+}
 func (f *UintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &UintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &UintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *UintField) IsAutoIncremented() bool { return true }
 func (f *UintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1022,6 +1174,7 @@ type BigUintField struct {
 	NotNull       bool
 	Default       *uint64
 	CheckFunc     func(uint64) error
+	CleanFunc     func(uint64) (uint64, error)
 }
 
 func (f *BigUintField) GetId() string         { return f.Id }
@@ -1040,8 +1193,15 @@ func (f *BigUintField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *BigUintField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(uint64))
+	} else {
+		return v, nil
+	}
+}
 func (f *BigUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BigUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &BigUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *BigUintField) IsAutoIncremented() bool { return true }
 func (f *BigUintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1086,6 +1246,7 @@ type RealField struct {
 	NotNull   bool
 	Default   *float64
 	CheckFunc func(float64) error
+	CleanFunc func(float64) (float64, error)
 }
 
 func (f *RealField) GetId() string                                    { return f.Id }
@@ -1102,8 +1263,15 @@ func (f *RealField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *RealField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(float64))
+	} else {
+		return v, nil
+	}
+}
 func (f *RealField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &RealField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &RealField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *RealField) IsAutoIncremented() bool { return false }
 func (f *RealField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1147,6 +1315,7 @@ type FloatField struct {
 	NotNull   bool
 	Default   *float64
 	CheckFunc func(float64) error
+	CleanFunc func(float64) (float64, error)
 }
 
 func (f *FloatField) GetId() string                                    { return f.Id }
@@ -1163,8 +1332,15 @@ func (f *FloatField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *FloatField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(float64))
+	} else {
+		return v, nil
+	}
+}
 func (f *FloatField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &FloatField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &FloatField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *FloatField) IsAutoIncremented() bool { return false }
 func (f *FloatField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1208,6 +1384,7 @@ type DecimalField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *DecimalField) GetId() string         { return f.Id }
@@ -1226,8 +1403,15 @@ func (f *DecimalField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *DecimalField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *DecimalField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &DecimalField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &DecimalField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *DecimalField) IsAutoIncremented() bool { return false }
 func (f *DecimalField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1271,6 +1455,7 @@ type NumericField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *NumericField) GetId() string         { return f.Id }
@@ -1289,8 +1474,15 @@ func (f *NumericField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *NumericField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *NumericField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &NumericField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc}
+	return &NumericField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *NumericField) IsAutoIncremented() bool { return false }
 func (f *NumericField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1332,6 +1524,7 @@ type BitField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *BitField) GetId() string                                    { return f.Id }
@@ -1348,8 +1541,15 @@ func (f *BitField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *BitField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *BitField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BitField{id, caption, f.Length, required, f.Default, f.CheckFunc}
+	return &BitField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *BitField) IsAutoIncremented() bool { return false }
 func (f *BitField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1382,6 +1582,7 @@ type BinaryField struct {
 	NotNull   bool
 	Default   *[]byte
 	CheckFunc func([]byte) error
+	CleanFunc func([]byte) ([]byte, error)
 }
 
 func (f *BinaryField) GetId() string         { return f.Id }
@@ -1400,8 +1601,15 @@ func (f *BinaryField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *BinaryField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		return v, nil
+	}
+}
 func (f *BinaryField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BinaryField{id, caption, f.Length, required, f.Default, f.CheckFunc}
+	return &BinaryField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *BinaryField) IsAutoIncremented() bool { return false }
 func (f *BinaryField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1434,6 +1642,7 @@ type VarBinaryField struct {
 	NotNull   bool
 	Default   *[]byte
 	CheckFunc func([]byte) error
+	CleanFunc func([]byte) ([]byte, error)
 }
 
 func (f *VarBinaryField) GetId() string         { return f.Id }
@@ -1452,8 +1661,15 @@ func (f *VarBinaryField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *VarBinaryField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		return v, nil
+	}
+}
 func (f *VarBinaryField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &VarBinaryField{id, caption, f.Length, required, f.Default, f.CheckFunc}
+	return &VarBinaryField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *VarBinaryField) IsAutoIncremented() bool { return false }
 func (f *VarBinaryField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1488,6 +1704,7 @@ type CharField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *CharField) GetId() string                                    { return f.Id }
@@ -1504,8 +1721,15 @@ func (f *CharField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *CharField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *CharField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &CharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.CheckFunc}
+	return &CharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *CharField) IsAutoIncremented() bool { return false }
 func (f *CharField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1550,6 +1774,7 @@ type VarCharField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *VarCharField) GetId() string         { return f.Id }
@@ -1568,8 +1793,15 @@ func (f *VarCharField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *VarCharField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *VarCharField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &VarCharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.CheckFunc}
+	return &VarCharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *VarCharField) IsAutoIncremented() bool { return false }
 func (f *VarCharField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1615,6 +1847,7 @@ type TinyTextField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *TinyTextField) GetId() string         { return f.Id }
@@ -1633,8 +1866,15 @@ func (f *TinyTextField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *TinyTextField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *TinyTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TinyTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc}
+	return &TinyTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *TinyTextField) IsAutoIncremented() bool { return false }
 func (f *TinyTextField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1684,6 +1924,7 @@ type TextField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *TextField) GetId() string                                    { return f.Id }
@@ -1700,8 +1941,15 @@ func (f *TextField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *TextField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *TextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc}
+	return &TextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *TextField) IsAutoIncremented() bool { return false }
 func (f *TextField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1751,6 +1999,7 @@ type MediumTextField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *MediumTextField) GetId() string         { return f.Id }
@@ -1769,8 +2018,15 @@ func (f *MediumTextField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *MediumTextField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *MediumTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &MediumTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc}
+	return &MediumTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *MediumTextField) IsAutoIncremented() bool { return false }
 func (f *MediumTextField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1820,6 +2076,7 @@ type LongTextField struct {
 	NotNull   bool
 	Default   *string
 	CheckFunc func(string) error
+	CleanFunc func(string) (string, error)
 }
 
 func (f *LongTextField) GetId() string         { return f.Id }
@@ -1838,8 +2095,15 @@ func (f *LongTextField) Check(v interface{}) error {
 		return nil
 	}
 }
+func (f *LongTextField) Clean(v interface{}) (interface{}, error) {
+	if f.CleanFunc != nil {
+		return f.CleanFunc(v.(string))
+	} else {
+		return v, nil
+	}
+}
 func (f *LongTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &LongTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc}
+	return &LongTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
 func (f *LongTextField) IsAutoIncremented() bool { return false }
 func (f *LongTextField) WriteSQL(sqlBuf *SqlBuffer) {

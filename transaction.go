@@ -22,6 +22,9 @@ func (s *MySQL) StartTransaction(ctx context.Context) (context.Context, error) {
 	t := ctx.Value(s.transactionKey())
 
 	if t == nil {
+		if debugSQL {
+			println("BEGIN")
+		}
 		ctx = timelog.Start(ctx, "BEGIN")
 		tx, err := s.db.Begin()
 		ctx = timelog.Finish(ctx)
@@ -39,6 +42,9 @@ func (s *MySQL) StartTransaction(ctx context.Context) (context.Context, error) {
 
 		t.savePoint++
 
+		if debugSQL {
+			println("SAVEPOINT SP" + strconv.FormatUint(t.savePoint, 10))
+		}
 		_, err := t.tx.Exec("SAVEPOINT SP" + strconv.FormatUint(t.savePoint, 10))
 		if err != nil {
 			return nil, err
@@ -60,6 +66,9 @@ func (s *MySQL) Commit(ctx context.Context) (context.Context, error) {
 	defer t.savePointMtx.Unlock()
 
 	if t.savePoint > 0 {
+		if debugSQL {
+			println("RELEASE SAVEPOINT SP" + strconv.FormatUint(t.savePoint, 10))
+		}
 		_, err := t.tx.Exec("RELEASE SAVEPOINT SP" + strconv.FormatUint(t.savePoint, 10))
 		if err != nil {
 			return nil, err
@@ -70,6 +79,9 @@ func (s *MySQL) Commit(ctx context.Context) (context.Context, error) {
 		return ctx, nil
 	}
 
+	if debugSQL {
+		println("COMMIT")
+	}
 	ctx = timelog.Start(ctx, "COMMIT")
 	err := t.tx.Commit()
 	ctx = timelog.Finish(ctx)
@@ -92,6 +104,9 @@ func (s *MySQL) Rollback(ctx context.Context) (context.Context, error) {
 	defer t.savePointMtx.Unlock()
 
 	if t.savePoint > 0 {
+		if debugSQL {
+			println("ROLLBACK TO SAVEPOINT SP" + strconv.FormatUint(t.savePoint, 10))
+		}
 		_, err := t.tx.Exec("ROLLBACK TO SAVEPOINT SP" + strconv.FormatUint(t.savePoint, 10))
 		if err != nil {
 			return nil, err
@@ -102,6 +117,9 @@ func (s *MySQL) Rollback(ctx context.Context) (context.Context, error) {
 		return ctx, nil
 	}
 
+	if debugSQL {
+		println("ROLLBACK")
+	}
 	ctx = timelog.Start(ctx, "ROLLBACK")
 	err := t.tx.Rollback()
 	ctx = timelog.Finish(ctx)

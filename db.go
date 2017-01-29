@@ -172,19 +172,19 @@ func (s *MySQL) RawQuery(ctx context.Context, query string, a ...interface{}) (*
 	return res, err
 }
 
-func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, data [][]interface{}, opts model.AddOptions) ([]interface{}, error) {
+func (s *MySQL) Add(ctx context.Context, m model.IModel, data *model.Data, opts model.AddOptions) (*model.Data, error) {
 	sqlBuf := NewSqlBuffer()
 
 	sqlBuf.WriteString("INSERT INTO ")
 	sqlBuf.WriteIdentifier(m.GetId())
 
 	sqlBuf.WriteByte('(')
-	sqlBuf.WriteIdentifiersList(fieldsNames)
+	sqlBuf.WriteIdentifiersList(data.Fields())
 	sqlBuf.WriteByte(')')
 
 	sqlBuf.WriteString("VALUES")
 
-	for i, row := range data {
+	for i, row := range data.Data() {
 		if i != 0 {
 			sqlBuf.WriteByte(',')
 		}
@@ -195,7 +195,7 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 
 	if opts.Replace {
 		sqlBuf.WriteString("ON DUPLICATE KEY UPDATE ")
-		for i, fieldName := range fieldsNames {
+		for i, fieldName := range data.Fields() {
 			if i > 0 {
 				sqlBuf.WriteByte(',')
 			}
@@ -213,7 +213,7 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 
 	pKFieldsNames := m.GetPKFieldsNames()
 	fieldsPos := make(map[string]int)
-	for i, fieldName := range fieldsNames {
+	for i, fieldName := range data.Fields() {
 		fieldsPos[fieldName] = i
 	}
 
@@ -227,8 +227,8 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 		}
 	}
 
-	res := make([]interface{}, len(data))
-	for i, row := range data {
+	res := make([][]interface{}, data.Len())
+	for i, row := range data.Data() {
 		rowRes := make([]interface{}, len(pKFieldsNames))
 		for j, fieldName := range pKFieldsNames {
 			fp, exists := fieldsPos[fieldName]
@@ -262,10 +262,10 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, fieldsNames []string, d
 		res[i] = rowRes
 	}
 
-	return res, nil
+	return model.NewData(m.GetPKFieldsNames(), res), nil
 }
 
-func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string, options model.GetAllOptions) ([]map[string]interface{}, error) {
+func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string, options model.GetAllOptions) (*model.Data, error) {
 	sqlBuf := NewSqlBuffer()
 
 	sqlBuf.WriteString("SELECT ")
@@ -305,11 +305,12 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 		return nil, err
 	}
 
-	var res []map[string]interface{}
 	columnsNames, err := rows.Columns()
 	if err != nil {
 		return nil, err
 	}
+
+	res := model.NewEmptyData(columnsNames)
 
 	for rows.Next() {
 		rawRow := make([]interface{}, len(columnsNames))
@@ -324,11 +325,11 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 			return nil, err
 		}
 
-		row := make(map[string]interface{})
-		for i, name := range columnsNames {
-			row[name] = reflect.ValueOf(rawRow[i]).Elem().Interface()
+		row := make([]interface{}, len(columnsNames))
+		for i, _ := range columnsNames {
+			row[i] = reflect.ValueOf(rawRow[i]).Elem().Interface()
 		}
-		res = append(res, row)
+		res.Add(row)
 	}
 
 	return res, nil
