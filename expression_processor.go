@@ -64,6 +64,32 @@ func (p *ExprProcessor) In(op expr.IExpression, values []expr.IExpression) inter
 	})
 }
 
+func (p *ExprProcessor) And(ops []expr.IExpression) interface{} {
+	return WriteFunc(func(buf *SqlBuffer) {
+		for i, op := range ops {
+			if i > 0 {
+				buf.WriteString("AND")
+			}
+			buf.WriteByte('(')
+			op.GetProcessor(p).(WriteFunc)(buf)
+			buf.WriteByte(')')
+		}
+	})
+}
+
+func (p *ExprProcessor) Or(ops []expr.IExpression) interface{} {
+	return WriteFunc(func(buf *SqlBuffer) {
+		for i, op := range ops {
+			if i > 0 {
+				buf.WriteString("OR")
+			}
+			buf.WriteByte('(')
+			op.GetProcessor(p).(WriteFunc)(buf)
+			buf.WriteByte(')')
+		}
+	})
+}
+
 func (p *ExprProcessor) ModelField(fieldName string) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		buf.WriteIdentifier(fieldName)

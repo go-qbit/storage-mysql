@@ -344,6 +344,12 @@ func Quote(value interface{}) string {
 	var v string
 
 	switch value := value.(type) {
+	case []byte:
+		v = "X`"
+		for _, b := range value {
+			v += strconv.FormatUint(uint64(b), 10)
+		}
+		v += "'"
 	case string:
 		v = "'" + strings.Replace(value, "'", "''", -1) + "'"
 	case int:
