@@ -228,7 +228,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	}, model.AddOptions{})
 	s.NoError(err)
 
-	s.NoError(s.user.Link(ctx, "address", []model.ModelLink{
+	s.NoError(s.user.Link(ctx, s.address, []model.ModelLink{
 		{[]interface{}{1}, [][]interface{}{{100}, {200}}},
 		{[]interface{}{2}, [][]interface{}{{200}, {300}}},
 		{[]interface{}{3}, [][]interface{}{{300}}},
