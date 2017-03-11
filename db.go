@@ -269,6 +269,11 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 	sqlBuf := NewSqlBuffer()
 
 	sqlBuf.WriteString("SELECT ")
+
+	if options.Distinct {
+		sqlBuf.WriteString(" DISTINCT ")
+	}
+
 	sqlBuf.WriteIdentifiersList(fieldsNames)
 	sqlBuf.WriteString(" FROM ")
 	sqlBuf.WriteIdentifier(m.GetId())
