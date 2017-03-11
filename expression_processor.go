@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	"github.com/go-qbit/model/expr"
+	"github.com/go-qbit/model"
 )
 
 var exprProcessor = &ExprProcessor{}
@@ -10,7 +10,7 @@ type ExprProcessor struct{}
 
 type WriteFunc func(*SqlBuffer)
 
-func (p *ExprProcessor) Eq(op1, op2 expr.IExpression) interface{} {
+func (p *ExprProcessor) Eq(op1, op2 model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		op1.GetProcessor(p).(WriteFunc)(buf)
 		buf.WriteByte('=')
@@ -18,7 +18,7 @@ func (p *ExprProcessor) Eq(op1, op2 expr.IExpression) interface{} {
 	})
 }
 
-func (p *ExprProcessor) Lt(op1, op2 expr.IExpression) interface{} {
+func (p *ExprProcessor) Lt(op1, op2 model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		op1.GetProcessor(p).(WriteFunc)(buf)
 		buf.WriteByte('<')
@@ -26,7 +26,7 @@ func (p *ExprProcessor) Lt(op1, op2 expr.IExpression) interface{} {
 	})
 }
 
-func (p *ExprProcessor) Le(op1, op2 expr.IExpression) interface{} {
+func (p *ExprProcessor) Le(op1, op2 model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		op1.GetProcessor(p).(WriteFunc)(buf)
 		buf.WriteString("<=")
@@ -34,7 +34,7 @@ func (p *ExprProcessor) Le(op1, op2 expr.IExpression) interface{} {
 	})
 }
 
-func (p *ExprProcessor) Gt(op1, op2 expr.IExpression) interface{} {
+func (p *ExprProcessor) Gt(op1, op2 model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		op1.GetProcessor(p).(WriteFunc)(buf)
 		buf.WriteByte('>')
@@ -42,7 +42,7 @@ func (p *ExprProcessor) Gt(op1, op2 expr.IExpression) interface{} {
 	})
 }
 
-func (p *ExprProcessor) Ge(op1, op2 expr.IExpression) interface{} {
+func (p *ExprProcessor) Ge(op1, op2 model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		op1.GetProcessor(p).(WriteFunc)(buf)
 		buf.WriteString(">=")
@@ -50,7 +50,7 @@ func (p *ExprProcessor) Ge(op1, op2 expr.IExpression) interface{} {
 	})
 }
 
-func (p *ExprProcessor) In(op expr.IExpression, values []expr.IExpression) interface{} {
+func (p *ExprProcessor) In(op model.IExpression, values []model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		op.GetProcessor(p).(WriteFunc)(buf)
 		buf.WriteString(" IN (")
@@ -64,7 +64,7 @@ func (p *ExprProcessor) In(op expr.IExpression, values []expr.IExpression) inter
 	})
 }
 
-func (p *ExprProcessor) And(ops []expr.IExpression) interface{} {
+func (p *ExprProcessor) And(ops []model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		for i, op := range ops {
 			if i > 0 {
@@ -77,7 +77,7 @@ func (p *ExprProcessor) And(ops []expr.IExpression) interface{} {
 	})
 }
 
-func (p *ExprProcessor) Or(ops []expr.IExpression) interface{} {
+func (p *ExprProcessor) Or(ops []model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		for i, op := range ops {
 			if i > 0 {
@@ -90,8 +90,52 @@ func (p *ExprProcessor) Or(ops []expr.IExpression) interface{} {
 	})
 }
 
-func (p *ExprProcessor) ModelField(fieldName string) interface{} {
+func (p *ExprProcessor) Any(localModel, extModel model.IModel, filter model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
+		relation := localModel.GetRelation(extModel.GetId())
+		if relation.RelationType == model.RELATION_MANY_TO_MANY {
+			buf.WriteIdentifiersList(relation.LocalFieldsNames)
+			buf.WriteString("=ANY(SELECT ")
+			buf.WriteIdentifiersList(relation.JunctionLocalFieldsNames)
+			buf.WriteString(" FROM ")
+			buf.WriteIdentifier(relation.JunctionModel.GetId())
+			buf.WriteString(" WHERE (")
+			buf.WriteIdentifiersList(relation.JunctionFkFieldsNames)
+			buf.WriteString(")=ANY(SELECT ")
+			buf.WriteIdentifiersList(relation.FkFieldsNames)
+			buf.WriteString(" FROM ")
+			buf.WriteIdentifier(extModel.GetId())
+
+			if filter != nil {
+				buf.WriteString(" WHERE ")
+				filter.GetProcessor(p).(WriteFunc)(buf)
+			}
+
+			buf.WriteString("))")
+		} else {
+			buf.WriteRune('(')
+			buf.WriteIdentifiersList(relation.LocalFieldsNames)
+			buf.WriteString(")=ANY(SELECT ")
+			buf.WriteIdentifiersList(relation.FkFieldsNames)
+			buf.WriteString(" FROM ")
+			buf.WriteIdentifier(extModel.GetId())
+
+			if filter != nil {
+				buf.WriteString(" WHERE ")
+				filter.GetProcessor(p).(WriteFunc)(buf)
+			}
+
+			buf.WriteRune(')')
+		}
+	})
+}
+
+func (p *ExprProcessor) ModelField(m model.IModel, fieldName string) interface{} {
+	return WriteFunc(func(buf *SqlBuffer) {
+		/*
+			buf.WriteIdentifier(m.GetId())
+			buf.WriteRune('.')
+		*/
 		buf.WriteIdentifier(fieldName)
 	})
 }
