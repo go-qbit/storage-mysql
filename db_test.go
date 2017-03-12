@@ -246,17 +246,22 @@ func (s *DBTestSuite) TestModel_Add() {
 func (s *DBTestSuite) TestModel_Query() {
 	s.TestModel_Add()
 
+	var totalRows uint64
+
 	data, err := s.storage.Query(context.Background(), s.user, []string{"id", "name"}, model.GetAllOptions{
 		OrderBy: []model.Order{
 			{"id", false},
 			{"name", true},
 		},
-		Limit:  3,
-		Offset: 2,
+		Limit:       3,
+		Offset:      2,
+		RowsWoLimit: &totalRows,
 	})
 	if !s.NoError(err) {
 		return
 	}
+
+	s.Equal(uint64(5), totalRows)
 
 	s.Equal(model.NewData([]string{"id", "name"}, [][]interface{}{
 		{uint32(3), "James"},

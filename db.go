@@ -274,6 +274,10 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 		sqlBuf.WriteString(" DISTINCT ")
 	}
 
+	if options.RowsWoLimit != nil {
+		sqlBuf.WriteString(" SQL_CALC_FOUND_ROWS ")
+	}
+
 	sqlBuf.WriteIdentifiersList(fieldsNames)
 	sqlBuf.WriteString(" FROM ")
 	sqlBuf.WriteIdentifier(m.GetId())
@@ -305,6 +309,12 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 		}
 	}
 
+	if options.RowsWoLimit != nil {
+		var err error
+		if ctx, err = s.StartTransaction(ctx); err != nil { // For using 1 connection
+			return nil, err
+		}
+	}
 	rows, err := s.RawQuery(ctx, sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
 	if err != nil {
 		return nil, err
@@ -335,6 +345,22 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 			row[i] = reflect.ValueOf(rawRow[i]).Elem().Interface()
 		}
 		res.Add(row)
+	}
+
+	if options.RowsWoLimit != nil {
+		rows, err := s.RawQuery(ctx, "SELECT FOUND_ROWS()")
+		if err != nil {
+			return nil, err
+		}
+
+		rows.Next()
+		rows.Scan(options.RowsWoLimit)
+		rows.Next()
+
+		ctx, err = s.Commit(ctx)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return res, nil
