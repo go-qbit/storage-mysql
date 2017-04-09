@@ -203,7 +203,13 @@ func main() {
 
 		buf.WriteString("func (f *" + typeName + ") GetId() string { return f.Id }\n")
 		buf.WriteString("func (f *" + typeName + ") GetCaption() string  { return f.Caption }\n")
-		buf.WriteString("func (f *" + typeName + ") GetType() reflect.Type { return reflect.TypeOf(" + typeOf[mysqlType.goType] + ") }\n")
+		buf.WriteString("func (f *" + typeName + ") GetType() reflect.Type {\n" +
+			"if f.NotNull {\n" +
+			"	return reflect.TypeOf(" + typeOf[mysqlType.goType] + ")\n" +
+			"} else {\n" +
+			"	return reflect.PtrTo(reflect.TypeOf(" + typeOf[mysqlType.goType] + "))\n" +
+			"}\n" +
+			"}\n")
 		buf.WriteString("func (f *" + typeName + ") IsDerivable() bool { return false }\n")
 		buf.WriteString("func (f *" + typeName + ") IsRequired() bool { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }\n")
 		buf.WriteString("func (f *" + typeName + ") GetDependsOn() []string { return nil }\n")
@@ -328,6 +334,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 		fmt.Println(buf.String())
+		file.Write(buf.Bytes())
 		os.Exit(1)
 	}
 

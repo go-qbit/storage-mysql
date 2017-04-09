@@ -18,9 +18,15 @@ type DateField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *DateField) GetId() string                                    { return f.Id }
-func (f *DateField) GetCaption() string                               { return f.Caption }
-func (f *DateField) GetType() reflect.Type                            { return reflect.TypeOf(string("")) }
+func (f *DateField) GetId() string      { return f.Id }
+func (f *DateField) GetCaption() string { return f.Caption }
+func (f *DateField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
 func (f *DateField) IsDerivable() bool                                { return false }
 func (f *DateField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *DateField) GetDependsOn() []string                           { return nil }
@@ -69,9 +75,15 @@ type TimeField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *TimeField) GetId() string                                    { return f.Id }
-func (f *TimeField) GetCaption() string                               { return f.Caption }
-func (f *TimeField) GetType() reflect.Type                            { return reflect.TypeOf(string("")) }
+func (f *TimeField) GetId() string      { return f.Id }
+func (f *TimeField) GetCaption() string { return f.Caption }
+func (f *TimeField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
 func (f *TimeField) IsDerivable() bool                                { return false }
 func (f *TimeField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *TimeField) GetDependsOn() []string                           { return nil }
@@ -120,10 +132,16 @@ type TimeStampField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *TimeStampField) GetId() string         { return f.Id }
-func (f *TimeStampField) GetCaption() string    { return f.Caption }
-func (f *TimeStampField) GetType() reflect.Type { return reflect.TypeOf(string("")) }
-func (f *TimeStampField) IsDerivable() bool     { return false }
+func (f *TimeStampField) GetId() string      { return f.Id }
+func (f *TimeStampField) GetCaption() string { return f.Caption }
+func (f *TimeStampField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
+func (f *TimeStampField) IsDerivable() bool { return false }
 func (f *TimeStampField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -173,10 +191,16 @@ type DateTimeField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *DateTimeField) GetId() string         { return f.Id }
-func (f *DateTimeField) GetCaption() string    { return f.Caption }
-func (f *DateTimeField) GetType() reflect.Type { return reflect.TypeOf(string("")) }
-func (f *DateTimeField) IsDerivable() bool     { return false }
+func (f *DateTimeField) GetId() string      { return f.Id }
+func (f *DateTimeField) GetCaption() string { return f.Caption }
+func (f *DateTimeField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
+func (f *DateTimeField) IsDerivable() bool { return false }
 func (f *DateTimeField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -226,9 +250,15 @@ type YearField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *YearField) GetId() string                                    { return f.Id }
-func (f *YearField) GetCaption() string                               { return f.Caption }
-func (f *YearField) GetType() reflect.Type                            { return reflect.TypeOf(string("")) }
+func (f *YearField) GetId() string      { return f.Id }
+func (f *YearField) GetCaption() string { return f.Caption }
+func (f *YearField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
 func (f *YearField) IsDerivable() bool                                { return false }
 func (f *YearField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *YearField) GetDependsOn() []string                           { return nil }
@@ -277,10 +307,16 @@ type TinyBlobField struct {
 	CleanFunc func([]byte) ([]byte, error)
 }
 
-func (f *TinyBlobField) GetId() string         { return f.Id }
-func (f *TinyBlobField) GetCaption() string    { return f.Caption }
-func (f *TinyBlobField) GetType() reflect.Type { return reflect.TypeOf([]byte{}) }
-func (f *TinyBlobField) IsDerivable() bool     { return false }
+func (f *TinyBlobField) GetId() string      { return f.Id }
+func (f *TinyBlobField) GetCaption() string { return f.Caption }
+func (f *TinyBlobField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf([]byte{})
+	} else {
+		return reflect.PtrTo(reflect.TypeOf([]byte{}))
+	}
+}
+func (f *TinyBlobField) IsDerivable() bool { return false }
 func (f *TinyBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -330,9 +366,15 @@ type BlobField struct {
 	CleanFunc func([]byte) ([]byte, error)
 }
 
-func (f *BlobField) GetId() string                                    { return f.Id }
-func (f *BlobField) GetCaption() string                               { return f.Caption }
-func (f *BlobField) GetType() reflect.Type                            { return reflect.TypeOf([]byte{}) }
+func (f *BlobField) GetId() string      { return f.Id }
+func (f *BlobField) GetCaption() string { return f.Caption }
+func (f *BlobField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf([]byte{})
+	} else {
+		return reflect.PtrTo(reflect.TypeOf([]byte{}))
+	}
+}
 func (f *BlobField) IsDerivable() bool                                { return false }
 func (f *BlobField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *BlobField) GetDependsOn() []string                           { return nil }
@@ -381,10 +423,16 @@ type MediumBlobField struct {
 	CleanFunc func([]byte) ([]byte, error)
 }
 
-func (f *MediumBlobField) GetId() string         { return f.Id }
-func (f *MediumBlobField) GetCaption() string    { return f.Caption }
-func (f *MediumBlobField) GetType() reflect.Type { return reflect.TypeOf([]byte{}) }
-func (f *MediumBlobField) IsDerivable() bool     { return false }
+func (f *MediumBlobField) GetId() string      { return f.Id }
+func (f *MediumBlobField) GetCaption() string { return f.Caption }
+func (f *MediumBlobField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf([]byte{})
+	} else {
+		return reflect.PtrTo(reflect.TypeOf([]byte{}))
+	}
+}
+func (f *MediumBlobField) IsDerivable() bool { return false }
 func (f *MediumBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -434,10 +482,16 @@ type LongBlobField struct {
 	CleanFunc func([]byte) ([]byte, error)
 }
 
-func (f *LongBlobField) GetId() string         { return f.Id }
-func (f *LongBlobField) GetCaption() string    { return f.Caption }
-func (f *LongBlobField) GetType() reflect.Type { return reflect.TypeOf([]byte{}) }
-func (f *LongBlobField) IsDerivable() bool     { return false }
+func (f *LongBlobField) GetId() string      { return f.Id }
+func (f *LongBlobField) GetCaption() string { return f.Caption }
+func (f *LongBlobField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf([]byte{})
+	} else {
+		return reflect.PtrTo(reflect.TypeOf([]byte{}))
+	}
+}
+func (f *LongBlobField) IsDerivable() bool { return false }
 func (f *LongBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -487,10 +541,16 @@ type BooleanField struct {
 	CleanFunc func(bool) (bool, error)
 }
 
-func (f *BooleanField) GetId() string         { return f.Id }
-func (f *BooleanField) GetCaption() string    { return f.Caption }
-func (f *BooleanField) GetType() reflect.Type { return reflect.TypeOf(bool(false)) }
-func (f *BooleanField) IsDerivable() bool     { return false }
+func (f *BooleanField) GetId() string      { return f.Id }
+func (f *BooleanField) GetCaption() string { return f.Caption }
+func (f *BooleanField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(bool(false))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(bool(false)))
+	}
+}
+func (f *BooleanField) IsDerivable() bool { return false }
 func (f *BooleanField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -543,10 +603,16 @@ type TinyIntField struct {
 	CleanFunc     func(int8) (int8, error)
 }
 
-func (f *TinyIntField) GetId() string         { return f.Id }
-func (f *TinyIntField) GetCaption() string    { return f.Caption }
-func (f *TinyIntField) GetType() reflect.Type { return reflect.TypeOf(int8(0)) }
-func (f *TinyIntField) IsDerivable() bool     { return false }
+func (f *TinyIntField) GetId() string      { return f.Id }
+func (f *TinyIntField) GetCaption() string { return f.Caption }
+func (f *TinyIntField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(int8(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(int8(0)))
+	}
+}
+func (f *TinyIntField) IsDerivable() bool { return false }
 func (f *TinyIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -613,10 +679,16 @@ type SmallIntField struct {
 	CleanFunc     func(int16) (int16, error)
 }
 
-func (f *SmallIntField) GetId() string         { return f.Id }
-func (f *SmallIntField) GetCaption() string    { return f.Caption }
-func (f *SmallIntField) GetType() reflect.Type { return reflect.TypeOf(int16(0)) }
-func (f *SmallIntField) IsDerivable() bool     { return false }
+func (f *SmallIntField) GetId() string      { return f.Id }
+func (f *SmallIntField) GetCaption() string { return f.Caption }
+func (f *SmallIntField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(int16(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(int16(0)))
+	}
+}
+func (f *SmallIntField) IsDerivable() bool { return false }
 func (f *SmallIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -683,10 +755,16 @@ type MediumIntField struct {
 	CleanFunc     func(int32) (int32, error)
 }
 
-func (f *MediumIntField) GetId() string         { return f.Id }
-func (f *MediumIntField) GetCaption() string    { return f.Caption }
-func (f *MediumIntField) GetType() reflect.Type { return reflect.TypeOf(int32(0)) }
-func (f *MediumIntField) IsDerivable() bool     { return false }
+func (f *MediumIntField) GetId() string      { return f.Id }
+func (f *MediumIntField) GetCaption() string { return f.Caption }
+func (f *MediumIntField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(int32(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(int32(0)))
+	}
+}
+func (f *MediumIntField) IsDerivable() bool { return false }
 func (f *MediumIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -753,9 +831,15 @@ type IntField struct {
 	CleanFunc     func(int32) (int32, error)
 }
 
-func (f *IntField) GetId() string                                    { return f.Id }
-func (f *IntField) GetCaption() string                               { return f.Caption }
-func (f *IntField) GetType() reflect.Type                            { return reflect.TypeOf(int32(0)) }
+func (f *IntField) GetId() string      { return f.Id }
+func (f *IntField) GetCaption() string { return f.Caption }
+func (f *IntField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(int32(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(int32(0)))
+	}
+}
 func (f *IntField) IsDerivable() bool                                { return false }
 func (f *IntField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *IntField) GetDependsOn() []string                           { return nil }
@@ -821,10 +905,16 @@ type BigIntField struct {
 	CleanFunc     func(int64) (int64, error)
 }
 
-func (f *BigIntField) GetId() string         { return f.Id }
-func (f *BigIntField) GetCaption() string    { return f.Caption }
-func (f *BigIntField) GetType() reflect.Type { return reflect.TypeOf(int64(0)) }
-func (f *BigIntField) IsDerivable() bool     { return false }
+func (f *BigIntField) GetId() string      { return f.Id }
+func (f *BigIntField) GetCaption() string { return f.Caption }
+func (f *BigIntField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(int64(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(int64(0)))
+	}
+}
+func (f *BigIntField) IsDerivable() bool { return false }
 func (f *BigIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -891,10 +981,16 @@ type TinyUintField struct {
 	CleanFunc     func(uint8) (uint8, error)
 }
 
-func (f *TinyUintField) GetId() string         { return f.Id }
-func (f *TinyUintField) GetCaption() string    { return f.Caption }
-func (f *TinyUintField) GetType() reflect.Type { return reflect.TypeOf(uint8(0)) }
-func (f *TinyUintField) IsDerivable() bool     { return false }
+func (f *TinyUintField) GetId() string      { return f.Id }
+func (f *TinyUintField) GetCaption() string { return f.Caption }
+func (f *TinyUintField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(uint8(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(uint8(0)))
+	}
+}
+func (f *TinyUintField) IsDerivable() bool { return false }
 func (f *TinyUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -963,10 +1059,16 @@ type SmallUintField struct {
 	CleanFunc     func(uint16) (uint16, error)
 }
 
-func (f *SmallUintField) GetId() string         { return f.Id }
-func (f *SmallUintField) GetCaption() string    { return f.Caption }
-func (f *SmallUintField) GetType() reflect.Type { return reflect.TypeOf(uint16(0)) }
-func (f *SmallUintField) IsDerivable() bool     { return false }
+func (f *SmallUintField) GetId() string      { return f.Id }
+func (f *SmallUintField) GetCaption() string { return f.Caption }
+func (f *SmallUintField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(uint16(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(uint16(0)))
+	}
+}
+func (f *SmallUintField) IsDerivable() bool { return false }
 func (f *SmallUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1035,10 +1137,16 @@ type MediumUintField struct {
 	CleanFunc     func(uint32) (uint32, error)
 }
 
-func (f *MediumUintField) GetId() string         { return f.Id }
-func (f *MediumUintField) GetCaption() string    { return f.Caption }
-func (f *MediumUintField) GetType() reflect.Type { return reflect.TypeOf(uint32(0)) }
-func (f *MediumUintField) IsDerivable() bool     { return false }
+func (f *MediumUintField) GetId() string      { return f.Id }
+func (f *MediumUintField) GetCaption() string { return f.Caption }
+func (f *MediumUintField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(uint32(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(uint32(0)))
+	}
+}
+func (f *MediumUintField) IsDerivable() bool { return false }
 func (f *MediumUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1107,9 +1215,15 @@ type UintField struct {
 	CleanFunc     func(uint32) (uint32, error)
 }
 
-func (f *UintField) GetId() string                                    { return f.Id }
-func (f *UintField) GetCaption() string                               { return f.Caption }
-func (f *UintField) GetType() reflect.Type                            { return reflect.TypeOf(uint32(0)) }
+func (f *UintField) GetId() string      { return f.Id }
+func (f *UintField) GetCaption() string { return f.Caption }
+func (f *UintField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(uint32(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(uint32(0)))
+	}
+}
 func (f *UintField) IsDerivable() bool                                { return false }
 func (f *UintField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *UintField) GetDependsOn() []string                           { return nil }
@@ -1177,10 +1291,16 @@ type BigUintField struct {
 	CleanFunc     func(uint64) (uint64, error)
 }
 
-func (f *BigUintField) GetId() string         { return f.Id }
-func (f *BigUintField) GetCaption() string    { return f.Caption }
-func (f *BigUintField) GetType() reflect.Type { return reflect.TypeOf(uint64(0)) }
-func (f *BigUintField) IsDerivable() bool     { return false }
+func (f *BigUintField) GetId() string      { return f.Id }
+func (f *BigUintField) GetCaption() string { return f.Caption }
+func (f *BigUintField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(uint64(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(uint64(0)))
+	}
+}
+func (f *BigUintField) IsDerivable() bool { return false }
 func (f *BigUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1249,9 +1369,15 @@ type RealField struct {
 	CleanFunc func(float64) (float64, error)
 }
 
-func (f *RealField) GetId() string                                    { return f.Id }
-func (f *RealField) GetCaption() string                               { return f.Caption }
-func (f *RealField) GetType() reflect.Type                            { return reflect.TypeOf(float64(0)) }
+func (f *RealField) GetId() string      { return f.Id }
+func (f *RealField) GetCaption() string { return f.Caption }
+func (f *RealField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(float64(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(float64(0)))
+	}
+}
 func (f *RealField) IsDerivable() bool                                { return false }
 func (f *RealField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *RealField) GetDependsOn() []string                           { return nil }
@@ -1318,9 +1444,15 @@ type FloatField struct {
 	CleanFunc func(float64) (float64, error)
 }
 
-func (f *FloatField) GetId() string                                    { return f.Id }
-func (f *FloatField) GetCaption() string                               { return f.Caption }
-func (f *FloatField) GetType() reflect.Type                            { return reflect.TypeOf(float64(0)) }
+func (f *FloatField) GetId() string      { return f.Id }
+func (f *FloatField) GetCaption() string { return f.Caption }
+func (f *FloatField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(float64(0))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(float64(0)))
+	}
+}
 func (f *FloatField) IsDerivable() bool                                { return false }
 func (f *FloatField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *FloatField) GetDependsOn() []string                           { return nil }
@@ -1387,10 +1519,16 @@ type DecimalField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *DecimalField) GetId() string         { return f.Id }
-func (f *DecimalField) GetCaption() string    { return f.Caption }
-func (f *DecimalField) GetType() reflect.Type { return reflect.TypeOf(string("")) }
-func (f *DecimalField) IsDerivable() bool     { return false }
+func (f *DecimalField) GetId() string      { return f.Id }
+func (f *DecimalField) GetCaption() string { return f.Caption }
+func (f *DecimalField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
+func (f *DecimalField) IsDerivable() bool { return false }
 func (f *DecimalField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1458,10 +1596,16 @@ type NumericField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *NumericField) GetId() string         { return f.Id }
-func (f *NumericField) GetCaption() string    { return f.Caption }
-func (f *NumericField) GetType() reflect.Type { return reflect.TypeOf(string("")) }
-func (f *NumericField) IsDerivable() bool     { return false }
+func (f *NumericField) GetId() string      { return f.Id }
+func (f *NumericField) GetCaption() string { return f.Caption }
+func (f *NumericField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
+func (f *NumericField) IsDerivable() bool { return false }
 func (f *NumericField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1527,9 +1671,15 @@ type BitField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *BitField) GetId() string                                    { return f.Id }
-func (f *BitField) GetCaption() string                               { return f.Caption }
-func (f *BitField) GetType() reflect.Type                            { return reflect.TypeOf(string("")) }
+func (f *BitField) GetId() string      { return f.Id }
+func (f *BitField) GetCaption() string { return f.Caption }
+func (f *BitField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
 func (f *BitField) IsDerivable() bool                                { return false }
 func (f *BitField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *BitField) GetDependsOn() []string                           { return nil }
@@ -1585,10 +1735,16 @@ type BinaryField struct {
 	CleanFunc func([]byte) ([]byte, error)
 }
 
-func (f *BinaryField) GetId() string         { return f.Id }
-func (f *BinaryField) GetCaption() string    { return f.Caption }
-func (f *BinaryField) GetType() reflect.Type { return reflect.TypeOf([]byte{}) }
-func (f *BinaryField) IsDerivable() bool     { return false }
+func (f *BinaryField) GetId() string      { return f.Id }
+func (f *BinaryField) GetCaption() string { return f.Caption }
+func (f *BinaryField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf([]byte{})
+	} else {
+		return reflect.PtrTo(reflect.TypeOf([]byte{}))
+	}
+}
+func (f *BinaryField) IsDerivable() bool { return false }
 func (f *BinaryField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1645,10 +1801,16 @@ type VarBinaryField struct {
 	CleanFunc func([]byte) ([]byte, error)
 }
 
-func (f *VarBinaryField) GetId() string         { return f.Id }
-func (f *VarBinaryField) GetCaption() string    { return f.Caption }
-func (f *VarBinaryField) GetType() reflect.Type { return reflect.TypeOf([]byte{}) }
-func (f *VarBinaryField) IsDerivable() bool     { return false }
+func (f *VarBinaryField) GetId() string      { return f.Id }
+func (f *VarBinaryField) GetCaption() string { return f.Caption }
+func (f *VarBinaryField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf([]byte{})
+	} else {
+		return reflect.PtrTo(reflect.TypeOf([]byte{}))
+	}
+}
+func (f *VarBinaryField) IsDerivable() bool { return false }
 func (f *VarBinaryField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1707,9 +1869,15 @@ type CharField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *CharField) GetId() string                                    { return f.Id }
-func (f *CharField) GetCaption() string                               { return f.Caption }
-func (f *CharField) GetType() reflect.Type                            { return reflect.TypeOf(string("")) }
+func (f *CharField) GetId() string      { return f.Id }
+func (f *CharField) GetCaption() string { return f.Caption }
+func (f *CharField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
 func (f *CharField) IsDerivable() bool                                { return false }
 func (f *CharField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *CharField) GetDependsOn() []string                           { return nil }
@@ -1777,10 +1945,16 @@ type VarCharField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *VarCharField) GetId() string         { return f.Id }
-func (f *VarCharField) GetCaption() string    { return f.Caption }
-func (f *VarCharField) GetType() reflect.Type { return reflect.TypeOf(string("")) }
-func (f *VarCharField) IsDerivable() bool     { return false }
+func (f *VarCharField) GetId() string      { return f.Id }
+func (f *VarCharField) GetCaption() string { return f.Caption }
+func (f *VarCharField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
+func (f *VarCharField) IsDerivable() bool { return false }
 func (f *VarCharField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1850,10 +2024,16 @@ type TinyTextField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *TinyTextField) GetId() string         { return f.Id }
-func (f *TinyTextField) GetCaption() string    { return f.Caption }
-func (f *TinyTextField) GetType() reflect.Type { return reflect.TypeOf(string("")) }
-func (f *TinyTextField) IsDerivable() bool     { return false }
+func (f *TinyTextField) GetId() string      { return f.Id }
+func (f *TinyTextField) GetCaption() string { return f.Caption }
+func (f *TinyTextField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
+func (f *TinyTextField) IsDerivable() bool { return false }
 func (f *TinyTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -1927,9 +2107,15 @@ type TextField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *TextField) GetId() string                                    { return f.Id }
-func (f *TextField) GetCaption() string                               { return f.Caption }
-func (f *TextField) GetType() reflect.Type                            { return reflect.TypeOf(string("")) }
+func (f *TextField) GetId() string      { return f.Id }
+func (f *TextField) GetCaption() string { return f.Caption }
+func (f *TextField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
 func (f *TextField) IsDerivable() bool                                { return false }
 func (f *TextField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *TextField) GetDependsOn() []string                           { return nil }
@@ -2002,10 +2188,16 @@ type MediumTextField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *MediumTextField) GetId() string         { return f.Id }
-func (f *MediumTextField) GetCaption() string    { return f.Caption }
-func (f *MediumTextField) GetType() reflect.Type { return reflect.TypeOf(string("")) }
-func (f *MediumTextField) IsDerivable() bool     { return false }
+func (f *MediumTextField) GetId() string      { return f.Id }
+func (f *MediumTextField) GetCaption() string { return f.Caption }
+func (f *MediumTextField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
+func (f *MediumTextField) IsDerivable() bool { return false }
 func (f *MediumTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
@@ -2079,10 +2271,16 @@ type LongTextField struct {
 	CleanFunc func(string) (string, error)
 }
 
-func (f *LongTextField) GetId() string         { return f.Id }
-func (f *LongTextField) GetCaption() string    { return f.Caption }
-func (f *LongTextField) GetType() reflect.Type { return reflect.TypeOf(string("")) }
-func (f *LongTextField) IsDerivable() bool     { return false }
+func (f *LongTextField) GetId() string      { return f.Id }
+func (f *LongTextField) GetCaption() string { return f.Caption }
+func (f *LongTextField) GetType() reflect.Type {
+	if f.NotNull {
+		return reflect.TypeOf(string(""))
+	} else {
+		return reflect.PtrTo(reflect.TypeOf(string("")))
+	}
+}
+func (f *LongTextField) IsDerivable() bool { return false }
 func (f *LongTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
