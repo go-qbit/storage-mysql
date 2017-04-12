@@ -316,7 +316,7 @@ func (s *DBTestSuite) TestModel_GetAllToStruct() {
 	timelog.Finish(ctx)
 	//println(timelog.Get(ctx).Analyze().String())
 
-	s.Equal(
+	s.EqualValues(
 		[]UserType{
 			{
 				Id:       1,
@@ -345,8 +345,8 @@ func (s *DBTestSuite) TestModel_GetAllToStruct() {
 					{Text: "Message 4"},
 				},
 				Addresses: []AddressTYpe{
-					{City: "Crowley", Address: "524 Pecan Street"},
 					{City: "Fort Worth", Address: "7105 Plover Circle"},
+					{City: "Crowley", Address: "524 Pecan Street"},
 				},
 			},
 			{
