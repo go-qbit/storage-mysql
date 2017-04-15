@@ -366,6 +366,50 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 	return res, nil
 }
 
+func (s *MySQL) Edit(ctx context.Context, m model.IModel, filter model.IExpression, newValues map[string]interface{}) error {
+	sqlBuf := NewSqlBuffer()
+
+	sqlBuf.WriteString("UPDATE ")
+	sqlBuf.WriteIdentifier(m.GetId())
+	sqlBuf.WriteString(" SET ")
+	first := true
+	for name, value := range newValues {
+		if first {
+			first = false
+		} else {
+			sqlBuf.WriteString(", ")
+		}
+		sqlBuf.WriteIdentifier(name)
+		sqlBuf.WriteByte('=')
+		sqlBuf.WriteValue(value)
+	}
+
+	if filter != nil {
+		sqlBuf.WriteString(" WHERE ")
+		filter.GetProcessor(exprProcessor).(WriteFunc)(sqlBuf)
+	}
+
+	_, err := s.Exec(ctx, sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
+
+	return err
+}
+
+func (s *MySQL) Delete(ctx context.Context, m model.IModel, filter model.IExpression) error {
+	sqlBuf := NewSqlBuffer()
+
+	sqlBuf.WriteString("DELETE FROM ")
+	sqlBuf.WriteIdentifier(m.GetId())
+
+	if filter != nil {
+		sqlBuf.WriteString(" WHERE ")
+		filter.GetProcessor(exprProcessor).(WriteFunc)(sqlBuf)
+	}
+
+	_, err := s.Exec(ctx, sqlBuf.GetSQL(), sqlBuf.GetArgs()...)
+
+	return err
+}
+
 func QuoteIdentifier(identifier string) string {
 	return "`" + strings.Replace(identifier, "`", "``", -1) + "`"
 }

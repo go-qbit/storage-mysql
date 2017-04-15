@@ -411,3 +411,64 @@ func (s *DBTestSuite) TestModel_Transaction() {
 	rows.Scan(&n)
 	s.Equal(100, n)
 }
+
+func (s *DBTestSuite) TestBaseModel_Edit() {
+	s.TestModel_Add()
+
+	err := s.user.Edit(context.Background(), expr.Eq(s.user.FieldExpr("id"), expr.Value(3)), map[string]interface{}{
+		"lastname": "NewName",
+	})
+	s.NoError(err)
+
+	data, err := s.user.GetAll(
+		context.Background(),
+		[]string{"id", "lastname"},
+		model.GetAllOptions{
+			Filter: expr.Lt(expr.ModelField(s.user, "id"), expr.Value(4)),
+		},
+	)
+	s.NoError(err)
+
+	s.Equal([]map[string]interface{}{
+		{
+			"id":       uint32(1),
+			"lastname": "Sidorov",
+		},
+		{
+			"id":       uint32(2),
+			"lastname": "Ivanov",
+		},
+		{
+			"id":       uint32(3),
+			"lastname": "NewName",
+		},
+	}, data.Maps())
+}
+
+func (s *DBTestSuite) TestBaseModel_Delete() {
+	_, err := s.user.AddFromStructs(context.Background(), []struct {
+		Name     string
+		Lastname string
+	}{
+		{Name: "Ivan", Lastname: "Sidorov"},
+		{Name: "Petr", Lastname: "Ivanov"},
+		{Name: "James", Lastname: "Bond"},
+		{Name: "John", Lastname: "Connor"},
+		{Name: "Sara", Lastname: "Connor"},
+	}, model.AddOptions{})
+	s.NoError(err)
+
+	s.NoError(s.user.Delete(context.Background(), expr.Eq(s.user.FieldExpr("id"), expr.Value(3))))
+
+	data, err := s.user.GetAll(context.Background(), []string{"id"}, model.GetAllOptions{
+		OrderBy: []model.Order{{"id", false}},
+	})
+	s.NoError(err)
+
+	s.Equal([]map[string]interface{}{
+		{"id": uint32(1)},
+		{"id": uint32(2)},
+		{"id": uint32(4)},
+		{"id": uint32(5)},
+	}, data.Maps())
+}
