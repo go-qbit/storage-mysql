@@ -302,9 +302,10 @@ func (s *DBTestSuite) TestModel_GetAllToStruct() {
 	s.NoError(s.user.GetAllToStruct(
 		ctx, &res, model.GetAllOptions{
 			Filter: expr.Or(
-				expr.Lt(expr.ModelField(s.user, "id"), expr.Value(4)),
-				expr.Any(s.user, s.message, expr.Eq(expr.ModelField(s.message, "id"), expr.Value(10))),
-				expr.Any(s.user, s.address, expr.Eq(expr.ModelField(s.address, "id"), expr.Value(100))),
+				expr.Lt(s.user.FieldExpr("id"), expr.Value(4)),
+				expr.Any(s.user, s.message, expr.Eq(s.message.FieldExpr("id"), expr.Value(10))),
+				expr.Any(s.user, s.address, expr.Eq(s.address.FieldExpr("id"), expr.Value(100))),
+				expr.Eq(s.user.FieldExpr("id"), nil),
 			),
 			OrderBy: []model.Order{
 				{"id", false},

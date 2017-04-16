@@ -13,8 +13,26 @@ type WriteFunc func(*SqlBuffer)
 func (p *ExprProcessor) Eq(op1, op2 model.IExpression) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		op1.GetProcessor(p).(WriteFunc)(buf)
-		buf.WriteByte('=')
-		op2.GetProcessor(p).(WriteFunc)(buf)
+
+		if op2 == nil {
+			buf.WriteString(" IS NULL")
+		} else {
+			buf.WriteByte('=')
+			op2.GetProcessor(p).(WriteFunc)(buf)
+		}
+	})
+}
+
+func (p *ExprProcessor) Ne(op1, op2 model.IExpression) interface{} {
+	return WriteFunc(func(buf *SqlBuffer) {
+		op1.GetProcessor(p).(WriteFunc)(buf)
+
+		if op2 == nil {
+			buf.WriteString(" IS NOT NULL")
+		} else {
+			buf.WriteString("<>")
+			op2.GetProcessor(p).(WriteFunc)(buf)
+		}
 	})
 }
 
