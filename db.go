@@ -309,6 +309,10 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 		}
 	}
 
+	if options.ForUpdate {
+		sqlBuf.WriteString(" FOR UPDATE")
+	}
+
 	if options.RowsWoLimit != nil {
 		var err error
 		if ctx, err = s.StartTransaction(ctx); err != nil { // For using 1 connection

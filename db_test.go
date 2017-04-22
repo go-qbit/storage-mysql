@@ -256,6 +256,7 @@ func (s *DBTestSuite) TestModel_Query() {
 		Limit:       3,
 		Offset:      2,
 		RowsWoLimit: &totalRows,
+		ForUpdate:   true,
 	})
 	if !s.NoError(err) {
 		return
