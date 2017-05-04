@@ -58,7 +58,7 @@ func (s *MySQL) Commit(ctx context.Context) (context.Context, error) {
 	ct := ctx.Value(s.transactionKey())
 
 	if ct == nil {
-		return nil, qerror.New("No started transaction")
+		return nil, qerror.Errorf("No started transaction")
 	}
 
 	t := ct.(*transaction)
@@ -96,7 +96,7 @@ func (s *MySQL) Rollback(ctx context.Context) (context.Context, error) {
 	ct := ctx.Value(s.transactionKey())
 
 	if ct == nil {
-		return nil, qerror.New("No started transaction")
+		return nil, qerror.Errorf("No started transaction")
 	}
 
 	t := ct.(*transaction)

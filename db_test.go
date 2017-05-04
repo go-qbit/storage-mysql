@@ -81,7 +81,7 @@ func (s *DBTestSuite) SetupTest() {
 	s.address = test.NewAddress(s.storage)
 
 	model.AddOneToOneRelation(s.phone, s.user, false)
-	model.AddManyToOneRelation(s.message, s.user, false)
+	model.AddManyToOneRelation(s.message, s.user, false, "", "")
 	model.AddManyToManyRelation(s.user, s.address, s.storage)
 
 	if !s.NoError(s.storage.Connect(mysqlDsn)) {
