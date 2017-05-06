@@ -32,18 +32,30 @@ func (f *DateField) IsRequired() bool                                 { return f
 func (f *DateField) GetDependsOn() []string                           { return nil }
 func (f *DateField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *DateField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *DateField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *DateField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &DateField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -89,18 +101,30 @@ func (f *TimeField) IsRequired() bool                                 { return f
 func (f *TimeField) GetDependsOn() []string                           { return nil }
 func (f *TimeField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *TimeField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *TimeField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *TimeField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TimeField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -148,18 +172,30 @@ func (f *TimeStampField) IsRequired() bool {
 func (f *TimeStampField) GetDependsOn() []string                           { return nil }
 func (f *TimeStampField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *TimeStampField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *TimeStampField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *TimeStampField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TimeStampField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -207,18 +243,30 @@ func (f *DateTimeField) IsRequired() bool {
 func (f *DateTimeField) GetDependsOn() []string                           { return nil }
 func (f *DateTimeField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *DateTimeField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *DateTimeField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *DateTimeField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &DateTimeField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -264,18 +312,30 @@ func (f *YearField) IsRequired() bool                                 { return f
 func (f *YearField) GetDependsOn() []string                           { return nil }
 func (f *YearField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *YearField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *YearField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *YearField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &YearField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -323,18 +383,30 @@ func (f *TinyBlobField) IsRequired() bool {
 func (f *TinyBlobField) GetDependsOn() []string                           { return nil }
 func (f *TinyBlobField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *TinyBlobField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.([]byte))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CheckFunc(*v.(*[]byte))
+		}
+	}
+	return nil
 }
 func (f *TinyBlobField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.([]byte))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CleanFunc(*v.(*[]byte))
+		}
+	}
+	return v, nil
 }
 func (f *TinyBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TinyBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -380,18 +452,30 @@ func (f *BlobField) IsRequired() bool                                 { return f
 func (f *BlobField) GetDependsOn() []string                           { return nil }
 func (f *BlobField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *BlobField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.([]byte))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CheckFunc(*v.(*[]byte))
+		}
+	}
+	return nil
 }
 func (f *BlobField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.([]byte))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CleanFunc(*v.(*[]byte))
+		}
+	}
+	return v, nil
 }
 func (f *BlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &BlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -439,18 +523,30 @@ func (f *MediumBlobField) IsRequired() bool {
 func (f *MediumBlobField) GetDependsOn() []string                           { return nil }
 func (f *MediumBlobField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *MediumBlobField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.([]byte))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CheckFunc(*v.(*[]byte))
+		}
+	}
+	return nil
 }
 func (f *MediumBlobField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.([]byte))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CleanFunc(*v.(*[]byte))
+		}
+	}
+	return v, nil
 }
 func (f *MediumBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &MediumBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -498,18 +594,30 @@ func (f *LongBlobField) IsRequired() bool {
 func (f *LongBlobField) GetDependsOn() []string                           { return nil }
 func (f *LongBlobField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *LongBlobField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.([]byte))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CheckFunc(*v.(*[]byte))
+		}
+	}
+	return nil
 }
 func (f *LongBlobField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.([]byte))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CleanFunc(*v.(*[]byte))
+		}
+	}
+	return v, nil
 }
 func (f *LongBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &LongBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -557,18 +665,30 @@ func (f *BooleanField) IsRequired() bool {
 func (f *BooleanField) GetDependsOn() []string                           { return nil }
 func (f *BooleanField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *BooleanField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(bool))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(bool))
+	} else {
+		if v.(*bool) != nil {
+			return f.CheckFunc(*v.(*bool))
+		}
+	}
+	return nil
 }
 func (f *BooleanField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(bool))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(bool))
+	} else {
+		if v.(*bool) != nil {
+			return f.CleanFunc(*v.(*bool))
+		}
+	}
+	return v, nil
 }
 func (f *BooleanField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &BooleanField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -619,18 +739,30 @@ func (f *TinyIntField) IsRequired() bool {
 func (f *TinyIntField) GetDependsOn() []string                           { return nil }
 func (f *TinyIntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *TinyIntField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(int8))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(int8))
+	} else {
+		if v.(*int8) != nil {
+			return f.CheckFunc(*v.(*int8))
+		}
+	}
+	return nil
 }
 func (f *TinyIntField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(int8))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(int8))
+	} else {
+		if v.(*int8) != nil {
+			return f.CleanFunc(*v.(*int8))
+		}
+	}
+	return v, nil
 }
 func (f *TinyIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TinyIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -695,18 +827,30 @@ func (f *SmallIntField) IsRequired() bool {
 func (f *SmallIntField) GetDependsOn() []string                           { return nil }
 func (f *SmallIntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *SmallIntField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(int16))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(int16))
+	} else {
+		if v.(*int16) != nil {
+			return f.CheckFunc(*v.(*int16))
+		}
+	}
+	return nil
 }
 func (f *SmallIntField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(int16))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(int16))
+	} else {
+		if v.(*int16) != nil {
+			return f.CleanFunc(*v.(*int16))
+		}
+	}
+	return v, nil
 }
 func (f *SmallIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &SmallIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -771,18 +915,30 @@ func (f *MediumIntField) IsRequired() bool {
 func (f *MediumIntField) GetDependsOn() []string                           { return nil }
 func (f *MediumIntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *MediumIntField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(int32))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(int32))
+	} else {
+		if v.(*int32) != nil {
+			return f.CheckFunc(*v.(*int32))
+		}
+	}
+	return nil
 }
 func (f *MediumIntField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(int32))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(int32))
+	} else {
+		if v.(*int32) != nil {
+			return f.CleanFunc(*v.(*int32))
+		}
+	}
+	return v, nil
 }
 func (f *MediumIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &MediumIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -845,18 +1001,30 @@ func (f *IntField) IsRequired() bool                                 { return f.
 func (f *IntField) GetDependsOn() []string                           { return nil }
 func (f *IntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *IntField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(int32))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(int32))
+	} else {
+		if v.(*int32) != nil {
+			return f.CheckFunc(*v.(*int32))
+		}
+	}
+	return nil
 }
 func (f *IntField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(int32))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(int32))
+	} else {
+		if v.(*int32) != nil {
+			return f.CleanFunc(*v.(*int32))
+		}
+	}
+	return v, nil
 }
 func (f *IntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &IntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -921,18 +1089,30 @@ func (f *BigIntField) IsRequired() bool {
 func (f *BigIntField) GetDependsOn() []string                           { return nil }
 func (f *BigIntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *BigIntField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(int64))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(int64))
+	} else {
+		if v.(*int64) != nil {
+			return f.CheckFunc(*v.(*int64))
+		}
+	}
+	return nil
 }
 func (f *BigIntField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(int64))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(int64))
+	} else {
+		if v.(*int64) != nil {
+			return f.CleanFunc(*v.(*int64))
+		}
+	}
+	return v, nil
 }
 func (f *BigIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &BigIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -997,18 +1177,30 @@ func (f *TinyUintField) IsRequired() bool {
 func (f *TinyUintField) GetDependsOn() []string                           { return nil }
 func (f *TinyUintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *TinyUintField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(uint8))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(uint8))
+	} else {
+		if v.(*uint8) != nil {
+			return f.CheckFunc(*v.(*uint8))
+		}
+	}
+	return nil
 }
 func (f *TinyUintField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(uint8))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(uint8))
+	} else {
+		if v.(*uint8) != nil {
+			return f.CleanFunc(*v.(*uint8))
+		}
+	}
+	return v, nil
 }
 func (f *TinyUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TinyUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1075,18 +1267,30 @@ func (f *SmallUintField) IsRequired() bool {
 func (f *SmallUintField) GetDependsOn() []string                           { return nil }
 func (f *SmallUintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *SmallUintField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(uint16))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(uint16))
+	} else {
+		if v.(*uint16) != nil {
+			return f.CheckFunc(*v.(*uint16))
+		}
+	}
+	return nil
 }
 func (f *SmallUintField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(uint16))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(uint16))
+	} else {
+		if v.(*uint16) != nil {
+			return f.CleanFunc(*v.(*uint16))
+		}
+	}
+	return v, nil
 }
 func (f *SmallUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &SmallUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1153,18 +1357,30 @@ func (f *MediumUintField) IsRequired() bool {
 func (f *MediumUintField) GetDependsOn() []string                           { return nil }
 func (f *MediumUintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *MediumUintField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(uint32))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(uint32))
+	} else {
+		if v.(*uint32) != nil {
+			return f.CheckFunc(*v.(*uint32))
+		}
+	}
+	return nil
 }
 func (f *MediumUintField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(uint32))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(uint32))
+	} else {
+		if v.(*uint32) != nil {
+			return f.CleanFunc(*v.(*uint32))
+		}
+	}
+	return v, nil
 }
 func (f *MediumUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &MediumUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1229,18 +1445,30 @@ func (f *UintField) IsRequired() bool                                 { return f
 func (f *UintField) GetDependsOn() []string                           { return nil }
 func (f *UintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *UintField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(uint32))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(uint32))
+	} else {
+		if v.(*uint32) != nil {
+			return f.CheckFunc(*v.(*uint32))
+		}
+	}
+	return nil
 }
 func (f *UintField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(uint32))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(uint32))
+	} else {
+		if v.(*uint32) != nil {
+			return f.CleanFunc(*v.(*uint32))
+		}
+	}
+	return v, nil
 }
 func (f *UintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &UintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1307,18 +1535,30 @@ func (f *BigUintField) IsRequired() bool {
 func (f *BigUintField) GetDependsOn() []string                           { return nil }
 func (f *BigUintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *BigUintField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(uint64))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(uint64))
+	} else {
+		if v.(*uint64) != nil {
+			return f.CheckFunc(*v.(*uint64))
+		}
+	}
+	return nil
 }
 func (f *BigUintField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(uint64))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(uint64))
+	} else {
+		if v.(*uint64) != nil {
+			return f.CleanFunc(*v.(*uint64))
+		}
+	}
+	return v, nil
 }
 func (f *BigUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &BigUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1383,18 +1623,30 @@ func (f *RealField) IsRequired() bool                                 { return f
 func (f *RealField) GetDependsOn() []string                           { return nil }
 func (f *RealField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *RealField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(float64))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(float64))
+	} else {
+		if v.(*float64) != nil {
+			return f.CheckFunc(*v.(*float64))
+		}
+	}
+	return nil
 }
 func (f *RealField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(float64))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(float64))
+	} else {
+		if v.(*float64) != nil {
+			return f.CleanFunc(*v.(*float64))
+		}
+	}
+	return v, nil
 }
 func (f *RealField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &RealField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1458,18 +1710,30 @@ func (f *FloatField) IsRequired() bool                                 { return 
 func (f *FloatField) GetDependsOn() []string                           { return nil }
 func (f *FloatField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *FloatField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(float64))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(float64))
+	} else {
+		if v.(*float64) != nil {
+			return f.CheckFunc(*v.(*float64))
+		}
+	}
+	return nil
 }
 func (f *FloatField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(float64))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(float64))
+	} else {
+		if v.(*float64) != nil {
+			return f.CleanFunc(*v.(*float64))
+		}
+	}
+	return v, nil
 }
 func (f *FloatField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &FloatField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1535,18 +1799,30 @@ func (f *DecimalField) IsRequired() bool {
 func (f *DecimalField) GetDependsOn() []string                           { return nil }
 func (f *DecimalField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *DecimalField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *DecimalField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *DecimalField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &DecimalField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1612,18 +1888,30 @@ func (f *NumericField) IsRequired() bool {
 func (f *NumericField) GetDependsOn() []string                           { return nil }
 func (f *NumericField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *NumericField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *NumericField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *NumericField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &NumericField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1685,18 +1973,30 @@ func (f *BitField) IsRequired() bool                                 { return f.
 func (f *BitField) GetDependsOn() []string                           { return nil }
 func (f *BitField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *BitField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *BitField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *BitField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &BitField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1751,18 +2051,30 @@ func (f *BinaryField) IsRequired() bool {
 func (f *BinaryField) GetDependsOn() []string                           { return nil }
 func (f *BinaryField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *BinaryField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.([]byte))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CheckFunc(*v.(*[]byte))
+		}
+	}
+	return nil
 }
 func (f *BinaryField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.([]byte))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CleanFunc(*v.(*[]byte))
+		}
+	}
+	return v, nil
 }
 func (f *BinaryField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &BinaryField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1817,18 +2129,30 @@ func (f *VarBinaryField) IsRequired() bool {
 func (f *VarBinaryField) GetDependsOn() []string                           { return nil }
 func (f *VarBinaryField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *VarBinaryField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.([]byte))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CheckFunc(*v.(*[]byte))
+		}
+	}
+	return nil
 }
 func (f *VarBinaryField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.([]byte))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.([]byte))
+	} else {
+		if v.(*[]byte) != nil {
+			return f.CleanFunc(*v.(*[]byte))
+		}
+	}
+	return v, nil
 }
 func (f *VarBinaryField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &VarBinaryField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1883,18 +2207,30 @@ func (f *CharField) IsRequired() bool                                 { return f
 func (f *CharField) GetDependsOn() []string                           { return nil }
 func (f *CharField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *CharField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *CharField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *CharField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &CharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -1961,18 +2297,30 @@ func (f *VarCharField) IsRequired() bool {
 func (f *VarCharField) GetDependsOn() []string                           { return nil }
 func (f *VarCharField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *VarCharField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *VarCharField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *VarCharField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &VarCharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -2040,18 +2388,30 @@ func (f *TinyTextField) IsRequired() bool {
 func (f *TinyTextField) GetDependsOn() []string                           { return nil }
 func (f *TinyTextField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *TinyTextField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *TinyTextField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *TinyTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TinyTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -2121,18 +2481,30 @@ func (f *TextField) IsRequired() bool                                 { return f
 func (f *TextField) GetDependsOn() []string                           { return nil }
 func (f *TextField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *TextField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *TextField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *TextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -2204,18 +2576,30 @@ func (f *MediumTextField) IsRequired() bool {
 func (f *MediumTextField) GetDependsOn() []string                           { return nil }
 func (f *MediumTextField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *MediumTextField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *MediumTextField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *MediumTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &MediumTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
@@ -2287,18 +2671,30 @@ func (f *LongTextField) IsRequired() bool {
 func (f *LongTextField) GetDependsOn() []string                           { return nil }
 func (f *LongTextField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *LongTextField) Check(v interface{}) error {
-	if f.CheckFunc != nil {
-		return f.CheckFunc(v.(string))
-	} else {
+	if f.CheckFunc == nil {
 		return nil
 	}
+	if f.NotNull {
+		return f.CheckFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CheckFunc(*v.(*string))
+		}
+	}
+	return nil
 }
 func (f *LongTextField) Clean(v interface{}) (interface{}, error) {
-	if f.CleanFunc != nil {
-		return f.CleanFunc(v.(string))
-	} else {
+	if f.CleanFunc == nil {
 		return v, nil
 	}
+	if f.NotNull {
+		return f.CleanFunc(v.(string))
+	} else {
+		if v.(*string) != nil {
+			return f.CleanFunc(*v.(*string))
+		}
+	}
+	return v, nil
 }
 func (f *LongTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &LongTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}

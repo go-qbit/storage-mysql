@@ -215,18 +215,30 @@ func main() {
 		buf.WriteString("func (f *" + typeName + ") GetDependsOn() []string { return nil }\n")
 		buf.WriteString("func (f *" + typeName + ") Calc(map[string]interface{}) (interface{}, error) { return nil, nil }\n")
 		buf.WriteString("func (f *" + typeName + ") Check(v interface{}) error {\n" +
-			"	if f.CheckFunc != nil {\n" +
-			"		return f.CheckFunc(v.(" + mysqlType.goType + "))\n" +
-			"	} else {\n" +
+			"	if f.CheckFunc == nil {\n" +
 			"		return nil\n" +
 			"	}\n" +
+			"	if f.NotNull {\n" +
+			"		return f.CheckFunc(v.(" + mysqlType.goType + "))\n" +
+			"	} else {\n" +
+			"		if v.(*" + mysqlType.goType + ") != nil {\n" +
+			"			return f.CheckFunc(*v.(*" + mysqlType.goType + "))\n" +
+			"		}\n" +
+			"	}\n" +
+			"	return nil\n" +
 			"}\n")
 		buf.WriteString("func (f *" + typeName + ") Clean(v interface{}) (interface{}, error) {\n" +
-			"	if f.CleanFunc != nil {\n" +
-			"		return f.CleanFunc(v.(" + mysqlType.goType + "))\n" +
-			"	} else {\n" +
+			"	if f.CleanFunc == nil {\n" +
 			"		return v, nil\n" +
 			"	}\n" +
+			"	if f.NotNull {\n" +
+			"		return f.CleanFunc(v.(" + mysqlType.goType + "))\n" +
+			"	} else {\n" +
+			"		if v.(*" + mysqlType.goType + ") != nil {\n" +
+			"			return f.CleanFunc(*v.(*" + mysqlType.goType + "))\n" +
+			"		}\n" +
+			"	}\n" +
+			"	return v, nil\n" +
 			"}\n")
 
 		var cloneFields string
