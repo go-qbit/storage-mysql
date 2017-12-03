@@ -52,9 +52,13 @@ func NewPhone(storage *mysql.MySQL) *Phone {
 					},
 				},
 			},
-			[]string{"id"},
-			[]mysql.Index{
-				{[]string{"country_code", "code", "number"}, true},
+			mysql.BaseModelOpts{
+				BaseModelOpts: model.BaseModelOpts{
+					PkFieldsNames: []string{"id"},
+				},
+				Indexes: []mysql.Index{
+					{[]string{"country_code", "code", "number"}, true},
+				},
 			},
 		),
 	}

@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/go-qbit/model"
 	"github.com/go-qbit/storage-mysql"
 )
 
@@ -43,9 +44,13 @@ func NewAddress(storage *mysql.MySQL) *Address {
 				},
 			},
 			nil,
-			[]string{"id"},
-			[]mysql.Index{
-				{FieldNames: []string{"country", "city", "address"}, Unique: true},
+			mysql.BaseModelOpts{
+				BaseModelOpts: model.BaseModelOpts{
+					PkFieldsNames: []string{"id"},
+				},
+				Indexes: []mysql.Index{
+					{FieldNames: []string{"country", "city", "address"}, Unique: true},
+				},
 			},
 		),
 	}

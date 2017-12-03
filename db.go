@@ -50,13 +50,13 @@ func (s *MySQL) Disonnect() error {
 	return s.db.Close()
 }
 
-func (s *MySQL) NewModel(id string, fields []model.IFieldDefinition, pk []string) model.IModel {
+func (s *MySQL) NewModel(id string, fields []model.IFieldDefinition, opts model.BaseModelOpts) model.IModel {
 	mysqlFields := make([]IMysqlFieldDefinition, len(fields))
 	for i, _ := range fields {
 		mysqlFields[i] = fields[i].(IMysqlFieldDefinition)
 	}
 
-	return NewBaseModel(s, id, mysqlFields, nil, pk, nil)
+	return NewBaseModel(s, id, mysqlFields, nil, BaseModelOpts{BaseModelOpts: opts})
 }
 
 func (s *MySQL) RegisterModel(m model.IModel) error {

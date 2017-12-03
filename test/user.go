@@ -46,10 +46,14 @@ func NewUser(storage *mysql.MySQL) *User {
 					},
 				},
 			},
-			[]string{"id"},
-			[]mysql.Index{
-				{[]string{"name"}, false},
-				{[]string{"lastname", "name"}, false},
+			mysql.BaseModelOpts{
+				BaseModelOpts: model.BaseModelOpts{
+					PkFieldsNames: []string{"id"},
+				},
+				Indexes: []mysql.Index{
+					{[]string{"name"}, false},
+					{[]string{"lastname", "name"}, false},
+				},
 			},
 		),
 	}

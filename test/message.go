@@ -2,6 +2,7 @@ package test
 
 import (
 	"github.com/go-qbit/storage-mysql"
+	"github.com/go-qbit/model"
 )
 
 type Message struct {
@@ -29,8 +30,11 @@ func NewMessage(storage *mysql.MySQL) *Message {
 				},
 			},
 			nil,
-			[]string{"id"},
-			nil,
+			mysql.BaseModelOpts{
+				BaseModelOpts: model.BaseModelOpts{
+					PkFieldsNames: []string{"id"},
+				},
+			},
 		),
 	}
 }

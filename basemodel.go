@@ -12,12 +12,17 @@ type BaseModel struct {
 	indexes []Index
 }
 
+type BaseModelOpts struct {
+	model.BaseModelOpts
+	Indexes []Index
+}
+
 type Index struct {
 	FieldNames []string
 	Unique     bool
 }
 
-func NewBaseModel(db *MySQL, id string, dbFields []IMysqlFieldDefinition, derivableFields []model.IFieldDefinition, pk []string, indexes []Index) *BaseModel {
+func NewBaseModel(db *MySQL, id string, dbFields []IMysqlFieldDefinition, derivableFields []model.IFieldDefinition, opts BaseModelOpts) *BaseModel {
 	allFields := make([]model.IFieldDefinition, 0, len(dbFields)+len(derivableFields))
 
 	for _, field := range dbFields {
@@ -32,8 +37,8 @@ func NewBaseModel(db *MySQL, id string, dbFields []IMysqlFieldDefinition, deriva
 	}
 
 	m := &BaseModel{
-		BaseModel: model.NewBaseModel(id, allFields, pk, db),
-		indexes:   indexes,
+		BaseModel: model.NewBaseModel(id, allFields, db, opts.BaseModelOpts),
+		indexes:   opts.Indexes,
 	}
 
 	db.modelsMtx.Lock()
@@ -114,7 +119,7 @@ func (m *BaseModel) WriteCreateSQL(sqlBuf *SqlBuffer) {
 			sqlBuf.WriteString(",FOREIGN KEY ")
 			fkNameArr := []string{"fk", m.GetId(), ""}
 			fkNameArr = append(fkNameArr, relation.LocalFieldsNames...)
-			fkNameArr = append(fkNameArr, "_", extModel, "")
+			fkNameArr = append(fkNameArr, "_", relation.ExtModel.GetId(), "")
 			fkNameArr = append(fkNameArr, relation.FkFieldsNames...)
 			fkName := strings.Join(fkNameArr, "_")
 			if len(fkName) > 64 {
@@ -124,7 +129,7 @@ func (m *BaseModel) WriteCreateSQL(sqlBuf *SqlBuffer) {
 			sqlBuf.WriteByte('(')
 			sqlBuf.WriteIdentifiersList(relation.LocalFieldsNames)
 			sqlBuf.WriteString(")REFERENCES ")
-			sqlBuf.WriteIdentifier(extModel)
+			sqlBuf.WriteIdentifier(relation.ExtModel.GetId())
 			sqlBuf.WriteByte('(')
 			sqlBuf.WriteIdentifiersList(relation.FkFieldsNames)
 			sqlBuf.WriteString(")ON UPDATE RESTRICT ON DELETE RESTRICT")
