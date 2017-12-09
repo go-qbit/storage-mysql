@@ -195,6 +195,11 @@ func main() {
 			buf.WriteString(field.Name() + " " + field.GoType() + "\n")
 		}
 
+		typeFields := make(map[string]struct{})
+		for _, ftype := range mysqlType.baseClass.Fields() {
+			typeFields[ftype.Name()] = struct{}{}
+		}
+
 		buf.WriteString("NotNull bool\n")
 		buf.WriteString("Default *" + mysqlType.goType + "\n")
 		buf.WriteString("CheckFunc func(" + mysqlType.goType + ") error\n")
@@ -210,6 +215,21 @@ func main() {
 			"	return reflect.PtrTo(reflect.TypeOf(" + typeOf[mysqlType.goType] + "))\n" +
 			"}\n" +
 			"}\n")
+		/**/
+		buf.WriteString("" +
+			"func (f *" + typeName + ") GetStorageType() string {\n" +
+			"	res := \"" + mysqlType.mysqlType + "\"\n\n")
+
+		if _, exists := typeFields["Length"]; exists {
+			buf.WriteString(`if f.Length != 0 {
+				res += "(" + strconv.Itoa(f.Length) + ")"
+			}` + "\n\n")
+		}
+		if mysqlType.baseClass.IsUnsigned() {
+			buf.WriteString(`res += " UNSIGNED"` + "\n\n")
+		}
+		buf.WriteString("return res\n}\n")
+		/**/
 		buf.WriteString("func (f *" + typeName + ") IsDerivable() bool { return false }\n")
 		buf.WriteString("func (f *" + typeName + ") IsRequired() bool { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }\n")
 		buf.WriteString("func (f *" + typeName + ") GetDependsOn() []string { return nil }\n")
@@ -253,11 +273,6 @@ func main() {
 		buf.WriteString("func (f *" + typeName + ") CloneForFK(id string, caption string, required bool) model.IFieldDefinition {\n" +
 			"return &" + typeName + "{id, caption, " + cloneFields + " required, f.Default, f.CheckFunc, f.CleanFunc}\n" +
 			"}\n")
-
-		typeFields := make(map[string]struct{})
-		for _, ftype := range mysqlType.baseClass.Fields() {
-			typeFields[ftype.Name()] = struct{}{}
-		}
 
 		isAutoincremented := "false"
 		if _, exists := typeFields["AutoIncrement"]; exists {

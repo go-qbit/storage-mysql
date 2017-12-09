@@ -27,6 +27,11 @@ func (f *DateField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
 }
+func (f *DateField) GetStorageType() string {
+	res := "DATE"
+
+	return res
+}
 func (f *DateField) IsDerivable() bool                                { return false }
 func (f *DateField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *DateField) GetDependsOn() []string                           { return nil }
@@ -96,6 +101,11 @@ func (f *TimeField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
 }
+func (f *TimeField) GetStorageType() string {
+	res := "TIME"
+
+	return res
+}
 func (f *TimeField) IsDerivable() bool                                { return false }
 func (f *TimeField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *TimeField) GetDependsOn() []string                           { return nil }
@@ -164,6 +174,11 @@ func (f *TimeStampField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
+}
+func (f *TimeStampField) GetStorageType() string {
+	res := "TIMESTAMP"
+
+	return res
 }
 func (f *TimeStampField) IsDerivable() bool { return false }
 func (f *TimeStampField) IsRequired() bool {
@@ -236,6 +251,11 @@ func (f *DateTimeField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
 }
+func (f *DateTimeField) GetStorageType() string {
+	res := "DATETIME"
+
+	return res
+}
 func (f *DateTimeField) IsDerivable() bool { return false }
 func (f *DateTimeField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
@@ -307,6 +327,11 @@ func (f *YearField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
 }
+func (f *YearField) GetStorageType() string {
+	res := "YEAR"
+
+	return res
+}
 func (f *YearField) IsDerivable() bool                                { return false }
 func (f *YearField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *YearField) GetDependsOn() []string                           { return nil }
@@ -375,6 +400,11 @@ func (f *TinyBlobField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf([]byte{}))
 	}
+}
+func (f *TinyBlobField) GetStorageType() string {
+	res := "TINYBLOB"
+
+	return res
 }
 func (f *TinyBlobField) IsDerivable() bool { return false }
 func (f *TinyBlobField) IsRequired() bool {
@@ -447,6 +477,11 @@ func (f *BlobField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf([]byte{}))
 	}
 }
+func (f *BlobField) GetStorageType() string {
+	res := "BLOB"
+
+	return res
+}
 func (f *BlobField) IsDerivable() bool                                { return false }
 func (f *BlobField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *BlobField) GetDependsOn() []string                           { return nil }
@@ -515,6 +550,11 @@ func (f *MediumBlobField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf([]byte{}))
 	}
+}
+func (f *MediumBlobField) GetStorageType() string {
+	res := "MEDIUMBLOB"
+
+	return res
 }
 func (f *MediumBlobField) IsDerivable() bool { return false }
 func (f *MediumBlobField) IsRequired() bool {
@@ -587,6 +627,11 @@ func (f *LongBlobField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf([]byte{}))
 	}
 }
+func (f *LongBlobField) GetStorageType() string {
+	res := "LONGBLOB"
+
+	return res
+}
 func (f *LongBlobField) IsDerivable() bool { return false }
 func (f *LongBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
@@ -657,6 +702,11 @@ func (f *BooleanField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(bool(false)))
 	}
+}
+func (f *BooleanField) GetStorageType() string {
+	res := "BOOLEAN"
+
+	return res
 }
 func (f *BooleanField) IsDerivable() bool { return false }
 func (f *BooleanField) IsRequired() bool {
@@ -731,6 +781,15 @@ func (f *TinyIntField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(int8(0)))
 	}
+}
+func (f *TinyIntField) GetStorageType() string {
+	res := "TINYINT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *TinyIntField) IsDerivable() bool { return false }
 func (f *TinyIntField) IsRequired() bool {
@@ -820,6 +879,15 @@ func (f *SmallIntField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(int16(0)))
 	}
 }
+func (f *SmallIntField) GetStorageType() string {
+	res := "SMALLINT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
+}
 func (f *SmallIntField) IsDerivable() bool { return false }
 func (f *SmallIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
@@ -907,6 +975,15 @@ func (f *MediumIntField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(int32(0)))
 	}
+}
+func (f *MediumIntField) GetStorageType() string {
+	res := "MEDIUMINT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *MediumIntField) IsDerivable() bool { return false }
 func (f *MediumIntField) IsRequired() bool {
@@ -996,6 +1073,15 @@ func (f *IntField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(int32(0)))
 	}
 }
+func (f *IntField) GetStorageType() string {
+	res := "INT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
+}
 func (f *IntField) IsDerivable() bool                                { return false }
 func (f *IntField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *IntField) GetDependsOn() []string                           { return nil }
@@ -1081,6 +1167,15 @@ func (f *BigIntField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(int64(0)))
 	}
+}
+func (f *BigIntField) GetStorageType() string {
+	res := "BIGINT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *BigIntField) IsDerivable() bool { return false }
 func (f *BigIntField) IsRequired() bool {
@@ -1169,6 +1264,17 @@ func (f *TinyUintField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(uint8(0)))
 	}
+}
+func (f *TinyUintField) GetStorageType() string {
+	res := "TINYINT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	res += " UNSIGNED"
+
+	return res
 }
 func (f *TinyUintField) IsDerivable() bool { return false }
 func (f *TinyUintField) IsRequired() bool {
@@ -1260,6 +1366,17 @@ func (f *SmallUintField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(uint16(0)))
 	}
 }
+func (f *SmallUintField) GetStorageType() string {
+	res := "SMALLINT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	res += " UNSIGNED"
+
+	return res
+}
 func (f *SmallUintField) IsDerivable() bool { return false }
 func (f *SmallUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
@@ -1349,6 +1466,17 @@ func (f *MediumUintField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(uint32(0)))
 	}
+}
+func (f *MediumUintField) GetStorageType() string {
+	res := "MEDIUMINT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	res += " UNSIGNED"
+
+	return res
 }
 func (f *MediumUintField) IsDerivable() bool { return false }
 func (f *MediumUintField) IsRequired() bool {
@@ -1440,6 +1568,17 @@ func (f *UintField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(uint32(0)))
 	}
 }
+func (f *UintField) GetStorageType() string {
+	res := "INT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	res += " UNSIGNED"
+
+	return res
+}
 func (f *UintField) IsDerivable() bool                                { return false }
 func (f *UintField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *UintField) GetDependsOn() []string                           { return nil }
@@ -1527,6 +1666,17 @@ func (f *BigUintField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(uint64(0)))
 	}
+}
+func (f *BigUintField) GetStorageType() string {
+	res := "BIGINT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	res += " UNSIGNED"
+
+	return res
 }
 func (f *BigUintField) IsDerivable() bool { return false }
 func (f *BigUintField) IsRequired() bool {
@@ -1618,6 +1768,15 @@ func (f *RealField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(float64(0)))
 	}
 }
+func (f *RealField) GetStorageType() string {
+	res := "REAL"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
+}
 func (f *RealField) IsDerivable() bool                                { return false }
 func (f *RealField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *RealField) GetDependsOn() []string                           { return nil }
@@ -1705,6 +1864,15 @@ func (f *FloatField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(float64(0)))
 	}
 }
+func (f *FloatField) GetStorageType() string {
+	res := "FLOAT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
+}
 func (f *FloatField) IsDerivable() bool                                { return false }
 func (f *FloatField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *FloatField) GetDependsOn() []string                           { return nil }
@@ -1791,6 +1959,15 @@ func (f *DecimalField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
+}
+func (f *DecimalField) GetStorageType() string {
+	res := "DECIMAL"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *DecimalField) IsDerivable() bool { return false }
 func (f *DecimalField) IsRequired() bool {
@@ -1881,6 +2058,15 @@ func (f *NumericField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
 }
+func (f *NumericField) GetStorageType() string {
+	res := "NUMERIC"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
+}
 func (f *NumericField) IsDerivable() bool { return false }
 func (f *NumericField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
@@ -1968,6 +2154,15 @@ func (f *BitField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
 }
+func (f *BitField) GetStorageType() string {
+	res := "BIT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
+}
 func (f *BitField) IsDerivable() bool                                { return false }
 func (f *BitField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *BitField) GetDependsOn() []string                           { return nil }
@@ -2043,6 +2238,15 @@ func (f *BinaryField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf([]byte{}))
 	}
+}
+func (f *BinaryField) GetStorageType() string {
+	res := "BINARY"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *BinaryField) IsDerivable() bool { return false }
 func (f *BinaryField) IsRequired() bool {
@@ -2121,6 +2325,15 @@ func (f *VarBinaryField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf([]byte{}))
 	}
+}
+func (f *VarBinaryField) GetStorageType() string {
+	res := "VARBINARY"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *VarBinaryField) IsDerivable() bool { return false }
 func (f *VarBinaryField) IsRequired() bool {
@@ -2201,6 +2414,15 @@ func (f *CharField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
+}
+func (f *CharField) GetStorageType() string {
+	res := "CHAR"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *CharField) IsDerivable() bool                                { return false }
 func (f *CharField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
@@ -2289,6 +2511,15 @@ func (f *VarCharField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
+}
+func (f *VarCharField) GetStorageType() string {
+	res := "VARCHAR"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *VarCharField) IsDerivable() bool { return false }
 func (f *VarCharField) IsRequired() bool {
@@ -2380,6 +2611,15 @@ func (f *TinyTextField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
+}
+func (f *TinyTextField) GetStorageType() string {
+	res := "TINYTEXT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *TinyTextField) IsDerivable() bool { return false }
 func (f *TinyTextField) IsRequired() bool {
@@ -2476,6 +2716,15 @@ func (f *TextField) GetType() reflect.Type {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
 }
+func (f *TextField) GetStorageType() string {
+	res := "TEXT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
+}
 func (f *TextField) IsDerivable() bool                                { return false }
 func (f *TextField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
 func (f *TextField) GetDependsOn() []string                           { return nil }
@@ -2568,6 +2817,15 @@ func (f *MediumTextField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
+}
+func (f *MediumTextField) GetStorageType() string {
+	res := "MEDIUMTEXT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *MediumTextField) IsDerivable() bool { return false }
 func (f *MediumTextField) IsRequired() bool {
@@ -2663,6 +2921,15 @@ func (f *LongTextField) GetType() reflect.Type {
 	} else {
 		return reflect.PtrTo(reflect.TypeOf(string("")))
 	}
+}
+func (f *LongTextField) GetStorageType() string {
+	res := "LONGTEXT"
+
+	if f.Length != 0 {
+		res += "(" + strconv.Itoa(f.Length) + ")"
+	}
+
+	return res
 }
 func (f *LongTextField) IsDerivable() bool { return false }
 func (f *LongTextField) IsRequired() bool {
