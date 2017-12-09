@@ -826,7 +826,7 @@ func (f *TinyIntField) Clean(v interface{}) (interface{}, error) {
 func (f *TinyIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TinyIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *TinyIntField) IsAutoIncremented() bool { return true }
+func (f *TinyIntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *TinyIntField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -923,7 +923,7 @@ func (f *SmallIntField) Clean(v interface{}) (interface{}, error) {
 func (f *SmallIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &SmallIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *SmallIntField) IsAutoIncremented() bool { return true }
+func (f *SmallIntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *SmallIntField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -1020,7 +1020,7 @@ func (f *MediumIntField) Clean(v interface{}) (interface{}, error) {
 func (f *MediumIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &MediumIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *MediumIntField) IsAutoIncremented() bool { return true }
+func (f *MediumIntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *MediumIntField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -1115,7 +1115,7 @@ func (f *IntField) Clean(v interface{}) (interface{}, error) {
 func (f *IntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &IntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *IntField) IsAutoIncremented() bool { return true }
+func (f *IntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *IntField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -1212,7 +1212,7 @@ func (f *BigIntField) Clean(v interface{}) (interface{}, error) {
 func (f *BigIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &BigIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *BigIntField) IsAutoIncremented() bool { return true }
+func (f *BigIntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *BigIntField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -1311,7 +1311,7 @@ func (f *TinyUintField) Clean(v interface{}) (interface{}, error) {
 func (f *TinyUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &TinyUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *TinyUintField) IsAutoIncremented() bool { return true }
+func (f *TinyUintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *TinyUintField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -1412,7 +1412,7 @@ func (f *SmallUintField) Clean(v interface{}) (interface{}, error) {
 func (f *SmallUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &SmallUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *SmallUintField) IsAutoIncremented() bool { return true }
+func (f *SmallUintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *SmallUintField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -1513,7 +1513,7 @@ func (f *MediumUintField) Clean(v interface{}) (interface{}, error) {
 func (f *MediumUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &MediumUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *MediumUintField) IsAutoIncremented() bool { return true }
+func (f *MediumUintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *MediumUintField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -1612,7 +1612,7 @@ func (f *UintField) Clean(v interface{}) (interface{}, error) {
 func (f *UintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &UintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *UintField) IsAutoIncremented() bool { return true }
+func (f *UintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *UintField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 
@@ -1713,7 +1713,7 @@ func (f *BigUintField) Clean(v interface{}) (interface{}, error) {
 func (f *BigUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
 	return &BigUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
 }
-func (f *BigUintField) IsAutoIncremented() bool { return true }
+func (f *BigUintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *BigUintField) WriteSQL(sqlBuf *SqlBuffer) {
 	sqlBuf.WriteIdentifier(f.Id)
 

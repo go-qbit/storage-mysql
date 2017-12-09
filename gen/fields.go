@@ -274,11 +274,13 @@ func main() {
 			"return &" + typeName + "{id, caption, " + cloneFields + " required, f.Default, f.CheckFunc, f.CleanFunc}\n" +
 			"}\n")
 
-		isAutoincremented := "false"
+		buf.WriteString("func (f *" + typeName + ") IsAutoIncremented() bool { return ")
 		if _, exists := typeFields["AutoIncrement"]; exists {
-			isAutoincremented = "true"
+			buf.WriteString("f.AutoIncrement")
+		} else {
+			buf.WriteString("false")
 		}
-		buf.WriteString("func (f *" + typeName + ") IsAutoIncremented() bool { return " + isAutoincremented + " }\n")
+		buf.WriteString(" }\n")
 
 		buf.WriteString("" +
 			"func (f *" + typeName + ") WriteSQL(sqlBuf *SqlBuffer) {\n" +
