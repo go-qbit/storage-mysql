@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/model/expr"
+	"github.com/go-qbit/model/relation"
 	"github.com/go-qbit/storage-mysql"
 	"github.com/go-qbit/storage-mysql/test"
 	"github.com/go-qbit/timelog"
@@ -80,9 +81,9 @@ func (s *DBTestSuite) SetupTest() {
 	s.message = test.NewMessage(s.storage)
 	s.address = test.NewAddress(s.storage)
 
-	model.AddOneToOneRelation(s.phone, s.user, false)
-	model.AddManyToOneRelation(s.message, s.user, false, "", "")
-	model.AddManyToManyRelation(s.user, s.address, s.storage)
+	relation.AddOneToOne(s.phone, s.user)
+	relation.AddManyToOne(s.message, s.user)
+	relation.AddManyToMany(s.user, s.address, s.storage)
 
 	if !s.NoError(s.storage.Connect(mysqlDsn)) {
 		return
