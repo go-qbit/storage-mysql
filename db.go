@@ -423,6 +423,8 @@ func Quote(value interface{}) string {
 	var v string
 
 	switch value := value.(type) {
+	case nil:
+		v = "NULL"
 	case []byte:
 		v = "X`"
 		for _, b := range value {
