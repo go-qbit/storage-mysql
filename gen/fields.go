@@ -181,6 +181,7 @@ func main() {
 	buf.WriteString("import (\n")
 	buf.WriteString(`"reflect"` + "\n")
 	buf.WriteString(`"strconv"` + "\n")
+	buf.WriteString(`"context"` + "\n")
 	buf.WriteByte('\n')
 	buf.WriteString(`"github.com/go-qbit/model"` + "\n")
 	buf.WriteString(")\n")
@@ -202,8 +203,8 @@ func main() {
 
 		buf.WriteString("NotNull bool\n")
 		buf.WriteString("Default *" + mysqlType.goType + "\n")
-		buf.WriteString("CheckFunc func(" + mysqlType.goType + ") error\n")
-		buf.WriteString("CleanFunc func(" + mysqlType.goType + ") (" + mysqlType.goType + ", error)\n")
+		buf.WriteString("CheckFunc func(ctx context.Context, value " + mysqlType.goType + ") error\n")
+		buf.WriteString("CleanFunc func(ctx context.Context, value " + mysqlType.goType + ") (" + mysqlType.goType + ", error)\n")
 		buf.WriteString("}\n")
 
 		buf.WriteString("func (f *" + typeName + ") GetId() string { return f.Id }\n")
@@ -233,29 +234,29 @@ func main() {
 		buf.WriteString("func (f *" + typeName + ") IsDerivable() bool { return false }\n")
 		buf.WriteString("func (f *" + typeName + ") IsRequired() bool { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }\n")
 		buf.WriteString("func (f *" + typeName + ") GetDependsOn() []string { return nil }\n")
-		buf.WriteString("func (f *" + typeName + ") Calc(map[string]interface{}) (interface{}, error) { return nil, nil }\n")
-		buf.WriteString("func (f *" + typeName + ") Check(v interface{}) error {\n" +
+		buf.WriteString("func (f *" + typeName + ") Calc(context.Context, map[string]interface{}) (interface{}, error) { return nil, nil }\n")
+		buf.WriteString("func (f *" + typeName + ") Check(ctx context.Context, v interface{}) error {\n" +
 			"	if f.CheckFunc == nil {\n" +
 			"		return nil\n" +
 			"	}\n" +
 			"	if f.NotNull {\n" +
-			"		return f.CheckFunc(v.(" + mysqlType.goType + "))\n" +
+			"		return f.CheckFunc(ctx, v.(" + mysqlType.goType + "))\n" +
 			"	} else {\n" +
 			"		if v.(*" + mysqlType.goType + ") != nil {\n" +
-			"			return f.CheckFunc(*v.(*" + mysqlType.goType + "))\n" +
+			"			return f.CheckFunc(ctx, *v.(*" + mysqlType.goType + "))\n" +
 			"		}\n" +
 			"	}\n" +
 			"	return nil\n" +
 			"}\n")
-		buf.WriteString("func (f *" + typeName + ") Clean(v interface{}) (interface{}, error) {\n" +
+		buf.WriteString("func (f *" + typeName + ") Clean(ctx context.Context, v interface{}) (interface{}, error) {\n" +
 			"	if f.CleanFunc == nil {\n" +
 			"		return v, nil\n" +
 			"	}\n" +
 			"	if f.NotNull {\n" +
-			"		return f.CleanFunc(v.(" + mysqlType.goType + "))\n" +
+			"		return f.CleanFunc(ctx, v.(" + mysqlType.goType + "))\n" +
 			"	} else {\n" +
 			"		if v.(*" + mysqlType.goType + ") != nil {\n" +
-			"			return f.CleanFunc(*v.(*" + mysqlType.goType + "))\n" +
+			"			return f.CleanFunc(ctx, *v.(*" + mysqlType.goType + "))\n" +
 			"		}\n" +
 			"	}\n" +
 			"	return v, nil\n" +

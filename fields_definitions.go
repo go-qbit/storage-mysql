@@ -3,6 +3,7 @@
 package mysql
 
 import (
+	"context"
 	"reflect"
 	"strconv"
 
@@ -14,8 +15,8 @@ type DateField struct {
 	Caption   string
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *DateField) GetId() string      { return f.Id }
@@ -32,32 +33,34 @@ func (f *DateField) GetStorageType() string {
 
 	return res
 }
-func (f *DateField) IsDerivable() bool                                { return false }
-func (f *DateField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *DateField) GetDependsOn() []string                           { return nil }
-func (f *DateField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *DateField) Check(v interface{}) error {
+func (f *DateField) IsDerivable() bool      { return false }
+func (f *DateField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *DateField) GetDependsOn() []string { return nil }
+func (f *DateField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *DateField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *DateField) Clean(v interface{}) (interface{}, error) {
+func (f *DateField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -88,8 +91,8 @@ type TimeField struct {
 	Caption   string
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *TimeField) GetId() string      { return f.Id }
@@ -106,32 +109,34 @@ func (f *TimeField) GetStorageType() string {
 
 	return res
 }
-func (f *TimeField) IsDerivable() bool                                { return false }
-func (f *TimeField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *TimeField) GetDependsOn() []string                           { return nil }
-func (f *TimeField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *TimeField) Check(v interface{}) error {
+func (f *TimeField) IsDerivable() bool      { return false }
+func (f *TimeField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *TimeField) GetDependsOn() []string { return nil }
+func (f *TimeField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *TimeField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *TimeField) Clean(v interface{}) (interface{}, error) {
+func (f *TimeField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -162,8 +167,8 @@ type TimeStampField struct {
 	Caption   string
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *TimeStampField) GetId() string      { return f.Id }
@@ -184,30 +189,32 @@ func (f *TimeStampField) IsDerivable() bool { return false }
 func (f *TimeStampField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TimeStampField) GetDependsOn() []string                           { return nil }
-func (f *TimeStampField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *TimeStampField) Check(v interface{}) error {
+func (f *TimeStampField) GetDependsOn() []string { return nil }
+func (f *TimeStampField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *TimeStampField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *TimeStampField) Clean(v interface{}) (interface{}, error) {
+func (f *TimeStampField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -238,8 +245,8 @@ type DateTimeField struct {
 	Caption   string
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *DateTimeField) GetId() string      { return f.Id }
@@ -260,30 +267,32 @@ func (f *DateTimeField) IsDerivable() bool { return false }
 func (f *DateTimeField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *DateTimeField) GetDependsOn() []string                           { return nil }
-func (f *DateTimeField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *DateTimeField) Check(v interface{}) error {
+func (f *DateTimeField) GetDependsOn() []string { return nil }
+func (f *DateTimeField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *DateTimeField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *DateTimeField) Clean(v interface{}) (interface{}, error) {
+func (f *DateTimeField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -314,8 +323,8 @@ type YearField struct {
 	Caption   string
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *YearField) GetId() string      { return f.Id }
@@ -332,32 +341,34 @@ func (f *YearField) GetStorageType() string {
 
 	return res
 }
-func (f *YearField) IsDerivable() bool                                { return false }
-func (f *YearField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *YearField) GetDependsOn() []string                           { return nil }
-func (f *YearField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *YearField) Check(v interface{}) error {
+func (f *YearField) IsDerivable() bool      { return false }
+func (f *YearField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *YearField) GetDependsOn() []string { return nil }
+func (f *YearField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *YearField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *YearField) Clean(v interface{}) (interface{}, error) {
+func (f *YearField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -388,8 +399,8 @@ type TinyBlobField struct {
 	Caption   string
 	NotNull   bool
 	Default   *[]byte
-	CheckFunc func([]byte) error
-	CleanFunc func([]byte) ([]byte, error)
+	CheckFunc func(ctx context.Context, value []byte) error
+	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *TinyBlobField) GetId() string      { return f.Id }
@@ -410,30 +421,32 @@ func (f *TinyBlobField) IsDerivable() bool { return false }
 func (f *TinyBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TinyBlobField) GetDependsOn() []string                           { return nil }
-func (f *TinyBlobField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *TinyBlobField) Check(v interface{}) error {
+func (f *TinyBlobField) GetDependsOn() []string { return nil }
+func (f *TinyBlobField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *TinyBlobField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.([]byte))
+		return f.CheckFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CheckFunc(*v.(*[]byte))
+			return f.CheckFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return nil
 }
-func (f *TinyBlobField) Clean(v interface{}) (interface{}, error) {
+func (f *TinyBlobField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.([]byte))
+		return f.CleanFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CleanFunc(*v.(*[]byte))
+			return f.CleanFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return v, nil
@@ -464,8 +477,8 @@ type BlobField struct {
 	Caption   string
 	NotNull   bool
 	Default   *[]byte
-	CheckFunc func([]byte) error
-	CleanFunc func([]byte) ([]byte, error)
+	CheckFunc func(ctx context.Context, value []byte) error
+	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *BlobField) GetId() string      { return f.Id }
@@ -482,32 +495,34 @@ func (f *BlobField) GetStorageType() string {
 
 	return res
 }
-func (f *BlobField) IsDerivable() bool                                { return false }
-func (f *BlobField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *BlobField) GetDependsOn() []string                           { return nil }
-func (f *BlobField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *BlobField) Check(v interface{}) error {
+func (f *BlobField) IsDerivable() bool      { return false }
+func (f *BlobField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *BlobField) GetDependsOn() []string { return nil }
+func (f *BlobField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *BlobField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.([]byte))
+		return f.CheckFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CheckFunc(*v.(*[]byte))
+			return f.CheckFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return nil
 }
-func (f *BlobField) Clean(v interface{}) (interface{}, error) {
+func (f *BlobField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.([]byte))
+		return f.CleanFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CleanFunc(*v.(*[]byte))
+			return f.CleanFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return v, nil
@@ -538,8 +553,8 @@ type MediumBlobField struct {
 	Caption   string
 	NotNull   bool
 	Default   *[]byte
-	CheckFunc func([]byte) error
-	CleanFunc func([]byte) ([]byte, error)
+	CheckFunc func(ctx context.Context, value []byte) error
+	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *MediumBlobField) GetId() string      { return f.Id }
@@ -560,30 +575,32 @@ func (f *MediumBlobField) IsDerivable() bool { return false }
 func (f *MediumBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *MediumBlobField) GetDependsOn() []string                           { return nil }
-func (f *MediumBlobField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *MediumBlobField) Check(v interface{}) error {
+func (f *MediumBlobField) GetDependsOn() []string { return nil }
+func (f *MediumBlobField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *MediumBlobField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.([]byte))
+		return f.CheckFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CheckFunc(*v.(*[]byte))
+			return f.CheckFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return nil
 }
-func (f *MediumBlobField) Clean(v interface{}) (interface{}, error) {
+func (f *MediumBlobField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.([]byte))
+		return f.CleanFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CleanFunc(*v.(*[]byte))
+			return f.CleanFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return v, nil
@@ -614,8 +631,8 @@ type LongBlobField struct {
 	Caption   string
 	NotNull   bool
 	Default   *[]byte
-	CheckFunc func([]byte) error
-	CleanFunc func([]byte) ([]byte, error)
+	CheckFunc func(ctx context.Context, value []byte) error
+	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *LongBlobField) GetId() string      { return f.Id }
@@ -636,30 +653,32 @@ func (f *LongBlobField) IsDerivable() bool { return false }
 func (f *LongBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *LongBlobField) GetDependsOn() []string                           { return nil }
-func (f *LongBlobField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *LongBlobField) Check(v interface{}) error {
+func (f *LongBlobField) GetDependsOn() []string { return nil }
+func (f *LongBlobField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *LongBlobField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.([]byte))
+		return f.CheckFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CheckFunc(*v.(*[]byte))
+			return f.CheckFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return nil
 }
-func (f *LongBlobField) Clean(v interface{}) (interface{}, error) {
+func (f *LongBlobField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.([]byte))
+		return f.CleanFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CleanFunc(*v.(*[]byte))
+			return f.CleanFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return v, nil
@@ -690,8 +709,8 @@ type BooleanField struct {
 	Caption   string
 	NotNull   bool
 	Default   *bool
-	CheckFunc func(bool) error
-	CleanFunc func(bool) (bool, error)
+	CheckFunc func(ctx context.Context, value bool) error
+	CleanFunc func(ctx context.Context, value bool) (bool, error)
 }
 
 func (f *BooleanField) GetId() string      { return f.Id }
@@ -712,30 +731,32 @@ func (f *BooleanField) IsDerivable() bool { return false }
 func (f *BooleanField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *BooleanField) GetDependsOn() []string                           { return nil }
-func (f *BooleanField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *BooleanField) Check(v interface{}) error {
+func (f *BooleanField) GetDependsOn() []string { return nil }
+func (f *BooleanField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *BooleanField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(bool))
+		return f.CheckFunc(ctx, v.(bool))
 	} else {
 		if v.(*bool) != nil {
-			return f.CheckFunc(*v.(*bool))
+			return f.CheckFunc(ctx, *v.(*bool))
 		}
 	}
 	return nil
 }
-func (f *BooleanField) Clean(v interface{}) (interface{}, error) {
+func (f *BooleanField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(bool))
+		return f.CleanFunc(ctx, v.(bool))
 	} else {
 		if v.(*bool) != nil {
-			return f.CleanFunc(*v.(*bool))
+			return f.CleanFunc(ctx, *v.(*bool))
 		}
 	}
 	return v, nil
@@ -769,8 +790,8 @@ type TinyIntField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *int8
-	CheckFunc     func(int8) error
-	CleanFunc     func(int8) (int8, error)
+	CheckFunc     func(ctx context.Context, value int8) error
+	CleanFunc     func(ctx context.Context, value int8) (int8, error)
 }
 
 func (f *TinyIntField) GetId() string      { return f.Id }
@@ -795,30 +816,32 @@ func (f *TinyIntField) IsDerivable() bool { return false }
 func (f *TinyIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TinyIntField) GetDependsOn() []string                           { return nil }
-func (f *TinyIntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *TinyIntField) Check(v interface{}) error {
+func (f *TinyIntField) GetDependsOn() []string { return nil }
+func (f *TinyIntField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *TinyIntField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(int8))
+		return f.CheckFunc(ctx, v.(int8))
 	} else {
 		if v.(*int8) != nil {
-			return f.CheckFunc(*v.(*int8))
+			return f.CheckFunc(ctx, *v.(*int8))
 		}
 	}
 	return nil
 }
-func (f *TinyIntField) Clean(v interface{}) (interface{}, error) {
+func (f *TinyIntField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(int8))
+		return f.CleanFunc(ctx, v.(int8))
 	} else {
 		if v.(*int8) != nil {
-			return f.CleanFunc(*v.(*int8))
+			return f.CleanFunc(ctx, *v.(*int8))
 		}
 	}
 	return v, nil
@@ -866,8 +889,8 @@ type SmallIntField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *int16
-	CheckFunc     func(int16) error
-	CleanFunc     func(int16) (int16, error)
+	CheckFunc     func(ctx context.Context, value int16) error
+	CleanFunc     func(ctx context.Context, value int16) (int16, error)
 }
 
 func (f *SmallIntField) GetId() string      { return f.Id }
@@ -892,30 +915,32 @@ func (f *SmallIntField) IsDerivable() bool { return false }
 func (f *SmallIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *SmallIntField) GetDependsOn() []string                           { return nil }
-func (f *SmallIntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *SmallIntField) Check(v interface{}) error {
+func (f *SmallIntField) GetDependsOn() []string { return nil }
+func (f *SmallIntField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *SmallIntField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(int16))
+		return f.CheckFunc(ctx, v.(int16))
 	} else {
 		if v.(*int16) != nil {
-			return f.CheckFunc(*v.(*int16))
+			return f.CheckFunc(ctx, *v.(*int16))
 		}
 	}
 	return nil
 }
-func (f *SmallIntField) Clean(v interface{}) (interface{}, error) {
+func (f *SmallIntField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(int16))
+		return f.CleanFunc(ctx, v.(int16))
 	} else {
 		if v.(*int16) != nil {
-			return f.CleanFunc(*v.(*int16))
+			return f.CleanFunc(ctx, *v.(*int16))
 		}
 	}
 	return v, nil
@@ -963,8 +988,8 @@ type MediumIntField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *int32
-	CheckFunc     func(int32) error
-	CleanFunc     func(int32) (int32, error)
+	CheckFunc     func(ctx context.Context, value int32) error
+	CleanFunc     func(ctx context.Context, value int32) (int32, error)
 }
 
 func (f *MediumIntField) GetId() string      { return f.Id }
@@ -989,30 +1014,32 @@ func (f *MediumIntField) IsDerivable() bool { return false }
 func (f *MediumIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *MediumIntField) GetDependsOn() []string                           { return nil }
-func (f *MediumIntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *MediumIntField) Check(v interface{}) error {
+func (f *MediumIntField) GetDependsOn() []string { return nil }
+func (f *MediumIntField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *MediumIntField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(int32))
+		return f.CheckFunc(ctx, v.(int32))
 	} else {
 		if v.(*int32) != nil {
-			return f.CheckFunc(*v.(*int32))
+			return f.CheckFunc(ctx, *v.(*int32))
 		}
 	}
 	return nil
 }
-func (f *MediumIntField) Clean(v interface{}) (interface{}, error) {
+func (f *MediumIntField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(int32))
+		return f.CleanFunc(ctx, v.(int32))
 	} else {
 		if v.(*int32) != nil {
-			return f.CleanFunc(*v.(*int32))
+			return f.CleanFunc(ctx, *v.(*int32))
 		}
 	}
 	return v, nil
@@ -1060,8 +1087,8 @@ type IntField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *int32
-	CheckFunc     func(int32) error
-	CleanFunc     func(int32) (int32, error)
+	CheckFunc     func(ctx context.Context, value int32) error
+	CleanFunc     func(ctx context.Context, value int32) (int32, error)
 }
 
 func (f *IntField) GetId() string      { return f.Id }
@@ -1082,32 +1109,32 @@ func (f *IntField) GetStorageType() string {
 
 	return res
 }
-func (f *IntField) IsDerivable() bool                                { return false }
-func (f *IntField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *IntField) GetDependsOn() []string                           { return nil }
-func (f *IntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *IntField) Check(v interface{}) error {
+func (f *IntField) IsDerivable() bool                                                 { return false }
+func (f *IntField) IsRequired() bool                                                  { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *IntField) GetDependsOn() []string                                            { return nil }
+func (f *IntField) Calc(context.Context, map[string]interface{}) (interface{}, error) { return nil, nil }
+func (f *IntField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(int32))
+		return f.CheckFunc(ctx, v.(int32))
 	} else {
 		if v.(*int32) != nil {
-			return f.CheckFunc(*v.(*int32))
+			return f.CheckFunc(ctx, *v.(*int32))
 		}
 	}
 	return nil
 }
-func (f *IntField) Clean(v interface{}) (interface{}, error) {
+func (f *IntField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(int32))
+		return f.CleanFunc(ctx, v.(int32))
 	} else {
 		if v.(*int32) != nil {
-			return f.CleanFunc(*v.(*int32))
+			return f.CleanFunc(ctx, *v.(*int32))
 		}
 	}
 	return v, nil
@@ -1155,8 +1182,8 @@ type BigIntField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *int64
-	CheckFunc     func(int64) error
-	CleanFunc     func(int64) (int64, error)
+	CheckFunc     func(ctx context.Context, value int64) error
+	CleanFunc     func(ctx context.Context, value int64) (int64, error)
 }
 
 func (f *BigIntField) GetId() string      { return f.Id }
@@ -1181,30 +1208,32 @@ func (f *BigIntField) IsDerivable() bool { return false }
 func (f *BigIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *BigIntField) GetDependsOn() []string                           { return nil }
-func (f *BigIntField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *BigIntField) Check(v interface{}) error {
+func (f *BigIntField) GetDependsOn() []string { return nil }
+func (f *BigIntField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *BigIntField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(int64))
+		return f.CheckFunc(ctx, v.(int64))
 	} else {
 		if v.(*int64) != nil {
-			return f.CheckFunc(*v.(*int64))
+			return f.CheckFunc(ctx, *v.(*int64))
 		}
 	}
 	return nil
 }
-func (f *BigIntField) Clean(v interface{}) (interface{}, error) {
+func (f *BigIntField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(int64))
+		return f.CleanFunc(ctx, v.(int64))
 	} else {
 		if v.(*int64) != nil {
-			return f.CleanFunc(*v.(*int64))
+			return f.CleanFunc(ctx, *v.(*int64))
 		}
 	}
 	return v, nil
@@ -1252,8 +1281,8 @@ type TinyUintField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *uint8
-	CheckFunc     func(uint8) error
-	CleanFunc     func(uint8) (uint8, error)
+	CheckFunc     func(ctx context.Context, value uint8) error
+	CleanFunc     func(ctx context.Context, value uint8) (uint8, error)
 }
 
 func (f *TinyUintField) GetId() string      { return f.Id }
@@ -1280,30 +1309,32 @@ func (f *TinyUintField) IsDerivable() bool { return false }
 func (f *TinyUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TinyUintField) GetDependsOn() []string                           { return nil }
-func (f *TinyUintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *TinyUintField) Check(v interface{}) error {
+func (f *TinyUintField) GetDependsOn() []string { return nil }
+func (f *TinyUintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *TinyUintField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(uint8))
+		return f.CheckFunc(ctx, v.(uint8))
 	} else {
 		if v.(*uint8) != nil {
-			return f.CheckFunc(*v.(*uint8))
+			return f.CheckFunc(ctx, *v.(*uint8))
 		}
 	}
 	return nil
 }
-func (f *TinyUintField) Clean(v interface{}) (interface{}, error) {
+func (f *TinyUintField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(uint8))
+		return f.CleanFunc(ctx, v.(uint8))
 	} else {
 		if v.(*uint8) != nil {
-			return f.CleanFunc(*v.(*uint8))
+			return f.CleanFunc(ctx, *v.(*uint8))
 		}
 	}
 	return v, nil
@@ -1353,8 +1384,8 @@ type SmallUintField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *uint16
-	CheckFunc     func(uint16) error
-	CleanFunc     func(uint16) (uint16, error)
+	CheckFunc     func(ctx context.Context, value uint16) error
+	CleanFunc     func(ctx context.Context, value uint16) (uint16, error)
 }
 
 func (f *SmallUintField) GetId() string      { return f.Id }
@@ -1381,30 +1412,32 @@ func (f *SmallUintField) IsDerivable() bool { return false }
 func (f *SmallUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *SmallUintField) GetDependsOn() []string                           { return nil }
-func (f *SmallUintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *SmallUintField) Check(v interface{}) error {
+func (f *SmallUintField) GetDependsOn() []string { return nil }
+func (f *SmallUintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *SmallUintField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(uint16))
+		return f.CheckFunc(ctx, v.(uint16))
 	} else {
 		if v.(*uint16) != nil {
-			return f.CheckFunc(*v.(*uint16))
+			return f.CheckFunc(ctx, *v.(*uint16))
 		}
 	}
 	return nil
 }
-func (f *SmallUintField) Clean(v interface{}) (interface{}, error) {
+func (f *SmallUintField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(uint16))
+		return f.CleanFunc(ctx, v.(uint16))
 	} else {
 		if v.(*uint16) != nil {
-			return f.CleanFunc(*v.(*uint16))
+			return f.CleanFunc(ctx, *v.(*uint16))
 		}
 	}
 	return v, nil
@@ -1454,8 +1487,8 @@ type MediumUintField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *uint32
-	CheckFunc     func(uint32) error
-	CleanFunc     func(uint32) (uint32, error)
+	CheckFunc     func(ctx context.Context, value uint32) error
+	CleanFunc     func(ctx context.Context, value uint32) (uint32, error)
 }
 
 func (f *MediumUintField) GetId() string      { return f.Id }
@@ -1482,30 +1515,32 @@ func (f *MediumUintField) IsDerivable() bool { return false }
 func (f *MediumUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *MediumUintField) GetDependsOn() []string                           { return nil }
-func (f *MediumUintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *MediumUintField) Check(v interface{}) error {
+func (f *MediumUintField) GetDependsOn() []string { return nil }
+func (f *MediumUintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *MediumUintField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(uint32))
+		return f.CheckFunc(ctx, v.(uint32))
 	} else {
 		if v.(*uint32) != nil {
-			return f.CheckFunc(*v.(*uint32))
+			return f.CheckFunc(ctx, *v.(*uint32))
 		}
 	}
 	return nil
 }
-func (f *MediumUintField) Clean(v interface{}) (interface{}, error) {
+func (f *MediumUintField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(uint32))
+		return f.CleanFunc(ctx, v.(uint32))
 	} else {
 		if v.(*uint32) != nil {
-			return f.CleanFunc(*v.(*uint32))
+			return f.CleanFunc(ctx, *v.(*uint32))
 		}
 	}
 	return v, nil
@@ -1555,8 +1590,8 @@ type UintField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *uint32
-	CheckFunc     func(uint32) error
-	CleanFunc     func(uint32) (uint32, error)
+	CheckFunc     func(ctx context.Context, value uint32) error
+	CleanFunc     func(ctx context.Context, value uint32) (uint32, error)
 }
 
 func (f *UintField) GetId() string      { return f.Id }
@@ -1579,32 +1614,34 @@ func (f *UintField) GetStorageType() string {
 
 	return res
 }
-func (f *UintField) IsDerivable() bool                                { return false }
-func (f *UintField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *UintField) GetDependsOn() []string                           { return nil }
-func (f *UintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *UintField) Check(v interface{}) error {
+func (f *UintField) IsDerivable() bool      { return false }
+func (f *UintField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *UintField) GetDependsOn() []string { return nil }
+func (f *UintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *UintField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(uint32))
+		return f.CheckFunc(ctx, v.(uint32))
 	} else {
 		if v.(*uint32) != nil {
-			return f.CheckFunc(*v.(*uint32))
+			return f.CheckFunc(ctx, *v.(*uint32))
 		}
 	}
 	return nil
 }
-func (f *UintField) Clean(v interface{}) (interface{}, error) {
+func (f *UintField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(uint32))
+		return f.CleanFunc(ctx, v.(uint32))
 	} else {
 		if v.(*uint32) != nil {
-			return f.CleanFunc(*v.(*uint32))
+			return f.CleanFunc(ctx, *v.(*uint32))
 		}
 	}
 	return v, nil
@@ -1654,8 +1691,8 @@ type BigUintField struct {
 	Zerofill      bool
 	NotNull       bool
 	Default       *uint64
-	CheckFunc     func(uint64) error
-	CleanFunc     func(uint64) (uint64, error)
+	CheckFunc     func(ctx context.Context, value uint64) error
+	CleanFunc     func(ctx context.Context, value uint64) (uint64, error)
 }
 
 func (f *BigUintField) GetId() string      { return f.Id }
@@ -1682,30 +1719,32 @@ func (f *BigUintField) IsDerivable() bool { return false }
 func (f *BigUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *BigUintField) GetDependsOn() []string                           { return nil }
-func (f *BigUintField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *BigUintField) Check(v interface{}) error {
+func (f *BigUintField) GetDependsOn() []string { return nil }
+func (f *BigUintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *BigUintField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(uint64))
+		return f.CheckFunc(ctx, v.(uint64))
 	} else {
 		if v.(*uint64) != nil {
-			return f.CheckFunc(*v.(*uint64))
+			return f.CheckFunc(ctx, *v.(*uint64))
 		}
 	}
 	return nil
 }
-func (f *BigUintField) Clean(v interface{}) (interface{}, error) {
+func (f *BigUintField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(uint64))
+		return f.CleanFunc(ctx, v.(uint64))
 	} else {
 		if v.(*uint64) != nil {
-			return f.CleanFunc(*v.(*uint64))
+			return f.CleanFunc(ctx, *v.(*uint64))
 		}
 	}
 	return v, nil
@@ -1755,8 +1794,8 @@ type RealField struct {
 	Zerofill  bool
 	NotNull   bool
 	Default   *float64
-	CheckFunc func(float64) error
-	CleanFunc func(float64) (float64, error)
+	CheckFunc func(ctx context.Context, value float64) error
+	CleanFunc func(ctx context.Context, value float64) (float64, error)
 }
 
 func (f *RealField) GetId() string      { return f.Id }
@@ -1777,32 +1816,34 @@ func (f *RealField) GetStorageType() string {
 
 	return res
 }
-func (f *RealField) IsDerivable() bool                                { return false }
-func (f *RealField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *RealField) GetDependsOn() []string                           { return nil }
-func (f *RealField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *RealField) Check(v interface{}) error {
+func (f *RealField) IsDerivable() bool      { return false }
+func (f *RealField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *RealField) GetDependsOn() []string { return nil }
+func (f *RealField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *RealField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(float64))
+		return f.CheckFunc(ctx, v.(float64))
 	} else {
 		if v.(*float64) != nil {
-			return f.CheckFunc(*v.(*float64))
+			return f.CheckFunc(ctx, *v.(*float64))
 		}
 	}
 	return nil
 }
-func (f *RealField) Clean(v interface{}) (interface{}, error) {
+func (f *RealField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(float64))
+		return f.CleanFunc(ctx, v.(float64))
 	} else {
 		if v.(*float64) != nil {
-			return f.CleanFunc(*v.(*float64))
+			return f.CleanFunc(ctx, *v.(*float64))
 		}
 	}
 	return v, nil
@@ -1851,8 +1892,8 @@ type FloatField struct {
 	Zerofill  bool
 	NotNull   bool
 	Default   *float64
-	CheckFunc func(float64) error
-	CleanFunc func(float64) (float64, error)
+	CheckFunc func(ctx context.Context, value float64) error
+	CleanFunc func(ctx context.Context, value float64) (float64, error)
 }
 
 func (f *FloatField) GetId() string      { return f.Id }
@@ -1873,32 +1914,34 @@ func (f *FloatField) GetStorageType() string {
 
 	return res
 }
-func (f *FloatField) IsDerivable() bool                                { return false }
-func (f *FloatField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *FloatField) GetDependsOn() []string                           { return nil }
-func (f *FloatField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *FloatField) Check(v interface{}) error {
+func (f *FloatField) IsDerivable() bool      { return false }
+func (f *FloatField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *FloatField) GetDependsOn() []string { return nil }
+func (f *FloatField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *FloatField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(float64))
+		return f.CheckFunc(ctx, v.(float64))
 	} else {
 		if v.(*float64) != nil {
-			return f.CheckFunc(*v.(*float64))
+			return f.CheckFunc(ctx, *v.(*float64))
 		}
 	}
 	return nil
 }
-func (f *FloatField) Clean(v interface{}) (interface{}, error) {
+func (f *FloatField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(float64))
+		return f.CleanFunc(ctx, v.(float64))
 	} else {
 		if v.(*float64) != nil {
-			return f.CleanFunc(*v.(*float64))
+			return f.CleanFunc(ctx, *v.(*float64))
 		}
 	}
 	return v, nil
@@ -1947,8 +1990,8 @@ type DecimalField struct {
 	Zerofill  bool
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *DecimalField) GetId() string      { return f.Id }
@@ -1973,30 +2016,32 @@ func (f *DecimalField) IsDerivable() bool { return false }
 func (f *DecimalField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *DecimalField) GetDependsOn() []string                           { return nil }
-func (f *DecimalField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *DecimalField) Check(v interface{}) error {
+func (f *DecimalField) GetDependsOn() []string { return nil }
+func (f *DecimalField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *DecimalField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *DecimalField) Clean(v interface{}) (interface{}, error) {
+func (f *DecimalField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -2045,8 +2090,8 @@ type NumericField struct {
 	Zerofill  bool
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *NumericField) GetId() string      { return f.Id }
@@ -2071,30 +2116,32 @@ func (f *NumericField) IsDerivable() bool { return false }
 func (f *NumericField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *NumericField) GetDependsOn() []string                           { return nil }
-func (f *NumericField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *NumericField) Check(v interface{}) error {
+func (f *NumericField) GetDependsOn() []string { return nil }
+func (f *NumericField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *NumericField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *NumericField) Clean(v interface{}) (interface{}, error) {
+func (f *NumericField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -2141,8 +2188,8 @@ type BitField struct {
 	Length    int
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *BitField) GetId() string      { return f.Id }
@@ -2163,32 +2210,32 @@ func (f *BitField) GetStorageType() string {
 
 	return res
 }
-func (f *BitField) IsDerivable() bool                                { return false }
-func (f *BitField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *BitField) GetDependsOn() []string                           { return nil }
-func (f *BitField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *BitField) Check(v interface{}) error {
+func (f *BitField) IsDerivable() bool                                                 { return false }
+func (f *BitField) IsRequired() bool                                                  { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *BitField) GetDependsOn() []string                                            { return nil }
+func (f *BitField) Calc(context.Context, map[string]interface{}) (interface{}, error) { return nil, nil }
+func (f *BitField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *BitField) Clean(v interface{}) (interface{}, error) {
+func (f *BitField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -2226,8 +2273,8 @@ type BinaryField struct {
 	Length    int
 	NotNull   bool
 	Default   *[]byte
-	CheckFunc func([]byte) error
-	CleanFunc func([]byte) ([]byte, error)
+	CheckFunc func(ctx context.Context, value []byte) error
+	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *BinaryField) GetId() string      { return f.Id }
@@ -2252,30 +2299,32 @@ func (f *BinaryField) IsDerivable() bool { return false }
 func (f *BinaryField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *BinaryField) GetDependsOn() []string                           { return nil }
-func (f *BinaryField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *BinaryField) Check(v interface{}) error {
+func (f *BinaryField) GetDependsOn() []string { return nil }
+func (f *BinaryField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *BinaryField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.([]byte))
+		return f.CheckFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CheckFunc(*v.(*[]byte))
+			return f.CheckFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return nil
 }
-func (f *BinaryField) Clean(v interface{}) (interface{}, error) {
+func (f *BinaryField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.([]byte))
+		return f.CleanFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CleanFunc(*v.(*[]byte))
+			return f.CleanFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return v, nil
@@ -2313,8 +2362,8 @@ type VarBinaryField struct {
 	Length    int
 	NotNull   bool
 	Default   *[]byte
-	CheckFunc func([]byte) error
-	CleanFunc func([]byte) ([]byte, error)
+	CheckFunc func(ctx context.Context, value []byte) error
+	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *VarBinaryField) GetId() string      { return f.Id }
@@ -2339,30 +2388,32 @@ func (f *VarBinaryField) IsDerivable() bool { return false }
 func (f *VarBinaryField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *VarBinaryField) GetDependsOn() []string                           { return nil }
-func (f *VarBinaryField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *VarBinaryField) Check(v interface{}) error {
+func (f *VarBinaryField) GetDependsOn() []string { return nil }
+func (f *VarBinaryField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *VarBinaryField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.([]byte))
+		return f.CheckFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CheckFunc(*v.(*[]byte))
+			return f.CheckFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return nil
 }
-func (f *VarBinaryField) Clean(v interface{}) (interface{}, error) {
+func (f *VarBinaryField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.([]byte))
+		return f.CleanFunc(ctx, v.([]byte))
 	} else {
 		if v.(*[]byte) != nil {
-			return f.CleanFunc(*v.(*[]byte))
+			return f.CleanFunc(ctx, *v.(*[]byte))
 		}
 	}
 	return v, nil
@@ -2402,8 +2453,8 @@ type CharField struct {
 	Collate   string
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *CharField) GetId() string      { return f.Id }
@@ -2424,32 +2475,34 @@ func (f *CharField) GetStorageType() string {
 
 	return res
 }
-func (f *CharField) IsDerivable() bool                                { return false }
-func (f *CharField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *CharField) GetDependsOn() []string                           { return nil }
-func (f *CharField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *CharField) Check(v interface{}) error {
+func (f *CharField) IsDerivable() bool      { return false }
+func (f *CharField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *CharField) GetDependsOn() []string { return nil }
+func (f *CharField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *CharField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *CharField) Clean(v interface{}) (interface{}, error) {
+func (f *CharField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -2499,8 +2552,8 @@ type VarCharField struct {
 	Collate   string
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *VarCharField) GetId() string      { return f.Id }
@@ -2525,30 +2578,32 @@ func (f *VarCharField) IsDerivable() bool { return false }
 func (f *VarCharField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *VarCharField) GetDependsOn() []string                           { return nil }
-func (f *VarCharField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *VarCharField) Check(v interface{}) error {
+func (f *VarCharField) GetDependsOn() []string { return nil }
+func (f *VarCharField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *VarCharField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *VarCharField) Clean(v interface{}) (interface{}, error) {
+func (f *VarCharField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -2599,8 +2654,8 @@ type TinyTextField struct {
 	Binary    bool
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *TinyTextField) GetId() string      { return f.Id }
@@ -2625,30 +2680,32 @@ func (f *TinyTextField) IsDerivable() bool { return false }
 func (f *TinyTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TinyTextField) GetDependsOn() []string                           { return nil }
-func (f *TinyTextField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *TinyTextField) Check(v interface{}) error {
+func (f *TinyTextField) GetDependsOn() []string { return nil }
+func (f *TinyTextField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *TinyTextField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *TinyTextField) Clean(v interface{}) (interface{}, error) {
+func (f *TinyTextField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -2703,8 +2760,8 @@ type TextField struct {
 	Binary    bool
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *TextField) GetId() string      { return f.Id }
@@ -2725,32 +2782,34 @@ func (f *TextField) GetStorageType() string {
 
 	return res
 }
-func (f *TextField) IsDerivable() bool                                { return false }
-func (f *TextField) IsRequired() bool                                 { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *TextField) GetDependsOn() []string                           { return nil }
-func (f *TextField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *TextField) Check(v interface{}) error {
+func (f *TextField) IsDerivable() bool      { return false }
+func (f *TextField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *TextField) GetDependsOn() []string { return nil }
+func (f *TextField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *TextField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *TextField) Clean(v interface{}) (interface{}, error) {
+func (f *TextField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -2805,8 +2864,8 @@ type MediumTextField struct {
 	Binary    bool
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *MediumTextField) GetId() string      { return f.Id }
@@ -2831,30 +2890,32 @@ func (f *MediumTextField) IsDerivable() bool { return false }
 func (f *MediumTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *MediumTextField) GetDependsOn() []string                           { return nil }
-func (f *MediumTextField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *MediumTextField) Check(v interface{}) error {
+func (f *MediumTextField) GetDependsOn() []string { return nil }
+func (f *MediumTextField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *MediumTextField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *MediumTextField) Clean(v interface{}) (interface{}, error) {
+func (f *MediumTextField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil
@@ -2909,8 +2970,8 @@ type LongTextField struct {
 	Binary    bool
 	NotNull   bool
 	Default   *string
-	CheckFunc func(string) error
-	CleanFunc func(string) (string, error)
+	CheckFunc func(ctx context.Context, value string) error
+	CleanFunc func(ctx context.Context, value string) (string, error)
 }
 
 func (f *LongTextField) GetId() string      { return f.Id }
@@ -2935,30 +2996,32 @@ func (f *LongTextField) IsDerivable() bool { return false }
 func (f *LongTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *LongTextField) GetDependsOn() []string                           { return nil }
-func (f *LongTextField) Calc(map[string]interface{}) (interface{}, error) { return nil, nil }
-func (f *LongTextField) Check(v interface{}) error {
+func (f *LongTextField) GetDependsOn() []string { return nil }
+func (f *LongTextField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
+	return nil, nil
+}
+func (f *LongTextField) Check(ctx context.Context, v interface{}) error {
 	if f.CheckFunc == nil {
 		return nil
 	}
 	if f.NotNull {
-		return f.CheckFunc(v.(string))
+		return f.CheckFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CheckFunc(*v.(*string))
+			return f.CheckFunc(ctx, *v.(*string))
 		}
 	}
 	return nil
 }
-func (f *LongTextField) Clean(v interface{}) (interface{}, error) {
+func (f *LongTextField) Clean(ctx context.Context, v interface{}) (interface{}, error) {
 	if f.CleanFunc == nil {
 		return v, nil
 	}
 	if f.NotNull {
-		return f.CleanFunc(v.(string))
+		return f.CleanFunc(ctx, v.(string))
 	} else {
 		if v.(*string) != nil {
-			return f.CleanFunc(*v.(*string))
+			return f.CleanFunc(ctx, *v.(*string))
 		}
 	}
 	return v, nil

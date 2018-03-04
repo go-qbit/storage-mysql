@@ -3,6 +3,7 @@ package test
 import (
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/storage-mysql"
+	"context"
 )
 
 type User struct {
@@ -41,7 +42,7 @@ func NewUser(storage *mysql.MySQL) *User {
 					Id:        "fullname",
 					Caption:   "Full name",
 					DependsOn: []string{"name", "lastname"},
-					Get: func(row map[string]interface{}) (interface{}, error) {
+					Get: func(ctx context.Context, row map[string]interface{}) (interface{}, error) {
 						return row["name"].(string) + " " + row["lastname"].(string), nil
 					},
 				},

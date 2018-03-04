@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/storage-mysql"
+	"context"
 )
 
 type Phone struct {
@@ -47,7 +48,7 @@ func NewPhone(storage *mysql.MySQL) *Phone {
 					Id:        "formated_number",
 					Caption:   "Formated number",
 					DependsOn: []string{"country_code", "code", "number"},
-					Get: func(row map[string]interface{}) (interface{}, error) {
+					Get: func(ctx context.Context, row map[string]interface{}) (interface{}, error) {
 						return fmt.Sprintf("+%d (%d) %s", row["country_code"], row["code"], row["number"]), nil
 					},
 				},
