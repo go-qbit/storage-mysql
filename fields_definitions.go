@@ -8,15 +8,18 @@ import (
 	"strconv"
 
 	"github.com/go-qbit/model"
+	"github.com/go-qbit/rbac"
 )
 
 type DateField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *DateField) GetId() string      { return f.Id }
@@ -33,9 +36,11 @@ func (f *DateField) GetStorageType() string {
 
 	return res
 }
-func (f *DateField) IsDerivable() bool      { return false }
-func (f *DateField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *DateField) GetDependsOn() []string { return nil }
+func (f *DateField) IsDerivable() bool                   { return false }
+func (f *DateField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *DateField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *DateField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *DateField) GetDependsOn() []string              { return nil }
 func (f *DateField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -66,7 +71,7 @@ func (f *DateField) Clean(ctx context.Context, v interface{}) (interface{}, erro
 	return v, nil
 }
 func (f *DateField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &DateField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &DateField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *DateField) IsAutoIncremented() bool { return false }
 func (f *DateField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -87,12 +92,14 @@ func (f *DateField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type TimeField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *TimeField) GetId() string      { return f.Id }
@@ -109,9 +116,11 @@ func (f *TimeField) GetStorageType() string {
 
 	return res
 }
-func (f *TimeField) IsDerivable() bool      { return false }
-func (f *TimeField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *TimeField) GetDependsOn() []string { return nil }
+func (f *TimeField) IsDerivable() bool                   { return false }
+func (f *TimeField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *TimeField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *TimeField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *TimeField) GetDependsOn() []string              { return nil }
 func (f *TimeField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -142,7 +151,7 @@ func (f *TimeField) Clean(ctx context.Context, v interface{}) (interface{}, erro
 	return v, nil
 }
 func (f *TimeField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TimeField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &TimeField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *TimeField) IsAutoIncremented() bool { return false }
 func (f *TimeField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -163,12 +172,14 @@ func (f *TimeField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type TimeStampField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *TimeStampField) GetId() string      { return f.Id }
@@ -189,7 +200,9 @@ func (f *TimeStampField) IsDerivable() bool { return false }
 func (f *TimeStampField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TimeStampField) GetDependsOn() []string { return nil }
+func (f *TimeStampField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *TimeStampField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *TimeStampField) GetDependsOn() []string              { return nil }
 func (f *TimeStampField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -220,7 +233,7 @@ func (f *TimeStampField) Clean(ctx context.Context, v interface{}) (interface{},
 	return v, nil
 }
 func (f *TimeStampField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TimeStampField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &TimeStampField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *TimeStampField) IsAutoIncremented() bool { return false }
 func (f *TimeStampField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -241,12 +254,14 @@ func (f *TimeStampField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type DateTimeField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *DateTimeField) GetId() string      { return f.Id }
@@ -267,7 +282,9 @@ func (f *DateTimeField) IsDerivable() bool { return false }
 func (f *DateTimeField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *DateTimeField) GetDependsOn() []string { return nil }
+func (f *DateTimeField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *DateTimeField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *DateTimeField) GetDependsOn() []string              { return nil }
 func (f *DateTimeField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -298,7 +315,7 @@ func (f *DateTimeField) Clean(ctx context.Context, v interface{}) (interface{}, 
 	return v, nil
 }
 func (f *DateTimeField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &DateTimeField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &DateTimeField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *DateTimeField) IsAutoIncremented() bool { return false }
 func (f *DateTimeField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -319,12 +336,14 @@ func (f *DateTimeField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type YearField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *YearField) GetId() string      { return f.Id }
@@ -341,9 +360,11 @@ func (f *YearField) GetStorageType() string {
 
 	return res
 }
-func (f *YearField) IsDerivable() bool      { return false }
-func (f *YearField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *YearField) GetDependsOn() []string { return nil }
+func (f *YearField) IsDerivable() bool                   { return false }
+func (f *YearField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *YearField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *YearField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *YearField) GetDependsOn() []string              { return nil }
 func (f *YearField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -374,7 +395,7 @@ func (f *YearField) Clean(ctx context.Context, v interface{}) (interface{}, erro
 	return v, nil
 }
 func (f *YearField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &YearField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &YearField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *YearField) IsAutoIncremented() bool { return false }
 func (f *YearField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -395,12 +416,14 @@ func (f *YearField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type TinyBlobField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *[]byte
-	CheckFunc func(ctx context.Context, value []byte) error
-	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *[]byte
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value []byte) error
+	CleanFunc      func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *TinyBlobField) GetId() string      { return f.Id }
@@ -421,7 +444,9 @@ func (f *TinyBlobField) IsDerivable() bool { return false }
 func (f *TinyBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TinyBlobField) GetDependsOn() []string { return nil }
+func (f *TinyBlobField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *TinyBlobField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *TinyBlobField) GetDependsOn() []string              { return nil }
 func (f *TinyBlobField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -452,7 +477,7 @@ func (f *TinyBlobField) Clean(ctx context.Context, v interface{}) (interface{}, 
 	return v, nil
 }
 func (f *TinyBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TinyBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &TinyBlobField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *TinyBlobField) IsAutoIncremented() bool { return false }
 func (f *TinyBlobField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -473,12 +498,14 @@ func (f *TinyBlobField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type BlobField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *[]byte
-	CheckFunc func(ctx context.Context, value []byte) error
-	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *[]byte
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value []byte) error
+	CleanFunc      func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *BlobField) GetId() string      { return f.Id }
@@ -495,9 +522,11 @@ func (f *BlobField) GetStorageType() string {
 
 	return res
 }
-func (f *BlobField) IsDerivable() bool      { return false }
-func (f *BlobField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *BlobField) GetDependsOn() []string { return nil }
+func (f *BlobField) IsDerivable() bool                   { return false }
+func (f *BlobField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *BlobField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *BlobField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *BlobField) GetDependsOn() []string              { return nil }
 func (f *BlobField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -528,7 +557,7 @@ func (f *BlobField) Clean(ctx context.Context, v interface{}) (interface{}, erro
 	return v, nil
 }
 func (f *BlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &BlobField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *BlobField) IsAutoIncremented() bool { return false }
 func (f *BlobField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -549,12 +578,14 @@ func (f *BlobField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type MediumBlobField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *[]byte
-	CheckFunc func(ctx context.Context, value []byte) error
-	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *[]byte
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value []byte) error
+	CleanFunc      func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *MediumBlobField) GetId() string      { return f.Id }
@@ -575,7 +606,9 @@ func (f *MediumBlobField) IsDerivable() bool { return false }
 func (f *MediumBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *MediumBlobField) GetDependsOn() []string { return nil }
+func (f *MediumBlobField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *MediumBlobField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *MediumBlobField) GetDependsOn() []string              { return nil }
 func (f *MediumBlobField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -606,7 +639,7 @@ func (f *MediumBlobField) Clean(ctx context.Context, v interface{}) (interface{}
 	return v, nil
 }
 func (f *MediumBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &MediumBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &MediumBlobField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *MediumBlobField) IsAutoIncremented() bool { return false }
 func (f *MediumBlobField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -627,12 +660,14 @@ func (f *MediumBlobField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type LongBlobField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *[]byte
-	CheckFunc func(ctx context.Context, value []byte) error
-	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *[]byte
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value []byte) error
+	CleanFunc      func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *LongBlobField) GetId() string      { return f.Id }
@@ -653,7 +688,9 @@ func (f *LongBlobField) IsDerivable() bool { return false }
 func (f *LongBlobField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *LongBlobField) GetDependsOn() []string { return nil }
+func (f *LongBlobField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *LongBlobField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *LongBlobField) GetDependsOn() []string              { return nil }
 func (f *LongBlobField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -684,7 +721,7 @@ func (f *LongBlobField) Clean(ctx context.Context, v interface{}) (interface{}, 
 	return v, nil
 }
 func (f *LongBlobField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &LongBlobField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &LongBlobField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *LongBlobField) IsAutoIncremented() bool { return false }
 func (f *LongBlobField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -705,12 +742,14 @@ func (f *LongBlobField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type BooleanField struct {
-	Id        string
-	Caption   string
-	NotNull   bool
-	Default   *bool
-	CheckFunc func(ctx context.Context, value bool) error
-	CleanFunc func(ctx context.Context, value bool) (bool, error)
+	Id             string
+	Caption        string
+	NotNull        bool
+	Default        *bool
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value bool) error
+	CleanFunc      func(ctx context.Context, value bool) (bool, error)
 }
 
 func (f *BooleanField) GetId() string      { return f.Id }
@@ -731,7 +770,9 @@ func (f *BooleanField) IsDerivable() bool { return false }
 func (f *BooleanField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *BooleanField) GetDependsOn() []string { return nil }
+func (f *BooleanField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *BooleanField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *BooleanField) GetDependsOn() []string              { return nil }
 func (f *BooleanField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -762,7 +803,7 @@ func (f *BooleanField) Clean(ctx context.Context, v interface{}) (interface{}, e
 	return v, nil
 }
 func (f *BooleanField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BooleanField{id, caption, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &BooleanField{id, caption, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *BooleanField) IsAutoIncremented() bool { return false }
 func (f *BooleanField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -783,15 +824,17 @@ func (f *BooleanField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type TinyIntField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *int8
-	CheckFunc     func(ctx context.Context, value int8) error
-	CleanFunc     func(ctx context.Context, value int8) (int8, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *int8
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value int8) error
+	CleanFunc      func(ctx context.Context, value int8) (int8, error)
 }
 
 func (f *TinyIntField) GetId() string      { return f.Id }
@@ -816,7 +859,9 @@ func (f *TinyIntField) IsDerivable() bool { return false }
 func (f *TinyIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TinyIntField) GetDependsOn() []string { return nil }
+func (f *TinyIntField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *TinyIntField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *TinyIntField) GetDependsOn() []string              { return nil }
 func (f *TinyIntField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -847,7 +892,7 @@ func (f *TinyIntField) Clean(ctx context.Context, v interface{}) (interface{}, e
 	return v, nil
 }
 func (f *TinyIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TinyIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &TinyIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *TinyIntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *TinyIntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -882,15 +927,17 @@ func (f *TinyIntField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type SmallIntField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *int16
-	CheckFunc     func(ctx context.Context, value int16) error
-	CleanFunc     func(ctx context.Context, value int16) (int16, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *int16
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value int16) error
+	CleanFunc      func(ctx context.Context, value int16) (int16, error)
 }
 
 func (f *SmallIntField) GetId() string      { return f.Id }
@@ -915,7 +962,9 @@ func (f *SmallIntField) IsDerivable() bool { return false }
 func (f *SmallIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *SmallIntField) GetDependsOn() []string { return nil }
+func (f *SmallIntField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *SmallIntField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *SmallIntField) GetDependsOn() []string              { return nil }
 func (f *SmallIntField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -946,7 +995,7 @@ func (f *SmallIntField) Clean(ctx context.Context, v interface{}) (interface{}, 
 	return v, nil
 }
 func (f *SmallIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &SmallIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &SmallIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *SmallIntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *SmallIntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -981,15 +1030,17 @@ func (f *SmallIntField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type MediumIntField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *int32
-	CheckFunc     func(ctx context.Context, value int32) error
-	CleanFunc     func(ctx context.Context, value int32) (int32, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *int32
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value int32) error
+	CleanFunc      func(ctx context.Context, value int32) (int32, error)
 }
 
 func (f *MediumIntField) GetId() string      { return f.Id }
@@ -1014,7 +1065,9 @@ func (f *MediumIntField) IsDerivable() bool { return false }
 func (f *MediumIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *MediumIntField) GetDependsOn() []string { return nil }
+func (f *MediumIntField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *MediumIntField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *MediumIntField) GetDependsOn() []string              { return nil }
 func (f *MediumIntField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1045,7 +1098,7 @@ func (f *MediumIntField) Clean(ctx context.Context, v interface{}) (interface{},
 	return v, nil
 }
 func (f *MediumIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &MediumIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &MediumIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *MediumIntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *MediumIntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1080,15 +1133,17 @@ func (f *MediumIntField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type IntField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *int32
-	CheckFunc     func(ctx context.Context, value int32) error
-	CleanFunc     func(ctx context.Context, value int32) (int32, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *int32
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value int32) error
+	CleanFunc      func(ctx context.Context, value int32) (int32, error)
 }
 
 func (f *IntField) GetId() string      { return f.Id }
@@ -1111,6 +1166,8 @@ func (f *IntField) GetStorageType() string {
 }
 func (f *IntField) IsDerivable() bool                                                 { return false }
 func (f *IntField) IsRequired() bool                                                  { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *IntField) GetViewPermission() *rbac.Permission                               { return f.ViewPermission }
+func (f *IntField) GetEditPermission() *rbac.Permission                               { return f.EditPermission }
 func (f *IntField) GetDependsOn() []string                                            { return nil }
 func (f *IntField) Calc(context.Context, map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *IntField) Check(ctx context.Context, v interface{}) error {
@@ -1140,7 +1197,7 @@ func (f *IntField) Clean(ctx context.Context, v interface{}) (interface{}, error
 	return v, nil
 }
 func (f *IntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &IntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &IntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *IntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *IntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1175,15 +1232,17 @@ func (f *IntField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type BigIntField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *int64
-	CheckFunc     func(ctx context.Context, value int64) error
-	CleanFunc     func(ctx context.Context, value int64) (int64, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *int64
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value int64) error
+	CleanFunc      func(ctx context.Context, value int64) (int64, error)
 }
 
 func (f *BigIntField) GetId() string      { return f.Id }
@@ -1208,7 +1267,9 @@ func (f *BigIntField) IsDerivable() bool { return false }
 func (f *BigIntField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *BigIntField) GetDependsOn() []string { return nil }
+func (f *BigIntField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *BigIntField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *BigIntField) GetDependsOn() []string              { return nil }
 func (f *BigIntField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1239,7 +1300,7 @@ func (f *BigIntField) Clean(ctx context.Context, v interface{}) (interface{}, er
 	return v, nil
 }
 func (f *BigIntField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BigIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &BigIntField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *BigIntField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *BigIntField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1274,15 +1335,17 @@ func (f *BigIntField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type TinyUintField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *uint8
-	CheckFunc     func(ctx context.Context, value uint8) error
-	CleanFunc     func(ctx context.Context, value uint8) (uint8, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *uint8
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value uint8) error
+	CleanFunc      func(ctx context.Context, value uint8) (uint8, error)
 }
 
 func (f *TinyUintField) GetId() string      { return f.Id }
@@ -1309,7 +1372,9 @@ func (f *TinyUintField) IsDerivable() bool { return false }
 func (f *TinyUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TinyUintField) GetDependsOn() []string { return nil }
+func (f *TinyUintField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *TinyUintField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *TinyUintField) GetDependsOn() []string              { return nil }
 func (f *TinyUintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1340,7 +1405,7 @@ func (f *TinyUintField) Clean(ctx context.Context, v interface{}) (interface{}, 
 	return v, nil
 }
 func (f *TinyUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TinyUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &TinyUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *TinyUintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *TinyUintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1377,15 +1442,17 @@ func (f *TinyUintField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type SmallUintField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *uint16
-	CheckFunc     func(ctx context.Context, value uint16) error
-	CleanFunc     func(ctx context.Context, value uint16) (uint16, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *uint16
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value uint16) error
+	CleanFunc      func(ctx context.Context, value uint16) (uint16, error)
 }
 
 func (f *SmallUintField) GetId() string      { return f.Id }
@@ -1412,7 +1479,9 @@ func (f *SmallUintField) IsDerivable() bool { return false }
 func (f *SmallUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *SmallUintField) GetDependsOn() []string { return nil }
+func (f *SmallUintField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *SmallUintField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *SmallUintField) GetDependsOn() []string              { return nil }
 func (f *SmallUintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1443,7 +1512,7 @@ func (f *SmallUintField) Clean(ctx context.Context, v interface{}) (interface{},
 	return v, nil
 }
 func (f *SmallUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &SmallUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &SmallUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *SmallUintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *SmallUintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1480,15 +1549,17 @@ func (f *SmallUintField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type MediumUintField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *uint32
-	CheckFunc     func(ctx context.Context, value uint32) error
-	CleanFunc     func(ctx context.Context, value uint32) (uint32, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *uint32
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value uint32) error
+	CleanFunc      func(ctx context.Context, value uint32) (uint32, error)
 }
 
 func (f *MediumUintField) GetId() string      { return f.Id }
@@ -1515,7 +1586,9 @@ func (f *MediumUintField) IsDerivable() bool { return false }
 func (f *MediumUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *MediumUintField) GetDependsOn() []string { return nil }
+func (f *MediumUintField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *MediumUintField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *MediumUintField) GetDependsOn() []string              { return nil }
 func (f *MediumUintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1546,7 +1619,7 @@ func (f *MediumUintField) Clean(ctx context.Context, v interface{}) (interface{}
 	return v, nil
 }
 func (f *MediumUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &MediumUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &MediumUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *MediumUintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *MediumUintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1583,15 +1656,17 @@ func (f *MediumUintField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type UintField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *uint32
-	CheckFunc     func(ctx context.Context, value uint32) error
-	CleanFunc     func(ctx context.Context, value uint32) (uint32, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *uint32
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value uint32) error
+	CleanFunc      func(ctx context.Context, value uint32) (uint32, error)
 }
 
 func (f *UintField) GetId() string      { return f.Id }
@@ -1614,9 +1689,11 @@ func (f *UintField) GetStorageType() string {
 
 	return res
 }
-func (f *UintField) IsDerivable() bool      { return false }
-func (f *UintField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *UintField) GetDependsOn() []string { return nil }
+func (f *UintField) IsDerivable() bool                   { return false }
+func (f *UintField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *UintField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *UintField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *UintField) GetDependsOn() []string              { return nil }
 func (f *UintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1647,7 +1724,7 @@ func (f *UintField) Clean(ctx context.Context, v interface{}) (interface{}, erro
 	return v, nil
 }
 func (f *UintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &UintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &UintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *UintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *UintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1684,15 +1761,17 @@ func (f *UintField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type BigUintField struct {
-	Id            string
-	Caption       string
-	Length        int
-	AutoIncrement bool
-	Zerofill      bool
-	NotNull       bool
-	Default       *uint64
-	CheckFunc     func(ctx context.Context, value uint64) error
-	CleanFunc     func(ctx context.Context, value uint64) (uint64, error)
+	Id             string
+	Caption        string
+	Length         int
+	AutoIncrement  bool
+	Zerofill       bool
+	NotNull        bool
+	Default        *uint64
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value uint64) error
+	CleanFunc      func(ctx context.Context, value uint64) (uint64, error)
 }
 
 func (f *BigUintField) GetId() string      { return f.Id }
@@ -1719,7 +1798,9 @@ func (f *BigUintField) IsDerivable() bool { return false }
 func (f *BigUintField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *BigUintField) GetDependsOn() []string { return nil }
+func (f *BigUintField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *BigUintField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *BigUintField) GetDependsOn() []string              { return nil }
 func (f *BigUintField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1750,7 +1831,7 @@ func (f *BigUintField) Clean(ctx context.Context, v interface{}) (interface{}, e
 	return v, nil
 }
 func (f *BigUintField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BigUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &BigUintField{id, caption, f.Length, false, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *BigUintField) IsAutoIncremented() bool { return f.AutoIncrement }
 func (f *BigUintField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1787,15 +1868,17 @@ func (f *BigUintField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type RealField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Decimals  int
-	Zerofill  bool
-	NotNull   bool
-	Default   *float64
-	CheckFunc func(ctx context.Context, value float64) error
-	CleanFunc func(ctx context.Context, value float64) (float64, error)
+	Id             string
+	Caption        string
+	Length         int
+	Decimals       int
+	Zerofill       bool
+	NotNull        bool
+	Default        *float64
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value float64) error
+	CleanFunc      func(ctx context.Context, value float64) (float64, error)
 }
 
 func (f *RealField) GetId() string      { return f.Id }
@@ -1816,9 +1899,11 @@ func (f *RealField) GetStorageType() string {
 
 	return res
 }
-func (f *RealField) IsDerivable() bool      { return false }
-func (f *RealField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *RealField) GetDependsOn() []string { return nil }
+func (f *RealField) IsDerivable() bool                   { return false }
+func (f *RealField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *RealField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *RealField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *RealField) GetDependsOn() []string              { return nil }
 func (f *RealField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1849,7 +1934,7 @@ func (f *RealField) Clean(ctx context.Context, v interface{}) (interface{}, erro
 	return v, nil
 }
 func (f *RealField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &RealField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &RealField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *RealField) IsAutoIncremented() bool { return false }
 func (f *RealField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1885,15 +1970,17 @@ func (f *RealField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type FloatField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Decimals  int
-	Zerofill  bool
-	NotNull   bool
-	Default   *float64
-	CheckFunc func(ctx context.Context, value float64) error
-	CleanFunc func(ctx context.Context, value float64) (float64, error)
+	Id             string
+	Caption        string
+	Length         int
+	Decimals       int
+	Zerofill       bool
+	NotNull        bool
+	Default        *float64
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value float64) error
+	CleanFunc      func(ctx context.Context, value float64) (float64, error)
 }
 
 func (f *FloatField) GetId() string      { return f.Id }
@@ -1914,9 +2001,11 @@ func (f *FloatField) GetStorageType() string {
 
 	return res
 }
-func (f *FloatField) IsDerivable() bool      { return false }
-func (f *FloatField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *FloatField) GetDependsOn() []string { return nil }
+func (f *FloatField) IsDerivable() bool                   { return false }
+func (f *FloatField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *FloatField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *FloatField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *FloatField) GetDependsOn() []string              { return nil }
 func (f *FloatField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -1947,7 +2036,7 @@ func (f *FloatField) Clean(ctx context.Context, v interface{}) (interface{}, err
 	return v, nil
 }
 func (f *FloatField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &FloatField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &FloatField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *FloatField) IsAutoIncremented() bool { return false }
 func (f *FloatField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -1983,15 +2072,17 @@ func (f *FloatField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type DecimalField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Decimals  int
-	Zerofill  bool
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	Decimals       int
+	Zerofill       bool
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *DecimalField) GetId() string      { return f.Id }
@@ -2016,7 +2107,9 @@ func (f *DecimalField) IsDerivable() bool { return false }
 func (f *DecimalField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *DecimalField) GetDependsOn() []string { return nil }
+func (f *DecimalField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *DecimalField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *DecimalField) GetDependsOn() []string              { return nil }
 func (f *DecimalField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2047,7 +2140,7 @@ func (f *DecimalField) Clean(ctx context.Context, v interface{}) (interface{}, e
 	return v, nil
 }
 func (f *DecimalField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &DecimalField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &DecimalField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *DecimalField) IsAutoIncremented() bool { return false }
 func (f *DecimalField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2083,15 +2176,17 @@ func (f *DecimalField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type NumericField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Decimals  int
-	Zerofill  bool
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	Decimals       int
+	Zerofill       bool
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *NumericField) GetId() string      { return f.Id }
@@ -2116,7 +2211,9 @@ func (f *NumericField) IsDerivable() bool { return false }
 func (f *NumericField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *NumericField) GetDependsOn() []string { return nil }
+func (f *NumericField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *NumericField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *NumericField) GetDependsOn() []string              { return nil }
 func (f *NumericField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2147,7 +2244,7 @@ func (f *NumericField) Clean(ctx context.Context, v interface{}) (interface{}, e
 	return v, nil
 }
 func (f *NumericField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &NumericField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &NumericField{id, caption, f.Length, f.Decimals, f.Zerofill, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *NumericField) IsAutoIncremented() bool { return false }
 func (f *NumericField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2183,13 +2280,15 @@ func (f *NumericField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type BitField struct {
-	Id        string
-	Caption   string
-	Length    int
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *BitField) GetId() string      { return f.Id }
@@ -2212,6 +2311,8 @@ func (f *BitField) GetStorageType() string {
 }
 func (f *BitField) IsDerivable() bool                                                 { return false }
 func (f *BitField) IsRequired() bool                                                  { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *BitField) GetViewPermission() *rbac.Permission                               { return f.ViewPermission }
+func (f *BitField) GetEditPermission() *rbac.Permission                               { return f.EditPermission }
 func (f *BitField) GetDependsOn() []string                                            { return nil }
 func (f *BitField) Calc(context.Context, map[string]interface{}) (interface{}, error) { return nil, nil }
 func (f *BitField) Check(ctx context.Context, v interface{}) error {
@@ -2241,7 +2342,7 @@ func (f *BitField) Clean(ctx context.Context, v interface{}) (interface{}, error
 	return v, nil
 }
 func (f *BitField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BitField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &BitField{id, caption, f.Length, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *BitField) IsAutoIncremented() bool { return false }
 func (f *BitField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2268,13 +2369,15 @@ func (f *BitField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type BinaryField struct {
-	Id        string
-	Caption   string
-	Length    int
-	NotNull   bool
-	Default   *[]byte
-	CheckFunc func(ctx context.Context, value []byte) error
-	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
+	Id             string
+	Caption        string
+	Length         int
+	NotNull        bool
+	Default        *[]byte
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value []byte) error
+	CleanFunc      func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *BinaryField) GetId() string      { return f.Id }
@@ -2299,7 +2402,9 @@ func (f *BinaryField) IsDerivable() bool { return false }
 func (f *BinaryField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *BinaryField) GetDependsOn() []string { return nil }
+func (f *BinaryField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *BinaryField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *BinaryField) GetDependsOn() []string              { return nil }
 func (f *BinaryField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2330,7 +2435,7 @@ func (f *BinaryField) Clean(ctx context.Context, v interface{}) (interface{}, er
 	return v, nil
 }
 func (f *BinaryField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &BinaryField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &BinaryField{id, caption, f.Length, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *BinaryField) IsAutoIncremented() bool { return false }
 func (f *BinaryField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2357,13 +2462,15 @@ func (f *BinaryField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type VarBinaryField struct {
-	Id        string
-	Caption   string
-	Length    int
-	NotNull   bool
-	Default   *[]byte
-	CheckFunc func(ctx context.Context, value []byte) error
-	CleanFunc func(ctx context.Context, value []byte) ([]byte, error)
+	Id             string
+	Caption        string
+	Length         int
+	NotNull        bool
+	Default        *[]byte
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value []byte) error
+	CleanFunc      func(ctx context.Context, value []byte) ([]byte, error)
 }
 
 func (f *VarBinaryField) GetId() string      { return f.Id }
@@ -2388,7 +2495,9 @@ func (f *VarBinaryField) IsDerivable() bool { return false }
 func (f *VarBinaryField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *VarBinaryField) GetDependsOn() []string { return nil }
+func (f *VarBinaryField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *VarBinaryField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *VarBinaryField) GetDependsOn() []string              { return nil }
 func (f *VarBinaryField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2419,7 +2528,7 @@ func (f *VarBinaryField) Clean(ctx context.Context, v interface{}) (interface{},
 	return v, nil
 }
 func (f *VarBinaryField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &VarBinaryField{id, caption, f.Length, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &VarBinaryField{id, caption, f.Length, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *VarBinaryField) IsAutoIncremented() bool { return false }
 func (f *VarBinaryField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2446,15 +2555,17 @@ func (f *VarBinaryField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type CharField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Charset   string
-	Collate   string
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	Charset        string
+	Collate        string
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *CharField) GetId() string      { return f.Id }
@@ -2475,9 +2586,11 @@ func (f *CharField) GetStorageType() string {
 
 	return res
 }
-func (f *CharField) IsDerivable() bool      { return false }
-func (f *CharField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *CharField) GetDependsOn() []string { return nil }
+func (f *CharField) IsDerivable() bool                   { return false }
+func (f *CharField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *CharField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *CharField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *CharField) GetDependsOn() []string              { return nil }
 func (f *CharField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2508,7 +2621,7 @@ func (f *CharField) Clean(ctx context.Context, v interface{}) (interface{}, erro
 	return v, nil
 }
 func (f *CharField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &CharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &CharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *CharField) IsAutoIncremented() bool { return false }
 func (f *CharField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2545,15 +2658,17 @@ func (f *CharField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type VarCharField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Charset   string
-	Collate   string
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	Charset        string
+	Collate        string
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *VarCharField) GetId() string      { return f.Id }
@@ -2578,7 +2693,9 @@ func (f *VarCharField) IsDerivable() bool { return false }
 func (f *VarCharField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *VarCharField) GetDependsOn() []string { return nil }
+func (f *VarCharField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *VarCharField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *VarCharField) GetDependsOn() []string              { return nil }
 func (f *VarCharField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2609,7 +2726,7 @@ func (f *VarCharField) Clean(ctx context.Context, v interface{}) (interface{}, e
 	return v, nil
 }
 func (f *VarCharField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &VarCharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &VarCharField{id, caption, f.Length, f.Charset, f.Collate, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *VarCharField) IsAutoIncremented() bool { return false }
 func (f *VarCharField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2646,16 +2763,18 @@ func (f *VarCharField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type TinyTextField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Charset   string
-	Collate   string
-	Binary    bool
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	Charset        string
+	Collate        string
+	Binary         bool
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *TinyTextField) GetId() string      { return f.Id }
@@ -2680,7 +2799,9 @@ func (f *TinyTextField) IsDerivable() bool { return false }
 func (f *TinyTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *TinyTextField) GetDependsOn() []string { return nil }
+func (f *TinyTextField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *TinyTextField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *TinyTextField) GetDependsOn() []string              { return nil }
 func (f *TinyTextField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2711,7 +2832,7 @@ func (f *TinyTextField) Clean(ctx context.Context, v interface{}) (interface{}, 
 	return v, nil
 }
 func (f *TinyTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TinyTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &TinyTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *TinyTextField) IsAutoIncremented() bool { return false }
 func (f *TinyTextField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2752,16 +2873,18 @@ func (f *TinyTextField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type TextField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Charset   string
-	Collate   string
-	Binary    bool
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	Charset        string
+	Collate        string
+	Binary         bool
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *TextField) GetId() string      { return f.Id }
@@ -2782,9 +2905,11 @@ func (f *TextField) GetStorageType() string {
 
 	return res
 }
-func (f *TextField) IsDerivable() bool      { return false }
-func (f *TextField) IsRequired() bool       { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
-func (f *TextField) GetDependsOn() []string { return nil }
+func (f *TextField) IsDerivable() bool                   { return false }
+func (f *TextField) IsRequired() bool                    { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }
+func (f *TextField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *TextField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *TextField) GetDependsOn() []string              { return nil }
 func (f *TextField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2815,7 +2940,7 @@ func (f *TextField) Clean(ctx context.Context, v interface{}) (interface{}, erro
 	return v, nil
 }
 func (f *TextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &TextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &TextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *TextField) IsAutoIncremented() bool { return false }
 func (f *TextField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2856,16 +2981,18 @@ func (f *TextField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type MediumTextField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Charset   string
-	Collate   string
-	Binary    bool
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	Charset        string
+	Collate        string
+	Binary         bool
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *MediumTextField) GetId() string      { return f.Id }
@@ -2890,7 +3017,9 @@ func (f *MediumTextField) IsDerivable() bool { return false }
 func (f *MediumTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *MediumTextField) GetDependsOn() []string { return nil }
+func (f *MediumTextField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *MediumTextField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *MediumTextField) GetDependsOn() []string              { return nil }
 func (f *MediumTextField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -2921,7 +3050,7 @@ func (f *MediumTextField) Clean(ctx context.Context, v interface{}) (interface{}
 	return v, nil
 }
 func (f *MediumTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &MediumTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &MediumTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *MediumTextField) IsAutoIncremented() bool { return false }
 func (f *MediumTextField) WriteSQL(sqlBuf *SqlBuffer) {
@@ -2962,16 +3091,18 @@ func (f *MediumTextField) WriteSQL(sqlBuf *SqlBuffer) {
 }
 
 type LongTextField struct {
-	Id        string
-	Caption   string
-	Length    int
-	Charset   string
-	Collate   string
-	Binary    bool
-	NotNull   bool
-	Default   *string
-	CheckFunc func(ctx context.Context, value string) error
-	CleanFunc func(ctx context.Context, value string) (string, error)
+	Id             string
+	Caption        string
+	Length         int
+	Charset        string
+	Collate        string
+	Binary         bool
+	NotNull        bool
+	Default        *string
+	ViewPermission *rbac.Permission
+	EditPermission *rbac.Permission
+	CheckFunc      func(ctx context.Context, value string) error
+	CleanFunc      func(ctx context.Context, value string) (string, error)
 }
 
 func (f *LongTextField) GetId() string      { return f.Id }
@@ -2996,7 +3127,9 @@ func (f *LongTextField) IsDerivable() bool { return false }
 func (f *LongTextField) IsRequired() bool {
 	return f.NotNull && f.Default == nil && !f.IsAutoIncremented()
 }
-func (f *LongTextField) GetDependsOn() []string { return nil }
+func (f *LongTextField) GetViewPermission() *rbac.Permission { return f.ViewPermission }
+func (f *LongTextField) GetEditPermission() *rbac.Permission { return f.EditPermission }
+func (f *LongTextField) GetDependsOn() []string              { return nil }
 func (f *LongTextField) Calc(context.Context, map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
@@ -3027,7 +3160,7 @@ func (f *LongTextField) Clean(ctx context.Context, v interface{}) (interface{}, 
 	return v, nil
 }
 func (f *LongTextField) CloneForFK(id string, caption string, required bool) model.IFieldDefinition {
-	return &LongTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.CheckFunc, f.CleanFunc}
+	return &LongTextField{id, caption, f.Length, f.Charset, f.Collate, f.Binary, required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}
 }
 func (f *LongTextField) IsAutoIncremented() bool { return false }
 func (f *LongTextField) WriteSQL(sqlBuf *SqlBuffer) {

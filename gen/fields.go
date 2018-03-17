@@ -184,6 +184,7 @@ func main() {
 	buf.WriteString(`"context"` + "\n")
 	buf.WriteByte('\n')
 	buf.WriteString(`"github.com/go-qbit/model"` + "\n")
+	buf.WriteString(`"github.com/go-qbit/rbac"` + "\n")
 	buf.WriteString(")\n")
 
 	for _, mysqlType := range mysqlTypes {
@@ -203,6 +204,9 @@ func main() {
 
 		buf.WriteString("NotNull bool\n")
 		buf.WriteString("Default *" + mysqlType.goType + "\n")
+		buf.WriteString("ViewPermission *rbac.Permission\n")
+		buf.WriteString("EditPermission *rbac.Permission\n")
+
 		buf.WriteString("CheckFunc func(ctx context.Context, value " + mysqlType.goType + ") error\n")
 		buf.WriteString("CleanFunc func(ctx context.Context, value " + mysqlType.goType + ") (" + mysqlType.goType + ", error)\n")
 		buf.WriteString("}\n")
@@ -233,6 +237,8 @@ func main() {
 		/**/
 		buf.WriteString("func (f *" + typeName + ") IsDerivable() bool { return false }\n")
 		buf.WriteString("func (f *" + typeName + ") IsRequired() bool { return f.NotNull && f.Default == nil && !f.IsAutoIncremented() }\n")
+		buf.WriteString("func (f *" + typeName + ") GetViewPermission() *rbac.Permission { return f.ViewPermission }\n")
+		buf.WriteString("func (f *" + typeName + ") GetEditPermission() *rbac.Permission { return f.EditPermission }\n")
 		buf.WriteString("func (f *" + typeName + ") GetDependsOn() []string { return nil }\n")
 		buf.WriteString("func (f *" + typeName + ") Calc(context.Context, map[string]interface{}) (interface{}, error) { return nil, nil }\n")
 		buf.WriteString("func (f *" + typeName + ") Check(ctx context.Context, v interface{}) error {\n" +
@@ -272,7 +278,7 @@ func main() {
 		}
 
 		buf.WriteString("func (f *" + typeName + ") CloneForFK(id string, caption string, required bool) model.IFieldDefinition {\n" +
-			"return &" + typeName + "{id, caption, " + cloneFields + " required, f.Default, f.CheckFunc, f.CleanFunc}\n" +
+			"return &" + typeName + "{id, caption, " + cloneFields + " required, f.Default, f.ViewPermission, f.EditPermission, f.CheckFunc, f.CleanFunc}\n" +
 			"}\n")
 
 		buf.WriteString("func (f *" + typeName + ") IsAutoIncremented() bool { return ")
