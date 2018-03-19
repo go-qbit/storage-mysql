@@ -181,6 +181,7 @@ func main() {
 	buf.WriteString("import (\n")
 	buf.WriteString(`"reflect"` + "\n")
 	buf.WriteString(`"strconv"` + "\n")
+	buf.WriteString(`"strings"` + "\n")
 	buf.WriteString(`"context"` + "\n")
 	buf.WriteByte('\n')
 	buf.WriteString(`"github.com/go-qbit/model"` + "\n")

@@ -6,6 +6,7 @@ import (
 	"context"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/rbac"
