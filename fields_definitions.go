@@ -244,11 +244,13 @@ func (f *TimeStampField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
 		sqlBuf.WriteString(" DEFAULT ")
-		sqlBuf.WriteValue(*f.Default)
+		sqlBuf.WriteString(*f.Default)
 	}
 
 }
