@@ -51,8 +51,15 @@ func (f *DateField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -131,8 +138,15 @@ func (f *TimeField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -213,8 +227,15 @@ func (f *TimeStampField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -295,8 +316,15 @@ func (f *DateTimeField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -375,8 +403,15 @@ func (f *YearField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -457,8 +492,15 @@ func (f *TinyBlobField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.([]byte))
 	} else {
-		if v.(*[]byte) != nil {
-			return f.CheckFunc(ctx, *v.(*[]byte))
+		switch val := v.(type) {
+		case *[]byte:
+			var t []byte
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case []byte:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -537,8 +579,15 @@ func (f *BlobField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.([]byte))
 	} else {
-		if v.(*[]byte) != nil {
-			return f.CheckFunc(ctx, *v.(*[]byte))
+		switch val := v.(type) {
+		case *[]byte:
+			var t []byte
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case []byte:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -619,8 +668,15 @@ func (f *MediumBlobField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.([]byte))
 	} else {
-		if v.(*[]byte) != nil {
-			return f.CheckFunc(ctx, *v.(*[]byte))
+		switch val := v.(type) {
+		case *[]byte:
+			var t []byte
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case []byte:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -701,8 +757,15 @@ func (f *LongBlobField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.([]byte))
 	} else {
-		if v.(*[]byte) != nil {
-			return f.CheckFunc(ctx, *v.(*[]byte))
+		switch val := v.(type) {
+		case *[]byte:
+			var t []byte
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case []byte:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -783,8 +846,15 @@ func (f *BooleanField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(bool))
 	} else {
-		if v.(*bool) != nil {
-			return f.CheckFunc(ctx, *v.(*bool))
+		switch val := v.(type) {
+		case *bool:
+			var t bool
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case bool:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -872,8 +942,15 @@ func (f *TinyIntField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(int8))
 	} else {
-		if v.(*int8) != nil {
-			return f.CheckFunc(ctx, *v.(*int8))
+		switch val := v.(type) {
+		case *int8:
+			var t int8
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case int8:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -975,8 +1052,15 @@ func (f *SmallIntField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(int16))
 	} else {
-		if v.(*int16) != nil {
-			return f.CheckFunc(ctx, *v.(*int16))
+		switch val := v.(type) {
+		case *int16:
+			var t int16
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case int16:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1078,8 +1162,15 @@ func (f *MediumIntField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(int32))
 	} else {
-		if v.(*int32) != nil {
-			return f.CheckFunc(ctx, *v.(*int32))
+		switch val := v.(type) {
+		case *int32:
+			var t int32
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case int32:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1177,8 +1268,15 @@ func (f *IntField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(int32))
 	} else {
-		if v.(*int32) != nil {
-			return f.CheckFunc(ctx, *v.(*int32))
+		switch val := v.(type) {
+		case *int32:
+			var t int32
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case int32:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1280,8 +1378,15 @@ func (f *BigIntField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(int64))
 	} else {
-		if v.(*int64) != nil {
-			return f.CheckFunc(ctx, *v.(*int64))
+		switch val := v.(type) {
+		case *int64:
+			var t int64
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case int64:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1385,8 +1490,15 @@ func (f *TinyUintField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(uint8))
 	} else {
-		if v.(*uint8) != nil {
-			return f.CheckFunc(ctx, *v.(*uint8))
+		switch val := v.(type) {
+		case *uint8:
+			var t uint8
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case uint8:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1492,8 +1604,15 @@ func (f *SmallUintField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(uint16))
 	} else {
-		if v.(*uint16) != nil {
-			return f.CheckFunc(ctx, *v.(*uint16))
+		switch val := v.(type) {
+		case *uint16:
+			var t uint16
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case uint16:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1599,8 +1718,15 @@ func (f *MediumUintField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(uint32))
 	} else {
-		if v.(*uint32) != nil {
-			return f.CheckFunc(ctx, *v.(*uint32))
+		switch val := v.(type) {
+		case *uint32:
+			var t uint32
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case uint32:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1704,8 +1830,15 @@ func (f *UintField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(uint32))
 	} else {
-		if v.(*uint32) != nil {
-			return f.CheckFunc(ctx, *v.(*uint32))
+		switch val := v.(type) {
+		case *uint32:
+			var t uint32
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case uint32:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1811,8 +1944,15 @@ func (f *BigUintField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(uint64))
 	} else {
-		if v.(*uint64) != nil {
-			return f.CheckFunc(ctx, *v.(*uint64))
+		switch val := v.(type) {
+		case *uint64:
+			var t uint64
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case uint64:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -1914,8 +2054,15 @@ func (f *RealField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(float64))
 	} else {
-		if v.(*float64) != nil {
-			return f.CheckFunc(ctx, *v.(*float64))
+		switch val := v.(type) {
+		case *float64:
+			var t float64
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case float64:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2016,8 +2163,15 @@ func (f *FloatField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(float64))
 	} else {
-		if v.(*float64) != nil {
-			return f.CheckFunc(ctx, *v.(*float64))
+		switch val := v.(type) {
+		case *float64:
+			var t float64
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case float64:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2120,8 +2274,15 @@ func (f *DecimalField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2224,8 +2385,15 @@ func (f *NumericField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2322,8 +2490,15 @@ func (f *BitField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2415,8 +2590,15 @@ func (f *BinaryField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.([]byte))
 	} else {
-		if v.(*[]byte) != nil {
-			return f.CheckFunc(ctx, *v.(*[]byte))
+		switch val := v.(type) {
+		case *[]byte:
+			var t []byte
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case []byte:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2508,8 +2690,15 @@ func (f *VarBinaryField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.([]byte))
 	} else {
-		if v.(*[]byte) != nil {
-			return f.CheckFunc(ctx, *v.(*[]byte))
+		switch val := v.(type) {
+		case *[]byte:
+			var t []byte
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case []byte:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2601,8 +2790,15 @@ func (f *CharField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2706,8 +2902,15 @@ func (f *VarCharField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2812,8 +3015,15 @@ func (f *TinyTextField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -2920,8 +3130,15 @@ func (f *TextField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -3030,8 +3247,15 @@ func (f *MediumTextField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
@@ -3140,8 +3364,15 @@ func (f *LongTextField) Check(ctx context.Context, v interface{}) error {
 	if f.NotNull {
 		return f.CheckFunc(ctx, v.(string))
 	} else {
-		if v.(*string) != nil {
-			return f.CheckFunc(ctx, *v.(*string))
+		switch val := v.(type) {
+		case *string:
+			var t string
+			if val != nil {
+				t = *val
+			}
+			return f.CheckFunc(ctx, t)
+		case string:
+			return f.CheckFunc(ctx, val)
 		}
 	}
 	return nil
