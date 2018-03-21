@@ -248,9 +248,20 @@ func main() {
 			"	if f.NotNull {\n" +
 			"		return f.CheckFunc(ctx, v.(" + mysqlType.goType + "))\n" +
 			"	} else {\n" +
-			"		if v.(*" + mysqlType.goType + ") != nil {\n" +
-			"			return f.CheckFunc(ctx, *v.(*" + mysqlType.goType + "))\n" +
+
+			"		switch val := v.(type) {\n" +
+			"		case *" + mysqlType.goType + ":\n" +
+			"			var t " + mysqlType.goType + "\n" +
+			"			if val != nil {\n" +
+			"				t = *val\n" +
+			"			}\n" +
+			"			return f.CheckFunc(ctx, t)\n" +
+			"		case " + mysqlType.goType + ":\n" +
+			"			return f.CheckFunc(ctx, val)\n" +
+			"		default:\n" +
+			"			panic(\"UnknownType\")" +
 			"		}\n" +
+
 			"	}\n" +
 			"	return nil\n" +
 			"}\n")
