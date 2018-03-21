@@ -258,6 +258,8 @@ func main() {
 			"			return f.CheckFunc(ctx, t)\n" +
 			"		case " + mysqlType.goType + ":\n" +
 			"			return f.CheckFunc(ctx, val)\n" +
+			"		default:\n" +
+			"			panic(\"UnknownType\")" +
 			"		}\n" +
 
 			"	}\n" +

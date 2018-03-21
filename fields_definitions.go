@@ -60,6 +60,8 @@ func (f *DateField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -147,6 +149,8 @@ func (f *TimeField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -236,6 +240,8 @@ func (f *TimeStampField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -325,6 +331,8 @@ func (f *DateTimeField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -412,6 +420,8 @@ func (f *YearField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -501,6 +511,8 @@ func (f *TinyBlobField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case []byte:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -588,6 +600,8 @@ func (f *BlobField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case []byte:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -677,6 +691,8 @@ func (f *MediumBlobField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case []byte:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -766,6 +782,8 @@ func (f *LongBlobField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case []byte:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -855,6 +873,8 @@ func (f *BooleanField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case bool:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -951,6 +971,8 @@ func (f *TinyIntField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case int8:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1061,6 +1083,8 @@ func (f *SmallIntField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case int16:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1171,6 +1195,8 @@ func (f *MediumIntField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case int32:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1277,6 +1303,8 @@ func (f *IntField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case int32:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1387,6 +1415,8 @@ func (f *BigIntField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case int64:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1499,6 +1529,8 @@ func (f *TinyUintField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case uint8:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1613,6 +1645,8 @@ func (f *SmallUintField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case uint16:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1727,6 +1761,8 @@ func (f *MediumUintField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case uint32:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1839,6 +1875,8 @@ func (f *UintField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case uint32:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -1953,6 +1991,8 @@ func (f *BigUintField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case uint64:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2063,6 +2103,8 @@ func (f *RealField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case float64:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2172,6 +2214,8 @@ func (f *FloatField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case float64:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2283,6 +2327,8 @@ func (f *DecimalField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2394,6 +2440,8 @@ func (f *NumericField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2499,6 +2547,8 @@ func (f *BitField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2599,6 +2649,8 @@ func (f *BinaryField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case []byte:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2699,6 +2751,8 @@ func (f *VarBinaryField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case []byte:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2799,6 +2853,8 @@ func (f *CharField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -2911,6 +2967,8 @@ func (f *VarCharField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -3024,6 +3082,8 @@ func (f *TinyTextField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -3139,6 +3199,8 @@ func (f *TextField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -3256,6 +3318,8 @@ func (f *MediumTextField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
@@ -3373,6 +3437,8 @@ func (f *LongTextField) Check(ctx context.Context, v interface{}) error {
 			return f.CheckFunc(ctx, t)
 		case string:
 			return f.CheckFunc(ctx, val)
+		default:
+			panic("UnknownType")
 		}
 	}
 	return nil
