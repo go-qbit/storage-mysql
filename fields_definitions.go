@@ -6,6 +6,7 @@ import (
 	"context"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/rbac"
@@ -91,6 +92,8 @@ func (f *DateField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -180,6 +183,8 @@ func (f *TimeField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -271,11 +276,13 @@ func (f *TimeStampField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
 		sqlBuf.WriteString(" DEFAULT ")
-		sqlBuf.WriteValue(*f.Default)
+		sqlBuf.WriteString(MysqlRealEscapeString(*f.Default))
 	}
 
 }
@@ -362,6 +369,8 @@ func (f *DateTimeField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -451,6 +460,8 @@ func (f *YearField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -542,6 +553,8 @@ func (f *TinyBlobField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -631,6 +644,8 @@ func (f *BlobField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -722,6 +737,8 @@ func (f *MediumBlobField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -813,6 +830,8 @@ func (f *LongBlobField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -904,6 +923,8 @@ func (f *BooleanField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -1012,6 +1033,8 @@ func (f *TinyIntField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -1124,6 +1147,8 @@ func (f *SmallIntField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -1236,6 +1261,8 @@ func (f *MediumIntField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -1344,6 +1371,8 @@ func (f *IntField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -1456,6 +1485,8 @@ func (f *BigIntField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -1572,6 +1603,8 @@ func (f *TinyUintField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -1688,6 +1721,8 @@ func (f *SmallUintField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -1804,6 +1839,8 @@ func (f *MediumUintField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -1918,6 +1955,8 @@ func (f *UintField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -2034,6 +2073,8 @@ func (f *BigUintField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.AutoIncrement {
@@ -2149,6 +2190,8 @@ func (f *RealField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -2260,6 +2303,8 @@ func (f *FloatField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -2373,6 +2418,8 @@ func (f *DecimalField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -2486,6 +2533,8 @@ func (f *NumericField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -2584,6 +2633,8 @@ func (f *BitField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -2686,6 +2737,8 @@ func (f *BinaryField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -2788,6 +2841,8 @@ func (f *VarBinaryField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -2900,6 +2955,8 @@ func (f *CharField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -3014,6 +3071,8 @@ func (f *VarCharField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -3133,6 +3192,8 @@ func (f *TinyTextField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -3250,6 +3311,8 @@ func (f *TextField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -3369,6 +3432,8 @@ func (f *MediumTextField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -3488,6 +3553,8 @@ func (f *LongTextField) WriteSQL(sqlBuf *SqlBuffer) {
 
 	if f.NotNull {
 		sqlBuf.WriteString(" NOT NULL")
+	} else {
+		sqlBuf.WriteString(" NULL")
 	}
 
 	if f.Default != nil {
@@ -3495,4 +3562,11 @@ func (f *LongTextField) WriteSQL(sqlBuf *SqlBuffer) {
 		sqlBuf.WriteValue(*f.Default)
 	}
 
+}
+func MysqlRealEscapeString(value string) string {
+	replace := map[string]string{"\\": "\\\\", "'": `\'`, "\\0": "\\\\0", "\n": "\\n", "\r": "\\r", `"`: `\"`, "\x1a": "\\Z"}
+	for b, a := range replace {
+		value = strings.Replace(value, b, a, -1)
+	}
+	return value
 }

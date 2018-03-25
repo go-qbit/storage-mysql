@@ -181,6 +181,7 @@ func main() {
 	buf.WriteString("import (\n")
 	buf.WriteString(`"reflect"` + "\n")
 	buf.WriteString(`"strconv"` + "\n")
+	buf.WriteString(`"strings"` + "\n")
 	buf.WriteString(`"context"` + "\n")
 	buf.WriteByte('\n')
 	buf.WriteString(`"github.com/go-qbit/model"` + "\n")
@@ -359,7 +360,9 @@ func main() {
 		buf.WriteString("" +
 			"	if f.NotNull {\n" +
 			"		sqlBuf.WriteString(\" NOT NULL\")\n" +
-			"	}\n\n")
+			"	} else {" +
+			"		sqlBuf.WriteString(\" NULL\")\n" +
+			"   }\n\n")
 
 		if _, exists := typeFields["AutoIncrement"]; exists {
 			buf.WriteString("" +
@@ -368,14 +371,19 @@ func main() {
 				"	}\n\n")
 		}
 
+		tmp := "		sqlBuf.WriteValue(*f.Default)\n"
+		if mysqlType.mysqlType == "TIMESTAMP" {
+			tmp = "		sqlBuf.WriteString(MysqlRealEscapeString(*f.Default))\n"
+		}
 		buf.WriteString("" +
 			"	if f.Default != nil {\n" +
-			"		sqlBuf.WriteString(\" DEFAULT \")\n" +
-			"		sqlBuf.WriteValue(*f.Default)\n" +
+			"		sqlBuf.WriteString(\" DEFAULT \")\n" + tmp +
 			"	}\n\n")
 
 		buf.WriteString("}\n")
 	}
+
+	buf.WriteString(escapeFunction)
 
 	source, err := format.Source(buf.Bytes())
 	if err != nil {
@@ -387,3 +395,10 @@ func main() {
 
 	file.Write(source)
 }
+
+var escapeFunction = `func MysqlRealEscapeString(value string) string {` +
+	`replace := map[string]string{"\\":"\\\\", "'":` + "`" + `\` + "'`, " + `"\\0":"\\\\0", "\n":"\\n", "\r":"\\r", ` + "`" + `"` + "`:" + "`" + `\"` + "`" + `, "\x1a":"\\Z"}
+	for b, a := range replace {value = strings.Replace(value, b, a, -1)    }
+	return value
+}
+`
