@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/qerror"
@@ -463,6 +464,8 @@ func Quote(value interface{}) string {
 		} else {
 			v = "FALSE"
 		}
+	case time.Time:
+		v = value.Format("2006-01-02 15:04:05")
 
 	case *string:
 		if value == nil {
@@ -552,6 +555,8 @@ func Quote(value interface{}) string {
 				v = "FALSE"
 			}
 		}
+	case *time.Time:
+		v = value.Format("2006-01-02 15:04:05")
 
 	default:
 		panic(fmt.Sprintf("%T is not implemented", value))
