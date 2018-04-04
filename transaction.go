@@ -3,11 +3,12 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"github.com/go-qbit/qerror"
-	"github.com/go-qbit/timelog"
 	"strconv"
 	"sync"
 	"unsafe"
+
+	"github.com/go-qbit/qerror"
+	"github.com/go-qbit/timelog"
 )
 
 const ctx_transaction_key = "MYSQL_TRANSACTION"
@@ -128,6 +129,25 @@ func (s *MySQL) Rollback(ctx context.Context) (context.Context, error) {
 	}
 
 	return context.WithValue(ctx, s.transactionKey(), nil), nil
+}
+
+func (s *MySQL) DoInTransaction(ctx context.Context, f func(ctx context.Context) error) error {
+	ctx, err := s.StartTransaction(ctx)
+	if err != nil {
+		return err
+	}
+
+	if err := f(ctx); err != nil {
+		s.Rollback(ctx)
+		return err
+	}
+
+	if _, err := s.Commit(ctx); err != nil {
+		s.Rollback(ctx)
+		return err
+	}
+
+	return nil
 }
 
 func (s *MySQL) transactionKey() string {
