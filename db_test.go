@@ -56,8 +56,8 @@ func init() {
 	addr = env("MYSQL_TEST_ADDR", "localhost:3306")
 	dbname = env("MYSQL_TEST_DBNAME", "gotest")
 	netAddr = fmt.Sprintf("%s(%s)", prot, addr)
-	mysqlDsn = fmt.Sprintf("%s:%s@%s/%s?timeout=30s&strict=true&", user, pass, netAddr, "mysql")
-	gotestDsn = fmt.Sprintf("%s:%s@%s/%s?timeout=30s&strict=true&", user, pass, netAddr, dbname)
+	mysqlDsn = fmt.Sprintf("%s:%s@%s/%s?timeout=30s&", user, pass, netAddr, "mysql")
+	gotestDsn = fmt.Sprintf("%s:%s@%s/%s?timeout=30s&", user, pass, netAddr, dbname)
 }
 
 type DBTestSuite struct {

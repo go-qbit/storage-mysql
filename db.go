@@ -14,11 +14,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/qerror"
 	"github.com/go-qbit/timelog"
-
-	drvMysql "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var debugSQL = os.Getenv("MYSQL_DEBUG") != ""
@@ -40,6 +40,7 @@ func NewMySQL() *MySQL {
 func (s *MySQL) Connect(dsn string) error {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
+		spew.Dump(err)
 		return err
 	}
 	s.db = db
@@ -130,13 +131,6 @@ func (s *MySQL) Exec(ctx context.Context, sql string, a ...interface{}) (driver.
 		res, err = ct.(*transaction).tx.Exec(sql, a...)
 	}
 
-	if err != nil {
-		if warning, ok := err.(drvMysql.MySQLWarnings); ok {
-			println(warning.Error())
-			err = nil
-		}
-	}
-
 	return res, err
 }
 
@@ -161,13 +155,6 @@ func (s *MySQL) RawQuery(ctx context.Context, query string, a ...interface{}) (*
 		res, err = s.db.Query(query, a...)
 	} else {
 		res, err = ct.(*transaction).tx.Query(query, a...)
-	}
-
-	if err != nil {
-		if warning, ok := err.(drvMysql.MySQLWarnings); ok {
-			println(warning.Error())
-			err = nil
-		}
 	}
 
 	return res, err
