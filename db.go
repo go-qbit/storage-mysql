@@ -14,7 +14,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/qerror"
 	"github.com/go-qbit/timelog"
@@ -40,7 +39,6 @@ func NewMySQL() *MySQL {
 func (s *MySQL) Connect(dsn string) error {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		spew.Dump(err)
 		return err
 	}
 	s.db = db

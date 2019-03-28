@@ -9,6 +9,7 @@ import (
 
 type BaseModel struct {
 	*model.BaseModel
+	db      *MySQL
 	indexes []Index
 }
 
@@ -38,6 +39,7 @@ func NewBaseModel(db *MySQL, id string, dbFields []IMysqlFieldDefinition, deriva
 
 	m := &BaseModel{
 		BaseModel: model.NewBaseModel(id, allFields, db, opts.BaseModelOpts),
+		db:        db,
 		indexes:   opts.Indexes,
 	}
 
@@ -46,6 +48,10 @@ func NewBaseModel(db *MySQL, id string, dbFields []IMysqlFieldDefinition, deriva
 	db.models[id] = m
 
 	return m
+}
+
+func (m *BaseModel) GetDb() *MySQL {
+	return m.db
 }
 
 func (m *BaseModel) AddField(field model.IFieldDefinition) {
