@@ -20,7 +20,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var debugSQL = os.Getenv("MYSQL_DEBUG") != ""
+var (
+	debugSQL = os.Getenv("MYSQL_DEBUG") != ""
+	SqlDriver = "mysql"	
+)
 
 type MySQL struct {
 	db        *sql.DB
@@ -37,7 +40,7 @@ func NewMySQL() *MySQL {
 }
 
 func (s *MySQL) Connect(dsn string) error {
-	db, err := sql.Open("mysql", dsn)
+	db, err := sql.Open(SqlDriver, dsn)
 	if err != nil {
 		return err
 	}
