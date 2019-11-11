@@ -1,6 +1,8 @@
 package mysql
 
 import (
+	"strings"
+
 	"github.com/go-qbit/model"
 )
 
@@ -161,5 +163,27 @@ func (p *ExprProcessor) ModelField(m model.IModel, fieldName string) interface{}
 func (p *ExprProcessor) Value(value interface{}) interface{} {
 	return WriteFunc(func(buf *SqlBuffer) {
 		buf.WriteValue(value)
+	})
+}
+
+func (p *ExprProcessor) Func(name string, params ...model.IExpression) interface{} {
+	return WriteFunc(func(buf *SqlBuffer) {
+		switch strings.ToUpper(name) {
+		case "LIKE":
+			params[0].GetProcessor(p).(WriteFunc)(buf)
+			buf.WriteString(" LIKE ")
+			params[1].GetProcessor(p).(WriteFunc)(buf)
+
+		default:
+			buf.WriteIdentifier(name)
+			buf.WriteByte('(')
+			for i, param := range params {
+				if i > 0 {
+					buf.WriteByte(',')
+				}
+				param.GetProcessor(p).(WriteFunc)(buf)
+			}
+			buf.WriteByte(')')
+		}
 	})
 }
