@@ -14,15 +14,16 @@ import (
 	"sync"
 	"time"
 
+	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/qerror"
 	"github.com/go-qbit/timelog"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
-	debugSQL = os.Getenv("MYSQL_DEBUG") != ""
-	SqlDriver = "mysql"	
+	debugSQL  = os.Getenv("MYSQL_DEBUG") != ""
+	SqlDriver = "mysql"
 )
 
 type MySQL struct {
@@ -416,8 +417,12 @@ func Quote(value interface{}) string {
 		v = "NULL"
 	case []byte:
 		v = "X`"
-		for _, b := range value {
-			v += strconv.FormatUint(uint64(b), 10)
+		if len(value) <= 1024 {
+			for _, b := range value {
+				v += strconv.FormatUint(uint64(b), 10)
+			}
+		} else {
+			v += fmt.Sprintf("DATA(%d)", len(value))
 		}
 		v += "'"
 	case string:
