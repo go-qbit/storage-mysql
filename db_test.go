@@ -157,6 +157,8 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n", sqlBuf.String(),
 	)
+
+	//ioutil.WriteFile("/tmp/graph.svg", []byte(s.storage.GetGraphSVG()), 0644)
 }
 
 func (s *DBTestSuite) TestModel_Add() {

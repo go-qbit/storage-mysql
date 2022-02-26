@@ -9,6 +9,7 @@ require (
 	github.com/go-qbit/timelog v0.0.0-20200505103456-44613501a8f1
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/stretchr/testify v1.7.0
+	github.com/tmc/dot v0.0.0-20210901225022-f9bc17da75c0
 )
 
 require (
