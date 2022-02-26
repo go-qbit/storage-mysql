@@ -9,9 +9,10 @@ import (
 	"github.com/go-qbit/model"
 	"github.com/go-qbit/model/expr"
 	"github.com/go-qbit/model/relation"
-	"github.com/go-qbit/storage-mysql"
-	"github.com/go-qbit/storage-mysql/test"
 	"github.com/go-qbit/timelog"
+
+	mysql "github.com/go-qbit/storage-mysql"
+	"github.com/go-qbit/storage-mysql/test"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -120,7 +121,6 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"PRIMARY KEY (`id`),"+
 		"UNIQUE INDEX `uniq_address__country_city_address`(`country`,`city`,`address`)"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
-
 		"CREATE TABLE `user` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
 		"`name` VARCHAR(255) NOT NULL,"+
@@ -129,7 +129,6 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"INDEX `user__name`(`name`),"+
 		"INDEX `user__lastname_name`(`lastname`,`name`)"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
-
 		"CREATE TABLE `_junction__user__address` ("+
 		"`fk_user_id` INT UNSIGNED NOT NULL,"+
 		"`fk_address_id` INT UNSIGNED NOT NULL,"+
@@ -139,7 +138,6 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"FOREIGN KEY `fk__junction__user__address__fk_user_id___user__id`(`fk_user_id`)"+
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
-
 		"CREATE TABLE `message` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
 		"`text` VARCHAR(255) NOT NULL,"+
@@ -148,7 +146,6 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"FOREIGN KEY `fk_message__fk_user_id___user__id`(`fk_user_id`)"+
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
-
 		"CREATE TABLE `phone` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
 		"`country_code` INT UNSIGNED NOT NULL,"+
