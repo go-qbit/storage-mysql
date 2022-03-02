@@ -12,6 +12,8 @@ import (
 func (s *MySQL) GetGraphSVG() string {
 	g := dot.NewGraph("Database")
 
+	uniqRelations := map[string]map[string]*qmodel.Relation{}
+
 	nodes := make(map[string]*dot.Node)
 	for _, model := range s.models {
 		n := dot.NewNode(model.GetId())
@@ -63,11 +65,19 @@ func (s *MySQL) GetGraphSVG() string {
 
 		g.AddNode(n)
 		nodes[model.GetId()] = n
-	}
 
-	for _, model := range s.models {
+		uniqRelations[model.GetId()] = map[string]*qmodel.Relation{}
 		for _, name := range model.GetRelations() {
 			if relation := model.GetRelation(name); !relation.IsBack && relation.RelationType != qmodel.RELATION_MANY_TO_MANY {
+				uniqRelations[model.GetId()][relation.ExtModel.GetId()] = relation
+			}
+		}
+	}
+
+	for modelName, modelRelations := range uniqRelations {
+		model := s.models[modelName]
+		for _, relation := range modelRelations {
+			if !relation.IsBack && relation.RelationType != qmodel.RELATION_MANY_TO_MANY {
 				e := dot.NewEdge(nodes[model.GetId()], nodes[relation.ExtModel.GetId()])
 				_ = e.Set("tailport", relation.LocalFieldsNames[0])
 				_ = e.Set("headport", relation.FkFieldsNames[0])
@@ -81,20 +91,6 @@ func (s *MySQL) GetGraphSVG() string {
 					_ = e.Set("arrowtail", "odot")
 				}
 
-				switch relation.RelationType {
-				case qmodel.RELATION_ONE_TO_MANY:
-					_ = e.Set("taillabel", "one")
-					_ = e.Set("headlabel", "many")
-				case qmodel.RELATION_MANY_TO_ONE:
-					_ = e.Set("taillabel", "many")
-					_ = e.Set("headlabel", "one")
-				case qmodel.RELATION_MANY_TO_MANY:
-					_ = e.Set("taillabel", "many")
-					_ = e.Set("headlabel", "many")
-				case qmodel.RELATION_ONE_TO_ONE:
-					_ = e.Set("taillabel", "one")
-					_ = e.Set("headlabel", "one")
-				}
 				g.AddEdge(e)
 			}
 		}

@@ -3,6 +3,7 @@ package mysql_test
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"testing"
 
@@ -83,7 +84,7 @@ func (s *DBTestSuite) SetupTest() {
 	s.address = test.NewAddress(s.storage)
 
 	relation.AddOneToOne(s.phone, s.user)
-	relation.AddManyToOne(s.message, s.user)
+	relation.AddManyToOne(s.message, s.user, relation.WithRequired(true), relation.WithAlias("author"))
 	relation.AddManyToMany(s.user, s.address, s.storage)
 
 	if !s.NoError(s.storage.Connect(mysqlDsn)) {
@@ -141,9 +142,11 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		"CREATE TABLE `message` ("+
 		"`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"+
 		"`text` VARCHAR(255) NOT NULL,"+
-		"`fk_user_id` INT UNSIGNED,"+
+		"`fk_author_id` INT UNSIGNED NOT NULL,"+
 		"PRIMARY KEY (`id`),"+
-		"FOREIGN KEY `fk_message__fk_user_id___user__id`(`fk_user_id`)"+
+		"FOREIGN KEY `fk_message__fk_author_id___user__id`(`fk_author_id`)"+
+		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT,"+
+		"FOREIGN KEY `fk_message__fk_author_id___user__id`(`fk_author_id`)"+
 		"REFERENCES `user`(`id`)ON UPDATE RESTRICT ON DELETE RESTRICT"+
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n"+
 		"CREATE TABLE `phone` ("+
@@ -158,7 +161,7 @@ func (s *DBTestSuite) TestModel_CreateSQL() {
 		")ENGINE='InnoDB' DEFAULT CHARACTER SET 'UTF8';\n", sqlBuf.String(),
 	)
 
-	//ioutil.WriteFile("/tmp/graph.svg", []byte(s.storage.GetGraphSVG()), 0644)
+	ioutil.WriteFile("/tmp/graph.svg", []byte(s.storage.GetGraphSVG()), 0644)
 }
 
 func (s *DBTestSuite) TestModel_Add() {
@@ -205,7 +208,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	_, err = s.message.AddFromStructs(ctx, []struct {
 		Id       int
 		Text     string
-		FkUserId int `field:"fk_user_id"`
+		FkUserId int `field:"fk_author_id"`
 	}{
 		{Id: 10, Text: "Message 1", FkUserId: 1},
 		{Id: 20, Text: "Message 2", FkUserId: 1},
