@@ -3,7 +3,7 @@ module github.com/go-qbit/storage-mysql
 go 1.17
 
 require (
-	github.com/go-qbit/model v1.0.0
+	github.com/go-qbit/model v1.1.0
 	github.com/go-qbit/qerror v1.2.3
 	github.com/go-qbit/rbac v0.0.0-20200326053441-69d621298d66
 	github.com/go-qbit/timelog v0.0.0-20200505103456-44613501a8f1
