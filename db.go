@@ -215,7 +215,11 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, data *model.Data, opts 
 		for j, fieldName := range pKFieldsNames {
 			fp, exists := fieldsPos[fieldName]
 			if exists {
-				rowRes[j] = row[fp]
+				if rv := reflect.ValueOf(row[fp]); rv.Kind() == reflect.Ptr && !rv.IsNil() {
+					rowRes[j] = rv.Elem().Interface()
+				} else {
+					rowRes[j] = row[fp]
+				}
 			}
 			if (!exists || isNil(rowRes[j])) && m.GetFieldDefinition(fieldName).(IMysqlFieldDefinition).IsAutoIncremented() {
 				switch m.GetFieldDefinition(fieldName).GetType().Kind() {
