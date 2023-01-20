@@ -171,6 +171,7 @@ func (s *DBTestSuite) TestModel_Add() {
 	s.NoError(err)
 
 	pks, err := s.user.AddFromStructs(ctx, []struct {
+		Id       *uint32
 		Name     string
 		Lastname string
 	}{
@@ -183,11 +184,11 @@ func (s *DBTestSuite) TestModel_Add() {
 	s.NoError(err)
 
 	s.Equal(model.NewData([]string{"id"}, [][]interface{}{
-		[]interface{}{uint32(1)},
-		[]interface{}{uint32(2)},
-		[]interface{}{uint32(3)},
-		[]interface{}{uint32(4)},
-		[]interface{}{uint32(5)},
+		{uint32(1)},
+		{uint32(2)},
+		{uint32(3)},
+		{uint32(4)},
+		{uint32(5)},
 	}), pks)
 
 	phones := []struct {

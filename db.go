@@ -207,15 +207,7 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, data *model.Data, opts 
 		fieldsPos[fieldName] = i
 	}
 
-	lastInsertId := int64(0)
-	for _, fieldName := range pKFieldsNames {
-		if _, exists := fieldsPos[fieldName]; !exists {
-			if m.GetFieldDefinition(fieldName).(IMysqlFieldDefinition).IsAutoIncremented() {
-				lastInsertId, _ = execRes.LastInsertId()
-				break
-			}
-		}
-	}
+	lastInsertId, _ := execRes.LastInsertId()
 
 	res := make([][]interface{}, data.Len())
 	for i, row := range data.Data() {
@@ -225,7 +217,7 @@ func (s *MySQL) Add(ctx context.Context, m model.IModel, data *model.Data, opts 
 			if exists {
 				rowRes[j] = row[fp]
 			}
-			if (!exists || rowRes[j] == nil) && m.GetFieldDefinition(fieldName).(IMysqlFieldDefinition).IsAutoIncremented() {
+			if (!exists || isNil(rowRes[j])) && m.GetFieldDefinition(fieldName).(IMysqlFieldDefinition).IsAutoIncremented() {
 				switch m.GetFieldDefinition(fieldName).GetType().Kind() {
 				case reflect.Int8:
 					rowRes[j] = int8(lastInsertId)
@@ -560,4 +552,14 @@ func Quote(value interface{}) string {
 	}
 
 	return v
+}
+
+func isNil(v interface{}) bool {
+	if v == nil {
+		return true
+	}
+
+	rv := reflect.ValueOf(v)
+
+	return rv.Kind() == reflect.Ptr && rv.IsNil()
 }
