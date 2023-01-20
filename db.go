@@ -549,7 +549,11 @@ func Quote(value interface{}) string {
 			}
 		}
 	case *time.Time:
-		v = value.Format("2006-01-02 15:04:05")
+		if value == nil {
+			v = "NULL"
+		} else {
+			v = value.Format("2006-01-02 15:04:05")
+		}
 
 	default:
 		panic(fmt.Sprintf("%T is not implemented", value))
