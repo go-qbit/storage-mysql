@@ -309,6 +309,7 @@ func (s *MySQL) Query(ctx context.Context, m model.IModel, fieldsNames []string,
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	columnsNames, err := rows.Columns()
 	if err != nil {
