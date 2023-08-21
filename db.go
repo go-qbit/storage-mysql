@@ -50,6 +50,18 @@ func (s *MySQL) Connect(dsn string) error {
 	return nil
 }
 
+func (s *MySQL) SetupConnectionsPool(maxOpenConns, maxIdleConns int, maxLifetime time.Duration) {
+	if maxOpenConns > 0 {
+		s.db.SetMaxOpenConns(maxOpenConns)
+	}
+	if maxIdleConns > 0 {
+		s.db.SetMaxIdleConns(maxIdleConns)
+	}
+	if maxLifetime > 0 {
+		s.db.SetConnMaxLifetime(maxLifetime)
+	}
+}
+
 func (s *MySQL) Disonnect() error {
 	return s.db.Close()
 }
