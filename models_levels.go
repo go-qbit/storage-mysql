@@ -25,25 +25,34 @@ func (s *MySQL) getModelsLevels() modelsLevels {
 	for name, _ := range s.models {
 		res = append(res, modelLevel{
 			name:  name,
-			level: s.getModelLevel(name, 0),
+			level: s.getModelLevel(name, 0, nil),
 		})
 	}
 
 	return res
 }
 
-func (s *MySQL) getModelLevel(tableName string, curLevel int) int {
+func (s *MySQL) getModelLevel(tableName string, curLevel int, visited map[string]bool) int {
+	if visited == nil {
+		visited = make(map[string]bool)
+	}
+	if visited[tableName] {
+		return curLevel
+	}
+	visited[tableName] = true
+
 	maxLevel := curLevel
 	for _, extModel := range s.models[tableName].GetRelations() {
 		relation := s.models[tableName].GetRelation(extModel)
 		if relation.IsBack {
 			continue
 		}
-		extLevel := s.getModelLevel(relation.ExtModel.GetId(), curLevel+1)
+		extLevel := s.getModelLevel(relation.ExtModel.GetId(), curLevel+1, visited)
 		if extLevel > maxLevel {
 			maxLevel = extLevel
 		}
 	}
 
+	delete(visited, tableName)
 	return maxLevel
 }
